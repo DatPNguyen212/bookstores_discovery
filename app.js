@@ -1,13 +1,13 @@
 // Express App
-const express = require('express')
+import express from 'express'
 const app = express()
 const PORT = 8080
 
 // Built-in Node Modules
-const path = require('path')
+import path from 'path'
 
 // Router objects
-const bookstoresRouter = require('./routes/bookstores')
+import bookstoresRouter from './routes/bookstores'
 
 // Configuring view engine
 app.set('view engine', 'ejs')

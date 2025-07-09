@@ -1,7 +1,12 @@
-module.exports.renderIndexPage = (req, res, next) => {
+const renderIndexPage = (req, res, next) => {
   res.render('index.ejs')
 }
 
-module.exports.renderCreatePage = (req, res, next) => {
+const renderCreatePage = (req, res, next) => {
   res.render('create.ejs')
+}
+
+export const bookstoresCtrl = {
+  renderIndexPage,
+  renderCreatePage,
 }

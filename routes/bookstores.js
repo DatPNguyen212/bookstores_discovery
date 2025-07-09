@@ -1,6 +1,6 @@
-const express = require('express')
+import express from 'express'
 const router = express.Router()
-const bookstoresCtrl = require('../controllers/bookstores')
+import { bookstoresCtrl } from '../controllers/bookstores'
 
 router.get('/new', bookstoresCtrl.renderCreatePage)
 
