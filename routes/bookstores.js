@@ -1,6 +1,6 @@
 import express from 'express'
 const router = express.Router()
-import { bookstoresCtrl } from '../controllers/bookstores'
+import * as bookstoresCtrl from '../controllers/bookstores'
 
 router.get('/new', bookstoresCtrl.renderCreatePage)
 

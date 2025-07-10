@@ -6,7 +6,4 @@ const renderCreatePage = (req, res, next) => {
   res.render('create.ejs')
 }
 
-export const bookstoresCtrl = {
-  renderIndexPage,
-  renderCreatePage,
-}
+export { renderIndexPage, renderCreatePage }
