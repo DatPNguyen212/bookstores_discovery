@@ -5,11 +5,15 @@ const PORT = 8080
 
 // Built-in Node Modules
 import path from 'path'
+import { fileURLToPath } from 'url'
+import { dirname } from 'path'
 
 // Router objects
 import bookstoresRouter from './routes/bookstores'
 
 // Configuring view engine
+const pathToCurrentFile = fileURLToPath(import.meta.url)
+const __dirname = dirname(pathToCurrentFile)
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, './', 'views'))
 
