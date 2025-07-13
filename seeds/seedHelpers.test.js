@@ -72,7 +72,9 @@ describe('seedHelpers.generateRandNum()', () => {
       seedHelpers.generateRandNum(min, max)
     }
     // assert
-    expect(fn).toThrow()
+    expect(fn).toThrow(
+      'First and second parameters must be of number data type'
+    )
   })
 
   it('should throw an error if second parameter is not number data type', () => {
@@ -85,7 +87,9 @@ describe('seedHelpers.generateRandNum()', () => {
       seedHelpers.generateRandNum(min, max)
     }
     // assert
-    expect(fn).toThrow()
+    expect(fn).toThrow(
+      'First and second parameters must be of number data type'
+    )
   })
 })
 
@@ -155,7 +159,7 @@ describe('seedHelpers.generateRandName()', () => {
       seedHelpers.generateRandName(firstNames, lastNames)
     }
 
-    expect(fn).toThrow()
+    expect(fn).toThrow('First and second parameters must be an array')
   })
 
   it('should throw an error if second parameter is not an array', () => {
@@ -166,7 +170,7 @@ describe('seedHelpers.generateRandName()', () => {
       seedHelpers.generateRandName(firstNames, lastNames)
     }
 
-    expect(fn).toThrow()
+    expect(fn).toThrow('First and second parameters must be an array')
   })
 
   it('should throw an error if first array argument contains contains atleast one item that is NOT of string data type', () => {
@@ -177,7 +181,9 @@ describe('seedHelpers.generateRandName()', () => {
       seedHelpers.generateRandName(firstNames, lastNames)
     }
 
-    expect(fn).toThrow()
+    expect(fn).toThrow(
+      'First parameter array must only contain string data type'
+    )
   })
   it('should throw an error if second array argument contains contains atleast one item that is NOT of string data type', () => {
     const firstNames = ['a']
@@ -187,6 +193,8 @@ describe('seedHelpers.generateRandName()', () => {
       seedHelpers.generateRandName(firstNames, lastNames)
     }
 
-    expect(fn).toThrow()
+    expect(fn).toThrow(
+      'Second parameter array must only contain string data type'
+    )
   })
 })
