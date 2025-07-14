@@ -3,7 +3,6 @@ class Address {
     if (
       typeof obj.homeNum !== 'string' ||
       typeof obj.street !== 'string' ||
-      typeof obj.ward !== 'string' ||
       typeof obj.district !== 'string' ||
       typeof obj.city !== 'string'
     ) {
@@ -14,15 +13,14 @@ class Address {
 
     this.homeNum = obj.homeNum
     this.street = obj.street
-    this.ward = obj.ward
     this.district = obj.district
     this.city = obj.city
   }
 
-  get fullStr() {
+  getFullStr() {
     return `${
       this.homeNum
-    }, ${this.getStreet()}, ${this.getWard()}, ${this.getDistrict()}, ${this.getCity()}`
+    }, ${this.getStreet()}, ${this.getDistrict()}, ${this.getCity()}`
   }
 
   getHomeNum() {
@@ -33,12 +31,8 @@ class Address {
     return this.street + ' Street'
   }
 
-  getWard() {
-    return 'Ward ' + this.ward
-  }
-
   getDistrict() {
-    return 'District ' + this.district
+    return this.district + ' District'
   }
 
   getCity() {

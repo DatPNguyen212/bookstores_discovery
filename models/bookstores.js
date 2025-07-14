@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 const bookstoreSchema = new mongoose.Schema({
   name: String,
-  location: String,
+  address: String,
   description: String,
   genres: [
     {

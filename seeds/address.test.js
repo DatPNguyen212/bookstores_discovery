@@ -2,11 +2,10 @@ import { vi, describe, it, expect } from 'vitest'
 import Address from './address.js'
 
 describe('new Address()', () => {
-  it('when pass an object that contains Address compoenents, it should return an object which contains homeNum, street, ward, district and city properties', () => {
+  it('when pass an object that contains Address compoenents, it should return an object which contains homeNum, street, district and city properties', () => {
     const obj = {
       homeNum: '3',
       street: 'Ba Thang Hai',
-      ward: '3',
       district: '10',
       city: 'Ho Chi Minh',
     }
@@ -15,7 +14,6 @@ describe('new Address()', () => {
 
     expect(res).toHaveProperty('homeNum')
     expect(res).toHaveProperty('street')
-    expect(res).toHaveProperty('ward')
     expect(res).toHaveProperty('district')
     expect(res).toHaveProperty('city')
   })
@@ -25,35 +23,24 @@ describe('new Address()', () => {
       {
         homeNum: false,
         street: 'Ba Thang Hai',
-        ward: '3',
         district: '10',
         city: 'Ho Chi Minh',
       },
       {
         homeNum: '3',
         street: true,
-        ward: '3',
         district: '10',
         city: 'Ho Chi Minh',
       },
       {
         homeNum: '3',
         street: 'Ba Thang Hai',
-        ward: true,
-        district: '10',
-        city: 'Ho Chi Minh',
-      },
-      {
-        homeNum: '3',
-        street: 'Ba Thang Hai',
-        ward: '3',
         district: true,
         city: 'Ho Chi Minh',
       },
       {
         homeNum: '3',
         street: 'Ba Thang Hai',
-        ward: '3',
         district: '10',
         city: true,
       },
@@ -75,18 +62,17 @@ describe('testing Address class instance methods', () => {
   const obj = {
     homeNum: '3',
     street: 'Ba Thang Hai',
-    ward: '3',
     district: '10',
     city: 'Ho Chi Minh',
   }
-  describe('fullStr() getter', () => {
-    it('should return the correct address format: homeNum, street, ward, district, city', () => {
+  describe('getFullStr()', () => {
+    it('should return the correct address format: homeNum, street, district, city', () => {
       const addressObj = new Address(obj)
 
-      const addressStr = addressObj.fullStr
+      const addressStr = addressObj.getFullStr()
 
       expect(addressStr).toBe(
-        '3, Ba Thang Hai Street, Ward 3, District 10, Ho Chi Minh City'
+        '3, Ba Thang Hai Street, 10 District, Ho Chi Minh City'
       )
     })
   })
@@ -101,23 +87,13 @@ describe('testing Address class instance methods', () => {
     })
   })
 
-  describe('getWard()', () => {
-    it('should return Address class instance ward property value with the word Ward added at the beginning', () => {
-      const addressObj = new Address(obj)
-
-      const res = addressObj.getWard()
-
-      expect(res).toBe('Ward 3')
-    })
-  })
-
   describe('getDistrict()', () => {
     it('should return Address class instance district property value with the word District added at the beginning', () => {
       const addressObj = new Address(obj)
 
       const res = addressObj.getDistrict()
 
-      expect(res).toBe('District 10')
+      expect(res).toBe('10 District')
     })
   })
 

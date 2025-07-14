@@ -1,97 +1,6 @@
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import seedHelpers from './seedHelpers'
-
-describe('seedHelpers.generateRandNum()', () => {
-  let mathRandomSpy
-
-  beforeEach(() => {
-    mathRandomSpy = vi.spyOn(Math, 'random')
-  })
-
-  afterEach(() => {
-    vi.restoreAllMocks()
-  })
-
-  it("given Math.random() returns 0, it should return the min parameter's value", () => {
-    // arrange
-    mathRandomSpy.mockImplementation(
-      vi.fn(() => {
-        return 0
-      })
-    )
-
-    const min = 1
-    const max = 5
-    // act
-    const res = seedHelpers.generateRandNum(min, max)
-
-    // assert
-    expect(res).toBe(min)
-  })
-
-  it("given Math.random() returns 0.9, it should return the max parameter's value", () => {
-    // arrange
-    mathRandomSpy.mockImplementation(
-      vi.fn(() => {
-        return 0.9
-      })
-    )
-    const min = 1
-    const max = 5
-    // act
-    const res = seedHelpers.generateRandNum(min, max)
-
-    // assert
-    expect(res).toBe(max)
-  })
-
-  it('given Math.random() returns 0.5, min is 1 and max is 5, it should return 3', () => {
-    // arrange
-    mathRandomSpy.mockImplementation(
-      vi.fn(() => {
-        return 0.5
-      })
-    )
-    const min = 1
-    const max = 5
-
-    // act
-    const res = seedHelpers.generateRandNum(min, max)
-
-    // assert
-    expect(res).toBe(3)
-  })
-
-  it('should throw an error if first parameter is not number data type', () => {
-    // arrange
-    const min = 'test'
-    const max = 3
-
-    // act
-    const fn = () => {
-      seedHelpers.generateRandNum(min, max)
-    }
-    // assert
-    expect(fn).toThrow(
-      'First and second parameters must be of number data type'
-    )
-  })
-
-  it('should throw an error if second parameter is not number data type', () => {
-    // arrange
-    const min = 1
-    const max = 'test'
-
-    // act
-    const fn = () => {
-      seedHelpers.generateRandNum(min, max)
-    }
-    // assert
-    expect(fn).toThrow(
-      'First and second parameters must be of number data type'
-    )
-  })
-})
+import fs from 'fs'
 
 describe('seedHelpers.generateRandName()', () => {
   let mathRandomSpy
@@ -195,6 +104,53 @@ describe('seedHelpers.generateRandName()', () => {
 
     expect(fn).toThrow(
       'Second parameter array must only contain string data type'
+    )
+  })
+})
+
+describe('seedHelpers.generateRandAddress()', () => {
+  const vnDataSetJsonMock = `[
+  {
+    "code": "SG",
+    "name": "Ho Chi Minh",
+    "district": [
+      {
+        "name": "Binh Chanh",
+        "pre": "Huyen",
+        "ward": [{ "name": "An Phu Tay" }],
+        "street": ["1"]
+      }
+    ]
+  }
+]`
+
+  let fsReadFileSpy
+  let mathRandomSpy
+
+  beforeEach(() => {
+    fsReadFileSpy = vi.spyOn(fs.promises, 'readFile').mockImplementation(
+      vi.fn(async () => {
+        return vnDataSetJsonMock
+      })
+    )
+
+    mathRandomSpy = vi.spyOn(Math, 'random')
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('given Math.random() returns 0, and a path to vnDataSet json file is passed to it, it should return a deterministc address full string based on the vnDataSet json file', async () => {
+    mathRandomSpy.mockImplementation(
+      vi.fn(() => {
+        return 0
+      })
+    )
+    const filePath = 'path'
+
+    await expect(seedHelpers.generateRandAddress(filePath)).resolves.toBe(
+      '0, 1 Street, Binh Chanh District, Ho Chi Minh City'
     )
   })
 })
