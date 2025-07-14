@@ -6,7 +6,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 vnDataSet
-  .createJsonFile(path.join(__dirname, '../', '../', 'seeds', 'vnDataSet.json'))
+  .createJsonFile(path.join(__dirname, '../', 'vnDataSet.json'))
   .then(() => {
     console.log('successful')
   })
