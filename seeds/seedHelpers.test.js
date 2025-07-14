@@ -141,7 +141,7 @@ describe('seedHelpers.generateRandAddress()', () => {
     vi.restoreAllMocks()
   })
 
-  it('given Math.random() returns 0, and a path to vnDataSet json file is passed to it, it should return a deterministc address full string based on the vnDataSet json file', async () => {
+  it('given Math.random() returns 0 and a mocked vnDataSet.json content when read, when a path to vnDataSet json file is passed to it, it should return a deterministc address full string based on the vnDataSet json file', async () => {
     mathRandomSpy.mockImplementation(
       vi.fn(() => {
         return 0
