@@ -30,11 +30,11 @@ describe('seedHelpers.generateRandName()', () => {
     expect(res).toBe('a a')
   })
 
-  it('given Math.random() returns 0.9, it should take the last index item in each of the 2 array arguments and return the concatenated string with space between of them', () => {
+  it('given Math.random() returns 0.999, it should take the last index item in each of the 2 array arguments and return the concatenated string with space between of them', () => {
     // arrange
     mathRandomSpy.mockImplementation(
       vi.fn(() => {
-        return 0.9
+        return 0.999
       })
     )
     const firstNames = ['a', 'b', 'c']
@@ -121,6 +121,30 @@ describe('seedHelpers.generateRandAddress()', () => {
         "street": ["1"]
       }
     ]
+  },
+  {
+    "code": "HN",
+    "name": "Ha Noi",
+    "district": [
+      {
+        "name": "Ba Dinh",
+        "pre": "Huyen",
+        "ward": [{ "name": "Cong Vi" }],
+        "street": ["10"]
+      }
+    ]
+  },
+  {
+    "code": "DDN",
+    "name": "Da Nang",
+    "district": [
+      {
+        "name": "Cam Le",
+        "pre": "Huyen",
+        "ward": [{ "name": "Hoa An" }],
+        "street": ["10"]
+      }
+    ]
   }
 ]`
 
@@ -151,6 +175,34 @@ describe('seedHelpers.generateRandAddress()', () => {
 
     await expect(seedHelpers.generateRandAddress(filePath)).resolves.toBe(
       '0, 1 Street, Binh Chanh District, Ho Chi Minh City'
+    )
+  })
+
+  it('given Math.random() returns 0.999 and a mocked vnDataSet,json content when read, when a path to vnDataSet json file is passed to it, it should return a deterministic address full string based on the vnDataSet json file', async () => {
+    mathRandomSpy.mockImplementation(
+      vi.fn(() => {
+        return 0.999
+      })
+    )
+
+    const filePath = 'path'
+
+    await expect(seedHelpers.generateRandAddress(filePath)).resolves.toBe(
+      '300, 10 Street, Cam Le District, Da Nang City'
+    )
+  })
+
+  it('given Math.random() returns 0.6 and a mocked vnDataSet,json content when read, when a path to vnDataSet json file is passed to it, it should return a deterministic address full string based on the vnDataSet json file', async () => {
+    mathRandomSpy.mockImplementation(
+      vi.fn(() => {
+        return 0.6
+      })
+    )
+
+    const filePath = 'path'
+
+    await expect(seedHelpers.generateRandAddress(filePath)).resolves.toBe(
+      '180, 10 Street, Ba Dinh District, Ha Noi City'
     )
   })
 })

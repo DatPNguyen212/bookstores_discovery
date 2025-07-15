@@ -26,10 +26,10 @@ describe('arrayUtils.getRandItem()', () => {
     expect(res).toBe(1)
   })
 
-  it('given Math.random() returns 0.9, when an array is passed to it, it should return the last index item in the array', () => {
+  it('given Math.random() returns 0.999, when an array is passed to it, it should return the last index item in the array', () => {
     mathRandomSpy.mockImplementation(
       vi.fn(() => {
-        return 0.9
+        return 0.999
       })
     )
 

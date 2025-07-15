@@ -29,11 +29,11 @@ describe('numberUtils.generateRandNum()', () => {
     expect(res).toBe(min)
   })
 
-  it("given Math.random() returns 0.9, it should return the max parameter's value", () => {
+  it("given Math.random() returns 0.999, it should return the max parameter's value", () => {
     // arrange
     mathRandomSpy.mockImplementation(
       vi.fn(() => {
-        return 0.9
+        return 0.999
       })
     )
     const min = 1
