@@ -205,4 +205,12 @@ describe('seedHelpers.generateRandAddress()', () => {
       '180, 10 Street, Ba Dinh District, Ha Noi City'
     )
   })
+
+  it('should throw an error if the first parameter is not string data type', async () => {
+    const filePath = 3
+
+    await expect(seedHelpers.generateRandAddress(filePath)).rejects.toThrow(
+      'First parameter should be of string data type'
+    )
+  })
 })

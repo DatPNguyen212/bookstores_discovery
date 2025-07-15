@@ -33,6 +33,10 @@ const seedHelpers = {
   },
 
   async generateRandAddress(filePath) {
+    if (typeof filePath !== 'string') {
+      throw new TypeError('First parameter should be of string data type')
+    }
+
     const vnDataSet = JSON.parse(
       await fs.promises.readFile(filePath, {
         encoding: 'utf-8',
