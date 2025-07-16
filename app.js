@@ -1,23 +1,21 @@
-// Express App
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
+
 import express from 'express'
 const app = express()
-const PORT = 8080
+const PORT = process.env.PORT || 3000
 
-// Built-in Node Modules
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
 
-// Router objects
 import bookstoresRouter from './routes/bookstores'
 
-// Configuring view engine
 const pathToCurrentFile = fileURLToPath(import.meta.url)
 const __dirname = dirname(pathToCurrentFile)
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, './', 'views'))
-
-//=========== Routes================
 
 // Bookstore routes
 app.use('/bookstores', bookstoresRouter)
