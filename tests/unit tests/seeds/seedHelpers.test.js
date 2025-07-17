@@ -1,5 +1,5 @@
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
-import seedHelpers from './seedHelpers'
+import seedHelpers from '../../../seeds/seedHelpers'
 import fs from 'fs'
 
 describe('seedHelpers.generateRandName()', () => {

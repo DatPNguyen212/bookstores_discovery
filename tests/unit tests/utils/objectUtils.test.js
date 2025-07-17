@@ -1,5 +1,5 @@
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
-import objectUtils from './objectUtils'
+import objectUtils from '../../../utils/objectUtils'
 
 describe('objectUtils.isPlainObject()', () => {
   it('when an array is passed, it should return false', () => {

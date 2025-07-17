@@ -1,5 +1,5 @@
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
-import numberUtils from './numberUtils'
+import numberUtils from '../../../utils/numberUtils'
 
 describe('numberUtils.generateRandNum()', () => {
   let mathRandomSpy
