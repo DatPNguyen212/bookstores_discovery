@@ -239,3 +239,104 @@ describe('testDBUtils.clearDB()', () => {
     )
   })
 })
+
+describe('testDBUtils.closeDB()', () => {
+  let connectionPropertySpy
+  let connectionSetPropertySpy
+  let mongoMemoryServerPropertySpy
+  let mongoMemoryServerSetPropertySpy
+
+  beforeEach(() => {
+    connectionPropertySpy = vi.spyOn(testDBUtils, 'connection', 'get')
+    connectionSetPropertySpy = vi.spyOn(testDBUtils, 'connection', 'set')
+    mongoMemoryServerPropertySpy = vi.spyOn(
+      testDBUtils,
+      'mongoMemoryServer',
+      'get'
+    )
+    mongoMemoryServerSetPropertySpy = vi.spyOn(
+      testDBUtils,
+      'mongoMemoryServer',
+      'set'
+    )
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('given testDBUtils.connection is not empty and testDBUtils.connection.readyState is 1, it should delete ALL collections, close the connection and testDBUtils.connection.connection is assigned null', async () => {
+    connectionPropertySpy.mockReturnValue({
+      readyState: 1,
+      dropDatabase: vi.fn(),
+      close: vi.fn(),
+    })
+
+    await testDBUtils.closeDB()
+
+    expect(testDBUtils.connection.dropDatabase).toBeCalled()
+    expect(testDBUtils.connection.close).toBeCalled()
+    expect(connectionSetPropertySpy).toBeCalledWith(null)
+  })
+  it('given testDBUtils.connection is not empty and testDBUtils.connection.readyState is 2, it should delete ALL collections, close the connection and testDBUtils.connection.connection is assigned null', async () => {
+    connectionPropertySpy.mockReturnValue({
+      readyState: 2,
+      dropDatabase: vi.fn(),
+      close: vi.fn(),
+    })
+
+    await testDBUtils.closeDB()
+
+    expect(testDBUtils.connection.dropDatabase).toBeCalled()
+    expect(testDBUtils.connection.close).toBeCalled()
+    expect(connectionSetPropertySpy).toBeCalledWith(null)
+  })
+  it('given testDBUtils.connection is not empty and testDBUtils.connection.readyState is 4, it should delete ALL collections, close the connection and testDBUtils.connection.connection is assigned null', async () => {
+    connectionPropertySpy.mockReturnValue({
+      readyState: 4,
+      dropDatabase: vi.fn(),
+      close: vi.fn(),
+    })
+
+    await testDBUtils.closeDB()
+
+    expect(testDBUtils.connection.dropDatabase).toBeCalled()
+    expect(testDBUtils.connection.close).toBeCalled()
+    expect(connectionSetPropertySpy).toBeCalledWith(null)
+  })
+
+  it('given testDBUtils.connection is falsy, it should log a message', async () => {
+    connectionPropertySpy.mockReturnValue(null)
+
+    vi.stubGlobal('console', {
+      log: vi.fn(),
+    })
+
+    await testDBUtils.closeDB()
+
+    expect(console.log).toBeCalledWith('Connection not established yet')
+  })
+
+  it('given testDBUtils.mongoMemoryServer is truthy, it should call testDBUtils.mongoMemoryServer.stop() and assign testDBUtils.mongoMemoryServer with null', async () => {
+    mongoMemoryServerPropertySpy.mockReturnValue({
+      stop: vi.fn(),
+    })
+
+    await testDBUtils.closeDB()
+
+    expect(testDBUtils.mongoMemoryServer.stop).toBeCalled()
+    expect(mongoMemoryServerSetPropertySpy).toBeCalledWith(null)
+  })
+
+  it('given testDBUtils.mongoMemoryServer is falsy, it should log that mongo memory server has not been created yet', async () => {
+    mongoMemoryServerPropertySpy.mockReturnValue(null)
+
+    vi.stubGlobal('console', {
+      log: vi.fn(),
+    })
+
+    await testDBUtils.closeDB()
+
+    expect(console.log).toBeCalled()
+  })
+})

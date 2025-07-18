@@ -54,8 +54,6 @@ const testDBUtils = {
         await this.connection.dropDatabase()
         await this.connection.close()
         this.connection = null
-      } else {
-        await this.connection.close()
       }
     } else {
       console.log('Connection not established yet')
