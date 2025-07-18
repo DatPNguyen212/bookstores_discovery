@@ -146,3 +146,96 @@ describe('testDBUtils.connect()', () => {
     expect(res).toEqual(connectionMock)
   })
 })
+
+describe('testDBUtils.clearDB()', () => {
+  let connectionPropertySpy
+
+  beforeEach(() => {
+    connectionPropertySpy = vi.spyOn(testDBUtils, 'connection', 'get')
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('should throw an error if testDBUtils.connection is falsy', async () => {
+    connectionPropertySpy.mockReturnValue(false)
+
+    const fn = async () => {
+      await testDBUtils.clearDB()
+    }
+
+    await expect(fn).rejects.toThrow('Connection not established')
+  })
+
+  it("given you're connected to mongo memory server, it should call deleteMany() methods of all the models inside the connection property of testDBUtils", async () => {
+    connectionPropertySpy.mockReturnValue({
+      readyState: 1,
+      models: {
+        ModelClass1: {
+          deleteMany: vi.fn(),
+        },
+        ModelClass2: {
+          deleteMany: vi.fn(),
+        },
+      },
+    })
+
+    await testDBUtils.clearDB()
+
+    expect(testDBUtils.connection.models.ModelClass1.deleteMany).toBeCalled()
+    expect(testDBUtils.connection.models.ModelClass2.deleteMany).toBeCalled()
+  })
+  it('if testDBUtils.connection.readyState is 0, it should throw an error', async () => {
+    connectionPropertySpy.mockReturnValue({
+      readyState: 0,
+    })
+
+    const fn = async () => {
+      await testDBUtils.clearDB()
+    }
+
+    await expect(fn).rejects.toThrow(
+      'Not connected to mongo memory server, so cannot clear database'
+    )
+  })
+  it('if testDBUtils.connection.readyState is 2, it should throw an error', async () => {
+    connectionPropertySpy.mockReturnValue({
+      readyState: 2,
+    })
+
+    const fn = async () => {
+      await testDBUtils.clearDB()
+    }
+
+    await expect(fn).rejects.toThrow(
+      'Not connected to mongo memory server, so cannot clear database'
+    )
+  })
+  it('if testDBUtils.connection.readyState is 3, it should throw an error', async () => {
+    connectionPropertySpy.mockReturnValue({
+      readyState: 3,
+    })
+
+    const fn = async () => {
+      await testDBUtils.clearDB()
+    }
+
+    await expect(fn).rejects.toThrow(
+      'Not connected to mongo memory server, so cannot clear database'
+    )
+  })
+  it('if testDBUtils.connection.readyState is 4, it should throw an error', async () => {
+    connectionPropertySpy.mockReturnValue({
+      readyState: 4,
+    })
+
+    const fn = async () => {
+      await testDBUtils.clearDB()
+    }
+
+    await expect(fn).rejects.toThrow(
+      'Not connected to mongo memory server, so cannot clear database'
+    )
+  })
+})
