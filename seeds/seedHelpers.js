@@ -66,6 +66,15 @@ const seedHelpers = {
 
     return addressString
   },
+
+  generateRandGenre(genres) {
+    for (let genre of genres) {
+      if (typeof genre !== 'string') {
+        throw new TypeError('First parameter must be an array of strings')
+      }
+    }
+    return arrayUtils.getRandItem(genres)
+  },
 }
 
 export default seedHelpers

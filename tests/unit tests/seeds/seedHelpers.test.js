@@ -1,6 +1,7 @@
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import seedHelpers from '../../../seeds/seedHelpers'
 import fs from 'fs'
+import arrayUtils from '../../../utils/arrayUtils'
 
 describe('seedHelpers.generateRandName()', () => {
   let mathRandomSpy
@@ -212,5 +213,64 @@ describe('seedHelpers.generateRandAddress()', () => {
     await expect(seedHelpers.generateRandAddress(filePath)).rejects.toThrow(
       'First parameter should be of string data type'
     )
+  })
+})
+
+describe('seedHelpers.generateBookstoreObj()', () => {
+  let generateRandNameSpy
+  let generateRandAddressSpy
+
+  beforeEach(() => {
+    generateRandNameSpy = vi
+      .spyOn(seedHelpers, 'generateRandName')
+      .mockReturnValue('John Wick')
+    generateRandAddressSpy = vi
+      .spyOn(seedHelpers, 'generateRandAddress')
+      .mockReturnValue('3, Ba Thang Hai Street, 10 District, Ho Chi Minh City')
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('should return a predictable obj', () => {})
+})
+
+describe('seedHelpers.generateRandGenre()', () => {
+  let getRandItemSpy
+
+  beforeEach(() => {
+    getRandItemSpy = vi.spyOn(arrayUtils, 'getRandItem')
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('when you pass an array to it, it should call arrayUtils.getRandomItem() with the array you passed', () => {
+    const genres = ['fiction', 'fantasy']
+
+    const res = seedHelpers.generateRandGenre(genres)
+
+    expect(getRandItemSpy).toBeCalledWith(genres)
+  })
+
+  it('given arrayUtils.generateRandItem() return first item in your array argument, it should return that same value', () => {
+    const genres = ['fiction', 'fantasy']
+
+    getRandItemSpy.mockReturnValue(genres[0])
+
+    const res = seedHelpers.generateRandGenre(genres)
+
+    expect(res).toBe('fiction')
+  })
+  it('should throw an error if first parameter argument is not an array of strings', () => {
+    const genres = [1, 2, 3]
+
+    const fn = () => {
+      seedHelpers.generateRandGenre(genres)
+    }
+
+    expect(fn).toThrow('First parameter must be an array of strings')
   })
 })
