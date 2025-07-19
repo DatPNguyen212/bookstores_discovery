@@ -1,4 +1,5 @@
 import numberUtils from './numberUtils'
+import lodash from 'lodash'
 const arrayUtils = {
   getRandItem(array) {
     if (!Array.isArray(array)) {
@@ -39,6 +40,18 @@ const arrayUtils = {
     }
 
     return newArray
+  },
+
+  isValueInArray(value, array) {
+    if (!Array.isArray(array)) {
+      throw new TypeError('2nd param must be an array')
+    }
+    for (let item of array) {
+      if (lodash.isEqual(value, item)) {
+        return true
+      }
+    }
+    return false
   },
 }
 
