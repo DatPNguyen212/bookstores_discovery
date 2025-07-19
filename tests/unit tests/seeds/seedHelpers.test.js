@@ -2,6 +2,7 @@ import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import seedHelpers from '../../../seeds/seedHelpers'
 import fs from 'fs'
 import arrayUtils from '../../../utils/arrayUtils'
+import numberUtils from '../../../utils/numberUtils'
 
 describe('seedHelpers.generateRandName()', () => {
   let mathRandomSpy
@@ -272,5 +273,59 @@ describe('seedHelpers.generateRandGenre()', () => {
     }
 
     expect(fn).toThrow('First parameter must be an array of strings')
+  })
+})
+
+describe('seedHelpers.generateOpenDays()', () => {
+  let generateArraySpy
+  let mathRandomSpy
+  let generateRandNumSpy
+
+  beforeEach(() => {
+    generateArraySpy = vi.spyOn(arrayUtils, 'generateArray')
+    mathRandomSpy = vi.spyOn(Math, 'random')
+    generateRandNumSpy = vi.spyOn(numberUtils, 'generateRandNum')
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+  it('should call numberUtils.generateRandNum() with 1 and 7 as arguments', () => {
+    const min = 1
+    const max = 7
+
+    const res = seedHelpers.generateOpenDays()
+
+    expect(generateRandNumSpy).toBeCalledWith(min, max)
+  })
+  it('given Math.random() returns 0, it should call arrayUtils.generateArray() with correct option object', () => {
+    mathRandomSpy.mockReturnValue(0)
+    const option = {
+      numberItems: 1,
+      enum: [
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+        'Sunday',
+      ],
+      uniqueItems: true,
+    }
+
+    const res = seedHelpers.generateOpenDays()
+
+    expect(generateArraySpy).toBeCalledWith(option)
+  })
+  it('given Math.random() returns predetermined values every time it is called such that numberUtils.generateRandNum() returns 3, it should return a predictable array of open days', () => {
+    mathRandomSpy.mockReturnValueOnce(0.3)
+    mathRandomSpy.mockReturnValueOnce(0)
+    mathRandomSpy.mockReturnValueOnce(0.6)
+    mathRandomSpy.mockReturnValueOnce(0.9)
+
+    const res = seedHelpers.generateOpenDays()
+
+    expect(res).toEqual(['Monday', 'Friday', 'Sunday'])
   })
 })

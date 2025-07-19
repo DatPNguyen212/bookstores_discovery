@@ -75,6 +75,31 @@ const seedHelpers = {
     }
     return arrayUtils.getRandItem(genres)
   },
+
+  generateOpenDays() {
+    const DAYS_OF_WEEK = [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday',
+    ]
+
+    const MIN = 1
+    const MAX = 7
+
+    const option = {
+      numberItems: numberUtils.generateRandNum(MIN, MAX),
+      enum: DAYS_OF_WEEK,
+      uniqueItems: true,
+    }
+
+    const openDays = arrayUtils.generateArray(option)
+
+    return openDays
+  },
 }
 
 export default seedHelpers
