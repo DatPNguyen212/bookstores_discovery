@@ -1,6 +1,5 @@
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import arrayUtils from '../../../utils/arrayUtils'
-import lodash from 'lodash'
 
 describe('arrayUtils.isValueInArray()', () => {
   it('when pass 1 in 1st param and [1,2,3] in 2nd param, if value is in array, it should return true', () => {

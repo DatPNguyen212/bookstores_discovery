@@ -149,14 +149,4 @@ describe('arrayUtils.generateArray()', () => {
 
     expect(fn).toThrow('enum property must be an array')
   })
-
-  it('if default property is not number data type, it should throw an error', () => {
-    const option = { numberItems: 3, default: '3' }
-
-    const fn = () => {
-      arrayUtils.generateArray(option)
-    }
-
-    expect(fn).toThrow('default property must be number data type')
-  })
 })

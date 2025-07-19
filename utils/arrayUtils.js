@@ -23,9 +23,6 @@ const arrayUtils = {
         newArray.push(randItemFromEnum)
       }
     } else if (!option.enum && option.default) {
-      if (typeof option.default !== 'number') {
-        throw new TypeError('default property must be number data type')
-      }
       for (let i = 0; i < option.numberItems; i++) {
         newArray.push(option.default)
       }
