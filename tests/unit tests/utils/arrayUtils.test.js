@@ -150,16 +150,38 @@ describe('arrayUtils.generateArray()', () => {
 
     expect(fn).toThrow('enum property must be an array')
   })
-  it('when pass {numberItems: 2, enum: [1,2], uniqueItems: true}, it should return an array whose items are unique and from enum', () => {
-    const option = { numberItems: 2, enum: [1, 2], uniqueItems: true }
-    let testRes = false
+
+  it('given Math.random() returns a predetermined value everytime it is called, when you pass {numberItems: 2, enum: [1,2], uniqueItems: true}, it should call arrayUtils.getRandItem() correct amount of times to get an array whose values are unique and are from enum array', () => {
+    mathRandomSpy.mockReturnValueOnce(0)
+    mathRandomSpy.mockReturnValueOnce(0.1)
+    mathRandomSpy.mockReturnValueOnce(0.99)
+    const getRandItemSpy = vi.spyOn(arrayUtils, 'getRandItem')
+
+    const option = {
+      numberItems: 2,
+      enum: [1, 2],
+      uniqueItems: true,
+    }
 
     const res = arrayUtils.generateArray(option)
 
-    if (lodash.isEqual(res, [1, 2]) || lodash.isEqual(res, [2, 1])) {
-      testRes = true
+    expect(getRandItemSpy).toBeCalledTimes(3)
+    expect(res).toEqual([1, 2])
+  })
+
+  it('given option object arguemnt with numberItems, enum and uniqeItems true, when numberItems is larger than enum array length, it should throw an error', () => {
+    const option = {
+      numberItems: 4,
+      enum: [1, 2],
+      uniqueItems: true,
     }
 
-    expect(testRes).toBe(true)
+    const fn = () => {
+      arrayUtils.generateArray(option)
+    }
+
+    expect(fn).toThrow(
+      "numberItems should be smaller than or equal to enum array's length"
+    )
   })
 })

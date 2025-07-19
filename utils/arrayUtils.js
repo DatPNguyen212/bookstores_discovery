@@ -24,6 +24,11 @@ const arrayUtils = {
           newArray.push(randItemFromEnum)
         }
       } else if (option.uniqueItems === true) {
+        if (option.numberItems > option.enum.length) {
+          throw new TypeError(
+            "numberItems should be smaller than or equal to enum array's length"
+          )
+        }
         for (let i = 0; i < option.numberItems; i++) {
           let isInArray = true
           let randItem
