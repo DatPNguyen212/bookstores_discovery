@@ -1,5 +1,6 @@
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import arrayUtils from '../../../utils/arrayUtils'
+import lodash from 'lodash'
 
 describe('arrayUtils.getRandItem()', () => {
   let mathRandomSpy
@@ -148,5 +149,17 @@ describe('arrayUtils.generateArray()', () => {
     }
 
     expect(fn).toThrow('enum property must be an array')
+  })
+  it('when pass {numberItems: 2, enum: [1,2], uniqueItems: true}, it should return an array whose items are unique and from enum', () => {
+    const option = { numberItems: 2, enum: [1, 2], uniqueItems: true }
+    let testRes = false
+
+    const res = arrayUtils.generateArray(option)
+
+    if (lodash.isEqual(res, [1, 2]) || lodash.isEqual(res, [2, 1])) {
+      testRes = true
+    }
+
+    expect(testRes).toBe(true)
   })
 })

@@ -18,9 +18,22 @@ const arrayUtils = {
       if (!Array.isArray(option.enum)) {
         throw new TypeError('enum property must be an array')
       }
-      for (let i = 0; i < option.numberItems; i++) {
-        const randItemFromEnum = this.getRandItem(option.enum)
-        newArray.push(randItemFromEnum)
+      if (option.uniqueItems !== true) {
+        for (let i = 0; i < option.numberItems; i++) {
+          const randItemFromEnum = this.getRandItem(option.enum)
+          newArray.push(randItemFromEnum)
+        }
+      } else if (option.uniqueItems === true) {
+        for (let i = 0; i < option.numberItems; i++) {
+          let isInArray = true
+          let randItem
+          while (isInArray === true) {
+            randItem = this.getRandItem(option.enum)
+            isInArray = this.isValueInArray(randItem, newArray)
+          }
+          newArray.push(randItem)
+          console.log(newArray)
+        }
       }
     } else if (!option.enum && option.default) {
       for (let i = 0; i < option.numberItems; i++) {
