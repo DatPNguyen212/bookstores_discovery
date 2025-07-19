@@ -15,6 +15,14 @@ const setupDB = {
       console.log('Error connecting to the database')
     }
   },
+
+  async close() {
+    if (mongoose.connection.readyState === 1) {
+      mongoose.connection.close()
+    } else {
+      console.log('There must be a connection in order to close it')
+    }
+  },
 }
 
 export default setupDB

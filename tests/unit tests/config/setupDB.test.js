@@ -101,3 +101,92 @@ describe('setupDB.connect()', () => {
     await expect(fn).rejects.toThrow('First parameter must be string data type')
   })
 })
+
+describe('setupDB.close()', () => {
+  let connectionPropertyGetSpy
+
+  beforeEach(() => {
+    connectionPropertyGetSpy = vi.spyOn(mongoose, 'connection', 'get')
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+    vi.unstubAllGlobals()
+  })
+
+  it('if mongoose.connection.readyState is 1, it should call mongoose.connection.close()', async () => {
+    connectionPropertyGetSpy.mockReturnValue({
+      readyState: 1,
+      close: vi.fn(),
+    })
+
+    await setupDB.close()
+
+    expect(mongoose.connection.close).toBeCalled()
+  })
+
+  it('if mongoose.connection.readyState is 0, it should log a message', async () => {
+    vi.stubGlobal('console', {
+      log: vi.fn(),
+    })
+
+    connectionPropertyGetSpy.mockReturnValue({
+      readyState: 0,
+      close: vi.fn(),
+    })
+
+    await setupDB.close()
+
+    expect(console.log).toBeCalledWith(
+      'There must be a connection in order to close it'
+    )
+  })
+  it('if mongoose.connection.readyState is 2, it should log a message', async () => {
+    vi.stubGlobal('console', {
+      log: vi.fn(),
+    })
+
+    connectionPropertyGetSpy.mockReturnValue({
+      readyState: 2,
+      close: vi.fn(),
+    })
+
+    await setupDB.close()
+
+    expect(console.log).toBeCalledWith(
+      'There must be a connection in order to close it'
+    )
+  })
+  it('if mongoose.connection.readyState is 3, it should log a message', async () => {
+    vi.stubGlobal('console', {
+      log: vi.fn(),
+    })
+
+    connectionPropertyGetSpy.mockReturnValue({
+      readyState: 3,
+      close: vi.fn(),
+    })
+
+    await setupDB.close()
+
+    expect(console.log).toBeCalledWith(
+      'There must be a connection in order to close it'
+    )
+  })
+  it('if mongoose.connection.readyState is 4, it should log a message', async () => {
+    vi.stubGlobal('console', {
+      log: vi.fn(),
+    })
+
+    connectionPropertyGetSpy.mockReturnValue({
+      readyState: 3,
+      close: vi.fn(),
+    })
+
+    await setupDB.close()
+
+    expect(console.log).toBeCalledWith(
+      'There must be a connection in order to close it'
+    )
+  })
+})
