@@ -3,6 +3,7 @@ import seedHelpers from '../../../seeds/seedHelpers'
 import fs from 'fs'
 import arrayUtils from '../../../utils/arrayUtils'
 import numberUtils from '../../../utils/numberUtils'
+import names from '../../../seeds/names'
 
 describe('seedHelpers.generateRandName()', () => {
   let mathRandomSpy
@@ -327,5 +328,82 @@ describe('seedHelpers.generateOpenDays()', () => {
     const res = seedHelpers.generateOpenDays()
 
     expect(res).toEqual(['Monday', 'Friday', 'Sunday'])
+  })
+})
+
+describe('seedHelpers.genObjForBookstoreClass', () => {
+  let generateRandNameSpy
+  let generateRandAddressSpy
+  let generateRandGenreSpy
+  let generateOpenDaysSpy
+
+  beforeEach(() => {
+    generateRandNameSpy = vi.spyOn(seedHelpers, 'generateRandName')
+    generateRandAddressSpy = vi.spyOn(seedHelpers, 'generateRandAddress')
+    generateRandGenreSpy = vi.spyOn(seedHelpers, 'generateRandGenre')
+    generateOpenDaysSpy = vi.spyOn(seedHelpers, 'generateOpenDays')
+  })
+  it('should call seedHelpers.generateRandName() with firstNames and lastNames from names module', async () => {
+    const firstNames = names.firstNames
+    const lastNames = names.lastNames
+
+    await seedHelpers.genObjForBookstoreClass()
+
+    expect(generateRandNameSpy).toBeCalledWith(firstNames, lastNames)
+  })
+  it('should call seedHelpers.generateRandAddress() with file path to vnDataSet.json file', async () => {
+    const JSON_PATH = './seeds/vnDataSet.json'
+
+    await seedHelpers.genObjForBookstoreClass()
+
+    expect(generateRandAddressSpy).toBeCalledWith(JSON_PATH)
+  })
+  it('should call seedHelpers.generateRandGenres() with the correct predefined array of genres', async () => {
+    const GENRES = [
+      'fantasy',
+      'science',
+      'fiction',
+      'romance',
+      'mystery',
+      'thriller',
+      'historical',
+      'fiction',
+      'horror',
+      'non-fiction',
+    ]
+
+    await seedHelpers.genObjForBookstoreClass()
+
+    expect(generateRandGenreSpy).toBeCalledWith(GENRES)
+  })
+  it('should call seedHelpers.generateOpenDays()', async () => {
+    await seedHelpers.genObjForBookstoreClass()
+
+    expect(generateOpenDaysSpy).toBeCalled()
+  })
+  it('should return an object which contains all the properties of a Bookstore model', async () => {
+    const res = await seedHelpers.genObjForBookstoreClass()
+
+    expect(res).toHaveProperty('name')
+    expect(res).toHaveProperty('address')
+    expect(res).toHaveProperty('description')
+    expect(res).toHaveProperty('genres')
+    expect(res).toHaveProperty('images')
+    expect(res).toHaveProperty('openDays')
+  })
+  it('should return an obj where description property is of a predetermined value', async () => {
+    const DESCRIPTION =
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus semper suscipit scelerisque. Etiam nec tortor id odio facilisis sodales id a justo. Proin porta, turpis eget sodales mattis, est mauris.'
+
+    const res = await seedHelpers.genObjForBookstoreClass()
+
+    expect(res.description).toBe(DESCRIPTION)
+  })
+  it('should return an obj where images property is of a predetermined value', async () => {
+    const IMG_LINK = 'https://picsum.photos/800/300'
+
+    const res = await seedHelpers.genObjForBookstoreClass()
+
+    expect(res.images).toBe(IMG_LINK)
   })
 })

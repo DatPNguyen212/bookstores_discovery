@@ -2,6 +2,7 @@ import numberUtils from '../utils/numberUtils'
 import fs from 'fs'
 import arrayUtils from '../utils/arrayUtils'
 import Address from './address'
+import names from './names'
 
 const seedHelpers = {
   generateRandName(firstNames, lastNames) {
@@ -99,6 +100,37 @@ const seedHelpers = {
     const openDays = arrayUtils.generateArray(option)
 
     return openDays
+  },
+  async genObjForBookstoreClass() {
+    const JSON_PATH = './seeds/vnDataSet.json'
+    const GENRES = [
+      'fantasy',
+      'science',
+      'fiction',
+      'romance',
+      'mystery',
+      'thriller',
+      'historical',
+      'fiction',
+      'horror',
+      'non-fiction',
+    ]
+
+    const DESCRIPTION =
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus semper suscipit scelerisque. Etiam nec tortor id odio facilisis sodales id a justo. Proin porta, turpis eget sodales mattis, est mauris.'
+
+    const IMG_LINK = 'https://picsum.photos/800/300'
+
+    const obj = {
+      name: this.generateRandName(names.firstNames, names.lastNames),
+      address: this.generateRandAddress(JSON_PATH),
+      description: DESCRIPTION,
+      genres: this.generateRandGenre(GENRES),
+      images: IMG_LINK,
+      openDays: this.generateOpenDays(),
+    }
+
+    return obj
   },
 }
 
