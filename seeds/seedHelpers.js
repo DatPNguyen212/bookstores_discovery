@@ -3,8 +3,11 @@ import fs from 'fs'
 import arrayUtils from '../utils/arrayUtils'
 import Address from './address'
 import names from './names'
+import pathUtils from '../utils/pathUtils'
+import path from 'path'
 
 const seedHelpers = {
+  moduleFileUrl: import.meta.url,
   generateRandName(firstNames, lastNames) {
     if (!Array.isArray(firstNames) || !Array.isArray(lastNames)) {
       throw new TypeError('First and second parameters must be an array')
@@ -102,7 +105,8 @@ const seedHelpers = {
     return openDays
   },
   async genObjForBookstoreClass() {
-    const JSON_PATH = './seeds/vnDataSet.json'
+    const __dirname = pathUtils.getDirnamePathFromUrl(this.moduleFileUrl)
+    const JSON_PATH = path.join(__dirname, './', 'vnDataSet.json')
     const GENRES = [
       'fantasy',
       'science',

@@ -4,6 +4,18 @@ import fs from 'fs'
 import arrayUtils from '../../../utils/arrayUtils'
 import numberUtils from '../../../utils/numberUtils'
 import names from '../../../seeds/names'
+import path from 'path'
+import pathUtils from '../../../utils/pathUtils'
+
+vi.mock('../../../utils/pathUtils.js', () => {
+  return {
+    default: {
+      getDirnamePathFromUrl: vi.fn((url) => {
+        return 'path'
+      }),
+    },
+  }
+})
 
 describe('seedHelpers.generateRandName()', () => {
   let mathRandomSpy
@@ -336,12 +348,19 @@ describe('seedHelpers.genObjForBookstoreClass', () => {
   let generateRandAddressSpy
   let generateRandGenreSpy
   let generateOpenDaysSpy
+  let moduleFileUrlSpy
+  let pathJoinSpy
 
   beforeEach(() => {
     generateRandNameSpy = vi.spyOn(seedHelpers, 'generateRandName')
     generateRandAddressSpy = vi.spyOn(seedHelpers, 'generateRandAddress')
     generateRandGenreSpy = vi.spyOn(seedHelpers, 'generateRandGenre')
     generateOpenDaysSpy = vi.spyOn(seedHelpers, 'generateOpenDays')
+    moduleFileUrlSpy = vi.spyOn(seedHelpers, 'moduleFileUrl', 'get')
+    pathJoinSpy = vi.spyOn(path, 'join')
+  })
+  afterEach(() => {
+    vi.restoreAllMocks()
   })
   it('should call seedHelpers.generateRandName() with firstNames and lastNames from names module', async () => {
     const firstNames = names.firstNames
@@ -351,9 +370,27 @@ describe('seedHelpers.genObjForBookstoreClass', () => {
 
     expect(generateRandNameSpy).toBeCalledWith(firstNames, lastNames)
   })
+  it('given seedHelpers.moduleFileUrl returns a mocked value, it should call pathUtils.getDirnamePathFromUrl() with that value', async () => {
+    moduleFileUrlSpy.mockReturnValue('url')
+
+    await seedHelpers.genObjForBookstoreClass()
+
+    expect(pathUtils.getDirnamePathFromUrl).toBeCalledWith('url')
+  })
+  it("given pathUtils.getDirnamePathFromUrl()'s return value is mocked, it should call path.join() with that mocked return value, and other values to form correct path to vnDataSet.json", async () => {
+    //pathUtils is vi.mock() above already, and .getDirnamePathFromUrl() mock return value is "path";
+
+    await seedHelpers.genObjForBookstoreClass()
+
+    expect(pathJoinSpy).toBeCalledWith('path', './', 'vnDataSet.json')
+  })
 
   it('should call seedHelpers.generateRandAddress() with file path to vnDataSet.json file', async () => {
-    const JSON_PATH = './seeds/vnDataSet.json'
+    const JSON_PATH = path.join(
+      pathUtils.getDirnamePathFromUrl(seedHelpers.moduleFileUrl),
+      './',
+      'vnDataSet.json'
+    )
 
     await seedHelpers.genObjForBookstoreClass()
 
@@ -406,5 +443,26 @@ describe('seedHelpers.genObjForBookstoreClass', () => {
     const res = await seedHelpers.genObjForBookstoreClass()
 
     expect(res.images).toBe(IMG_LINK)
+  })
+  it("given seedHelpers methods' return values are mocked, it should return an object whose properties' values are predictable", async () => {
+    generateRandNameSpy.mockReturnValue('name')
+    generateRandAddressSpy.mockReturnValue('address')
+    generateRandGenreSpy.mockReturnValue(['fantasy', 'fiction'])
+    generateOpenDaysSpy.mockReturnValue(['Monday', 'Tuesday'])
+    const DESCRIPTION =
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus semper suscipit scelerisque. Etiam nec tortor id odio facilisis sodales id a justo. Proin porta, turpis eget sodales mattis, est mauris.'
+
+    const IMG_LINK = 'https://picsum.photos/800/300'
+
+    const res = await seedHelpers.genObjForBookstoreClass()
+
+    expect(res).toEqual({
+      name: 'name',
+      address: 'address',
+      genres: ['fantasy', 'fiction'],
+      openDays: ['Monday', 'Tuesday'],
+      description: DESCRIPTION,
+      images: IMG_LINK,
+    })
   })
 })
