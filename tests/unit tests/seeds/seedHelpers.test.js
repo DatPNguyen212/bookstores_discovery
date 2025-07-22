@@ -351,6 +351,7 @@ describe('seedHelpers.genObjForBookstoreClass', () => {
 
     expect(generateRandNameSpy).toBeCalledWith(firstNames, lastNames)
   })
+
   it('should call seedHelpers.generateRandAddress() with file path to vnDataSet.json file', async () => {
     const JSON_PATH = './seeds/vnDataSet.json'
 
