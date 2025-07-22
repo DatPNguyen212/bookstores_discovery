@@ -41,4 +41,13 @@ describe('pathUtils.getDirnamePathFromUrl()', () => {
 
     expect(res).toBe('dirPath')
   })
+  it('should throw an error if you pass the first parameter a number', () => {
+    const importMetaUrl = 1
+
+    const fn = () => {
+      pathUtils.getDirnamePathFromUrl(importMetaUrl)
+    }
+
+    expect(fn).toThrow('First parameter must be of string data type')
+  })
 })
