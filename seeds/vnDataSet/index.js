@@ -1,9 +1,7 @@
 import vnDataSet from './vnDataSet.js'
 import path from 'path'
-import { fileURLToPath } from 'url'
-import { dirname } from 'path'
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
+import fileUtils from '../../utils/fileUtils'
+const __dirname = fileUtils.getDirname()
 
 vnDataSet
   .createJsonFile(path.join(__dirname, '../', 'vnDataSet.json'))

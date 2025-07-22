@@ -8,13 +8,11 @@ const app = express()
 const PORT = process.env.PORT || 3000
 
 import path from 'path'
-import { fileURLToPath } from 'url'
-import { dirname } from 'path'
+import fileUtils from './utils/fileUtils'
 
 import bookstoresRouter from './routes/bookstores'
 
-const pathToCurrentFile = fileURLToPath(import.meta.url)
-const __dirname = dirname(pathToCurrentFile)
+const __dirname = fileUtils.getDirname()
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, './', 'views'))
 
