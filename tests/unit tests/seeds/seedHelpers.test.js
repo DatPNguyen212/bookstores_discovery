@@ -6,6 +6,7 @@ import numberUtils from '../../../utils/numberUtils'
 import names from '../../../seeds/names'
 import path from 'path'
 import pathUtils from '../../../utils/pathUtils'
+import models from '../../../models'
 
 vi.mock('../../../utils/pathUtils.js', () => {
   return {
@@ -464,5 +465,39 @@ describe('seedHelpers.genObjForBookstoreClass', () => {
       description: DESCRIPTION,
       images: IMG_LINK,
     })
+  })
+})
+
+describe('seedHelpers.genBookstoreDoc()', () => {
+  let genObjForBookstoreClassSpy
+  let modelsBookstoreSpy
+  beforeEach(() => {
+    genObjForBookstoreClassSpy = vi
+      .spyOn(seedHelpers, 'genObjForBookstoreClass')
+      .mockImplementation(vi.fn(() => {}))
+    modelsBookstoreSpy = vi.spyOn(models, 'bookstore', 'get').mockReturnValue({
+      ModelClass: {
+        create: vi.fn(),
+      },
+    })
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+  it('should call seedHelpers.genObjForBookstoreClass()', async () => {
+    await seedHelpers.genBookstoreDoc()
+
+    expect(genObjForBookstoreClassSpy).toBeCalled()
+  })
+  it('given genObjForBookstoreClass returns a mocked obj, it should call models.bookstore.create() with that mocked obj', async () => {
+    const objMock = {
+      testing: 'test',
+    }
+    genObjForBookstoreClassSpy.mockReturnValue(objMock)
+
+    await seedHelpers.genBookstoreDoc()
+
+    expect(models.bookstore.ModelClass.create).toBeCalledWith(objMock)
   })
 })

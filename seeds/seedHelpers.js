@@ -5,6 +5,7 @@ import Address from './address'
 import names from './names'
 import pathUtils from '../utils/pathUtils'
 import path from 'path'
+import models from '../models'
 
 const seedHelpers = {
   moduleFileUrl: import.meta.url,
@@ -135,6 +136,10 @@ const seedHelpers = {
     }
 
     return obj
+  },
+  async genBookstoreDoc() {
+    const objForClass = await this.genObjForBookstoreClass()
+    models.bookstore.ModelClass.create(objForClass)
   },
 }
 
