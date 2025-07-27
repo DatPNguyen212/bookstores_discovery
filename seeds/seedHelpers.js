@@ -121,6 +121,8 @@ const seedHelpers = {
       'non-fiction',
     ]
 
+    console.log(JSON_PATH)
+
     const DESCRIPTION =
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus semper suscipit scelerisque. Etiam nec tortor id odio facilisis sodales id a justo. Proin porta, turpis eget sodales mattis, est mauris.'
 
@@ -128,7 +130,7 @@ const seedHelpers = {
 
     const obj = {
       name: this.generateRandName(names.firstNames, names.lastNames),
-      address: this.generateRandAddress(JSON_PATH),
+      address: await this.generateRandAddress(JSON_PATH),
       description: DESCRIPTION,
       genres: this.generateRandGenre(GENRES),
       images: IMG_LINK,
@@ -139,7 +141,7 @@ const seedHelpers = {
   },
   async genBookstoreDoc() {
     const objForClass = await this.genObjForBookstoreClass()
-    models.bookstore.ModelClass.create(objForClass)
+    await models.bookstore.ModelClass.create(objForClass)
   },
 }
 

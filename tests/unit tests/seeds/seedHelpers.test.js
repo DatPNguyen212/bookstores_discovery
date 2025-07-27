@@ -18,6 +18,57 @@ vi.mock('../../../utils/pathUtils.js', () => {
   }
 })
 
+const vnDataSetJsonMock = `[
+  {
+    "code": "SG",
+    "name": "Ho Chi Minh",
+    "district": [
+      {
+        "name": "Binh Chanh",
+        "pre": "Huyen",
+        "ward": [{ "name": "An Phu Tay" }],
+        "street": ["1"]
+      }
+    ]
+  },
+  {
+    "code": "HN",
+    "name": "Ha Noi",
+    "district": [
+      {
+        "name": "Ba Dinh",
+        "pre": "Huyen",
+        "ward": [{ "name": "Cong Vi" }],
+        "street": ["10"]
+      }
+    ]
+  },
+  {
+    "code": "DDN",
+    "name": "Da Nang",
+    "district": [
+      {
+        "name": "Cam Le",
+        "pre": "Huyen",
+        "ward": [{ "name": "Hoa An" }],
+        "street": ["10"]
+      }
+    ]
+  }
+]`
+
+vi.mock('fs', () => {
+  return {
+    default: {
+      promises: {
+        readFile: vi.fn(async () => {
+          return vnDataSetJsonMock
+        }),
+      },
+    },
+  }
+})
+
 describe('seedHelpers.generateRandName()', () => {
   let mathRandomSpy
 
@@ -125,55 +176,9 @@ describe('seedHelpers.generateRandName()', () => {
 })
 
 describe('seedHelpers.generateRandAddress()', () => {
-  const vnDataSetJsonMock = `[
-  {
-    "code": "SG",
-    "name": "Ho Chi Minh",
-    "district": [
-      {
-        "name": "Binh Chanh",
-        "pre": "Huyen",
-        "ward": [{ "name": "An Phu Tay" }],
-        "street": ["1"]
-      }
-    ]
-  },
-  {
-    "code": "HN",
-    "name": "Ha Noi",
-    "district": [
-      {
-        "name": "Ba Dinh",
-        "pre": "Huyen",
-        "ward": [{ "name": "Cong Vi" }],
-        "street": ["10"]
-      }
-    ]
-  },
-  {
-    "code": "DDN",
-    "name": "Da Nang",
-    "district": [
-      {
-        "name": "Cam Le",
-        "pre": "Huyen",
-        "ward": [{ "name": "Hoa An" }],
-        "street": ["10"]
-      }
-    ]
-  }
-]`
-
-  let fsReadFileSpy
   let mathRandomSpy
 
   beforeEach(() => {
-    fsReadFileSpy = vi.spyOn(fs.promises, 'readFile').mockImplementation(
-      vi.fn(async () => {
-        return vnDataSetJsonMock
-      })
-    )
-
     mathRandomSpy = vi.spyOn(Math, 'random')
   })
 
@@ -477,7 +482,7 @@ describe('seedHelpers.genBookstoreDoc()', () => {
       .mockImplementation(vi.fn(() => {}))
     modelsBookstoreSpy = vi.spyOn(models, 'bookstore', 'get').mockReturnValue({
       ModelClass: {
-        create: vi.fn(),
+        create: vi.fn((obj) => {}),
       },
     })
   })
