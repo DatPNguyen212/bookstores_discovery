@@ -64,4 +64,15 @@ describe('dbUtils.clearCollection()', () => {
 
     expect(ModelClassMock.deleteMany).toBeCalledWith({})
   })
+  it('when pass a non string data type, it should throw an error', async () => {
+    const modelName = 3
+
+    const fn = async () => {
+      await dbUtils.clearCollection(modelName)
+    }
+
+    await expect(fn).rejects.toThrow(
+      'First parameter should be of string data type'
+    )
+  })
 })
