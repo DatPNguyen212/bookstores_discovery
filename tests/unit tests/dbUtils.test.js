@@ -1,30 +1,67 @@
-// import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
-// import mongoose from 'mongoose'
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
+import mongoose from 'mongoose'
+import dbUtils from '../../utils/dbUtils'
 
-// const ModelClassMock = {
-//   deleteMany: vi.fn(),
-// }
+vi.mock('mongoose', () => {
+  return {
+    default: {
+      connection: {
+        models: {
+          ModelName: {
+            deleteMany: vi.fn(),
+          },
+        },
+      },
+    },
+  }
+})
 
-// vi.mock('mongoose', () => {
-//   return {
-//     default: {
-//       connection: {
-//         models: {
-//           ModelClassMock,
-//         },
-//       },
-//     },
-//   }
-// })
+describe('dbUtils.getModelClass()', () => {
+  it('when you pass the model name that exists in default connection, it should return a defined value', () => {
+    const modelName = 'ModelName'
 
-// describe('dbUtils.clearCollection', () => {})
+    const res = dbUtils.getModelClass(modelName)
 
-// describe('dbUtils.getModelClass()', () => {
-//   it('when you pass the model name, it should return the correct ModelClass from mongoose.connection.models', () => {
-//     const modelName = 'ModelClassMock'
+    expect(res).toBeDefined()
+  })
+  it('if you pass pass a non string in first parameter, it should throw an error', () => {
+    const modelName = 3
 
-//     const res = testDBUtils.getModelClass(modelName)
+    const fn = () => {
+      dbUtils.getModelClass(modelName)
+    }
 
-//     expect(res).toEqual(ModelClassMock)
-//   })
-// })
+    expect(fn).toThrow('First parameter should be of string data type')
+  })
+  it('when you pass the model name that does not exist in default connection, it should return undefined', () => {
+    const modelName = 'ModelName2'
+
+    const res = dbUtils.getModelClass(modelName)
+
+    expect(res).toBeUndefined()
+  })
+})
+
+describe('dbUtils.clearCollection()', () => {
+  let getModelClassSpy
+
+  beforeEach(() => {
+    getModelClassSpy = vi.spyOn(dbUtils, 'getModelClass')
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+  it("given dbUtils.getModelClass() returns a mocked obj, when you pass an existing modelName in default connection, it should call that mocked object's deleteMany({}) method", async () => {
+    const ModelClassMock = {
+      deleteMany: vi.fn(),
+    }
+    getModelClassSpy.mockReturnValue(ModelClassMock)
+
+    const modelName = 'ModelName'
+
+    const res = await dbUtils.clearCollection(modelName)
+
+    expect(ModelClassMock.deleteMany).toBeCalledWith({})
+  })
+})
