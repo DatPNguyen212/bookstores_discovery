@@ -13,6 +13,7 @@ import models from '../../../models'
 import setupDB from '../../../config/setupDB'
 import seedHelpers from '../../../seeds/seedHelpers'
 import models from '../../../models'
+import dbUtils from '../../../utils/dbUtils'
 
 vi.mock('../../../config/setupDB.js', () => {
   return {
@@ -27,27 +28,34 @@ describe('seedBookstore()', () => {
   let genObjForBookstoreClassSpy
   let setupDBConnectSpy
   let genBookstoreDocSpy
+  let clearCollectionSpy
 
   beforeEach(() => {
-    genObjForBookstoreClassSpy = vi.spyOn(
-      seedHelpers,
-      'genObjForBookstoreClass'
-    )
+    genObjForBookstoreClassSpy = vi
+      .spyOn(seedHelpers, 'genObjForBookstoreClass')
+      .mockImplementation(vi.fn(() => {}))
 
-    setupDBConnectSpy = vi.spyOn(setupDB, 'connect')
+    setupDBConnectSpy = vi
+      .spyOn(setupDB, 'connect')
+      .mockImplementation(vi.fn(() => {}))
 
     genBookstoreDocSpy = vi
       .spyOn(seedHelpers, 'genBookstoreDoc')
+      .mockImplementation(vi.fn(() => {}))
+
+    clearCollectionSpy = vi
+      .spyOn(dbUtils, 'clearCollection')
       .mockImplementation(vi.fn(() => {}))
   })
 
   afterEach(() => {
     vi.restoreAllMocks()
   })
-  it('it should call setupDB.connect() with local mongo service uri', async () => {
+  it('when you pass a positive number, it should call setupDB.connect() with local mongo service uri', async () => {
     const localUri = 'mongodb://127.0.0.1:27017/bookstoreDiscovery'
+    const numberOfStores = 3
 
-    await seedBookstore()
+    await seedBookstore(numberOfStores)
 
     expect(setupDBConnectSpy).toBeCalledWith(localUri)
   })
@@ -75,6 +83,15 @@ describe('seedBookstore()', () => {
       'First parameter should be a positive number that is not zero'
     )
   })
+
+  it('when you pass a positive number, it should call dbUtils.clearCollection(`Bookstore`)', async () => {
+    const numberOfStores = 3
+
+    await seedBookstore(numberOfStores)
+
+    expect(clearCollectionSpy).toBeCalledWith('Bookstore')
+  })
+
   it('when you pass a positive number, it should call seedHelpers.genBookstoreDoc() that same amount of number of times', async () => {
     const numberOfStores = 3
 
