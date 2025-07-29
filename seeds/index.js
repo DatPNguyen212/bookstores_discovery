@@ -25,11 +25,11 @@ async function seedBookstore(numberOfStores = 30) {
     try {
       await seedHelpers.genBookstoreDoc()
     } catch (error) {
-      console.log(
-        "There's an error generating bookstore document and saving it to the database server",
-        error
+      await setupDB.close()
+
+      throw new Error(
+        "There's an error generating bookstore document and saving it to the database server"
       )
-      setupDB.close()
     }
   }
 

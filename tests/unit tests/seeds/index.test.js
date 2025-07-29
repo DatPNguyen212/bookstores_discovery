@@ -121,15 +121,14 @@ describe('seedBookstore()', () => {
       })
     )
     const numberOfStores = 3
-
-    await seedBookstore(numberOfStores)
+    try {
+      await seedBookstore(numberOfStores)
+    } catch (error) {}
 
     expect(setupDB.close).toBeCalled()
   })
-  it('given seedHelpers.genBookstoreDoc() returns a promise reject, it should log an error message and the error thrown by genBookstoreDoc()', async () => {
-    vi.stubGlobal('console', {
-      log: vi.fn(() => {}),
-    })
+
+  it('given seedHelpers.genBookstoreDoc() returns a promise reject, it should trow an error', async () => {
     genBookstoreDocSpy.mockImplementation(
       vi.fn(() => {
         return Promise.reject('error')
@@ -137,11 +136,12 @@ describe('seedBookstore()', () => {
     )
     const numberOfStores = 3
 
-    await seedBookstore(numberOfStores)
+    const fn = async () => {
+      await seedBookstore(numberOfStores)
+    }
 
-    expect(console.log).toBeCalledWith(
-      "There's an error generating bookstore document and saving it to the database server",
-      'error'
+    await expect(fn).rejects.toThrow(
+      "There's an error generating bookstore document and saving it to the database server"
     )
   })
 })
