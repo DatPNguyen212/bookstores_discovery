@@ -1,11 +1,11 @@
-import numberUtils from '../utils/numberUtils'
+import numberUtils from '../utils/numberUtils.js'
 import fs from 'fs'
-import arrayUtils from '../utils/arrayUtils'
-import Address from './address'
-import names from './names'
-import pathUtils from '../utils/pathUtils'
+import arrayUtils from '../utils/arrayUtils.js'
+import Address from './address.js'
+import names from './names.js'
+import pathUtils from '../utils/pathUtils.js'
 import path from 'path'
-import models from '../models'
+import models from '../models/index.js'
 
 const seedHelpers = {
   moduleFileUrl: import.meta.url,

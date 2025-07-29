@@ -1,4 +1,4 @@
-import numberUtils from './numberUtils'
+import numberUtils from './numberUtils.js'
 import lodash from 'lodash'
 const arrayUtils = {
   getRandItem(array) {

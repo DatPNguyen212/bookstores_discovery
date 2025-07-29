@@ -1,12 +1,12 @@
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
-import seedHelpers from '../../../seeds/seedHelpers'
+import seedHelpers from '../../../seeds/seedHelpers.js'
 import fs from 'fs'
-import arrayUtils from '../../../utils/arrayUtils'
-import numberUtils from '../../../utils/numberUtils'
-import names from '../../../seeds/names'
+import arrayUtils from '../../../utils/arrayUtils.js'
+import numberUtils from '../../../utils/numberUtils.js'
+import names from '../../../seeds/names.js'
 import path from 'path'
-import pathUtils from '../../../utils/pathUtils'
-import models from '../../../models'
+import pathUtils from '../../../utils/pathUtils.js'
+import models from '../../../models/index.js'
 
 vi.mock('../../../utils/pathUtils.js', () => {
   return {

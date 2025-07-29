@@ -1,5 +1,5 @@
 import { vi, describe, it, expect } from 'vitest'
-import Address from '../../../seeds/address'
+import Address from '../../../seeds/address.js'
 
 describe('new Address()', () => {
   it('when pass an object that contains Address compoenents, it should return an object which contains homeNum, street, district and city properties', () => {

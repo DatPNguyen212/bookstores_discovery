@@ -8,11 +8,8 @@ import {
   afterAll,
 } from 'vitest'
 import seedBookstore from '../../../seeds/index'
-import testDBUtils from '../../../utils/testDBUtils/testDBUtils'
-import models from '../../../models'
 import setupDB from '../../../config/setupDB'
 import seedHelpers from '../../../seeds/seedHelpers'
-import models from '../../../models'
 import dbUtils from '../../../utils/dbUtils'
 
 vi.mock('../../../config/setupDB.js', () => {

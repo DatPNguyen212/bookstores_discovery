@@ -1,5 +1,5 @@
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
-import setupDB from '../../../config/setupDB'
+import setupDB from '../../../config/setupDB.js'
 import mongoose from 'mongoose'
 
 vi.mock('mongoose', () => {

@@ -1,6 +1,6 @@
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import mongoose from 'mongoose'
-import dbUtils from '../../utils/dbUtils'
+import dbUtils from '../../utils/dbUtils.js'
 
 vi.mock('mongoose', () => {
   return {

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import fs from 'fs'
-import vnDataSet from '../../../../seeds/vnDataSet/vnDataSet'
+import vnDataSet from '../../../../seeds/vnDataSet/vnDataSet.js'
 import axios from 'axios'
 
 vi.mock('fs', () => {

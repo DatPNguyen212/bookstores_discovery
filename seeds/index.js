@@ -1,6 +1,6 @@
-import setupDB from '../config/setupDB'
-import seedHelpers from './seedHelpers'
-import dbUtils from '../utils/dbUtils'
+import setupDB from '../config/setupDB.js'
+import seedHelpers from './seedHelpers.js'
+import dbUtils from '../utils/dbUtils.js'
 async function seedBookstore(numberOfStores = 30) {
   if (typeof numberOfStores !== 'number') {
     throw new TypeError(

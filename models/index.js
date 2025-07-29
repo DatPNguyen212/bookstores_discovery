@@ -1,4 +1,4 @@
-import { bookstoreSchema, Bookstore } from './bookstores'
+import { bookstoreSchema, Bookstore } from './bookstores.js'
 
 const models = {
   bookstore: {
