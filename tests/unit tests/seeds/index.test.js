@@ -60,6 +60,17 @@ describe('seedBookstore()', () => {
     expect(setupDBConnectSpy).toBeCalledWith(localUri)
   })
 
+  it('given setupDB.connect() returns a promise of reject, it should throw an error', async () => {
+    setupDBConnectSpy.mockReturnValue(Promise.reject())
+    const numberOfStores = 3
+
+    const fn = async () => {
+      await seedBookstore(numberOfStores)
+    }
+
+    await expect(fn).rejects.toThrow('Failed to connect to database')
+  })
+
   it('when you pass a string, it should throw an error', async () => {
     const numberOfTimes = 'test'
 

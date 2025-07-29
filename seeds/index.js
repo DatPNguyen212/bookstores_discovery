@@ -13,7 +13,11 @@ async function seedBookstore(numberOfStores = 30) {
     )
   }
   const MONGO_URI = 'mongodb://127.0.0.1:27017/bookstoreDiscovery'
-  await setupDB.connect(MONGO_URI)
+  try {
+    await setupDB.connect(MONGO_URI)
+  } catch (error) {
+    throw new Error('Failed to connect to database')
+  }
 
   await dbUtils.clearCollection('Bookstore')
 
