@@ -8,7 +8,8 @@
   "main": "app.js",
   "scripts": {
     "test": "vitest --run --reporter verbose",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage",
+    "compile": "sass --watch sass:public/css"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^3.2.4",
@@ -18,11 +19,13 @@
   },
   "dependencies": {
     "axios": "^1.10.0",
+    "browser-sync": "^3.0.4",
     "dotenv": "^17.2.0",
     "ejs": "^3.1.10",
     "ejs-mate": "^4.0.0",
     "express": "^5.1.0",
     "lodash": "^4.17.21",
-    "mongoose": "^8.16.2"
+    "mongoose": "^8.16.2",
+    "sass": "^1.89.2"
   }
 }

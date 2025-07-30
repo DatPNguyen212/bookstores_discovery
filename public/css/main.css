@@ -1,0 +1,33 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+nav {
+  width: 100vw;
+  height: 50px;
+  background: black;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+nav .nav__ul {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+}
+nav .nav__item {
+  height: 100%;
+  text-decoration: none;
+  list-style-type: none;
+  color: white;
+  font-size: 20px;
+}
+
+/*# sourceMappingURL=main.css.map */
