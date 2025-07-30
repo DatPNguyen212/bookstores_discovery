@@ -1,9 +1,9 @@
 const renderIndexPage = (req, res, next) => {
-  res.render('index.ejs')
+  res.render('./bookstore/index.ejs')
 }
 
 const renderCreatePage = (req, res, next) => {
-  res.render('create.ejs')
+  res.render('./bookstore/create.ejs')
 }
 
 export { renderIndexPage, renderCreatePage }
