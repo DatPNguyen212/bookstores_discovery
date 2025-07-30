@@ -2,7 +2,6 @@ import dotenv from 'dotenv'
 if (process.env.NODE_ENV !== 'production') {
   dotenv.config()
 }
-import { fileURLToPath } from 'url'
 
 import express from 'express'
 const app = express()
@@ -10,6 +9,7 @@ const PORT = process.env.PORT || 3000
 
 import path from 'path'
 import pathUtils from './utils/pathUtils.js'
+import { fileURLToPath } from 'url'
 
 import bookstoresRouter from './routes/bookstores.js'
 

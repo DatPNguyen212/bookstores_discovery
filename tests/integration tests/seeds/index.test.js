@@ -61,7 +61,7 @@ describe('seedBookstore()', () => {
 
     expect(res).toHaveLength(3)
   })
-  it('given seedHelpers.genObjForBookstoreClass returns a predetermined obj, when pass 1, it should save a predictable document to DB', async () => {
+  it('given seedHelpers.genObjForBookstoreClass returns a predetermined obj, when pass 2, it should save 2 predictable documents to DB', async () => {
     const objMock = {
       name: 'John Wick',
       address: '3, Ba Thang Hai Street, 3 District, Ho Chi Minh City',
@@ -73,7 +73,7 @@ describe('seedBookstore()', () => {
     const genObjForBookstoreClassSpy = vi
       .spyOn(seedHelpers, 'genObjForBookstoreClass')
       .mockReturnValue(objMock)
-    const numberOfStores = 1
+    const numberOfStores = 2
 
     await seedBookstore(numberOfStores)
 
@@ -89,5 +89,15 @@ describe('seedBookstore()', () => {
     expect(res[0]).toHaveProperty('genres', ['fantasy'])
     expect(res[0]).toHaveProperty('images', 'test')
     expect(res[0]).toHaveProperty('openDays', ['Monday', 'Tuesday'])
+
+    expect(res[1]).toHaveProperty('name', 'John Wick')
+    expect(res[1]).toHaveProperty(
+      'address',
+      '3, Ba Thang Hai Street, 3 District, Ho Chi Minh City'
+    )
+    expect(res[1]).toHaveProperty('description', 'test')
+    expect(res[1]).toHaveProperty('genres', ['fantasy'])
+    expect(res[1]).toHaveProperty('images', 'test')
+    expect(res[1]).toHaveProperty('openDays', ['Monday', 'Tuesday'])
   })
 })
