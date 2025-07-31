@@ -1,47 +1,37 @@
-@use '../mixin/_flexbox.scss';
+@use '../abstracts/_mixins.scss';
+@use '../abstracts/_variables.scss';
+
 nav {
-  --nav-font-size: 1.25rem;
-  --nav-height: 4rem;
-  --nav-background-color: linear-gradient(to right, #1e130c, #9a8478);
-  --nav-gap-logo-and-left: 3rem;
-
-  --nav-gap-between-items: 2rem;
-
-  --nav-leftmost-space: 1.5rem;
-  --nav-rightmost-space: 1.5rem;
-
-  --nav-primary-text-color: white;
-
   width: 100vw;
-  height: var(--nav-height);
-  background: var(--nav-background-color);
-  @include flexbox.displayFlex(row) {
+  height: variables.$nav-height;
+  background: variables.$nav-background-color;
+  @include mixins.displayFlex(row) {
     justify-content: space-between;
     align-items: center;
   }
-  font-size: var(--nav-font-size);
+  font-size: variables.$nav-font-size;
 
   .#{&}__left {
-    @include flexbox.displayFlex(row) {
-      gap: var(--nav-gap-logo-and-left);
+    @include mixins.displayFlex(row) {
+      gap: variables.$nav-gap-logo-and-left;
     }
-    margin-left: var(--nav-leftmost-space);
+    margin-left: variables.$nav-leftmost-space;
   }
 
   .#{&}__right {
-    margin-right: var(--nav-rightmost-space);
+    margin-right: variables.$nav-rightmost-space;
   }
 
   .#{&}__logo {
-    @include flexbox.center();
-    color: var(--nav-primary-text-color);
+    @include mixins.flexCenter();
+    color: variables.$nav-primary-text-color;
   }
 
   .#{&}__ul {
-    @include flexbox.displayFlex(row) {
+    @include mixins.displayFlex(row) {
       align-items: center;
       text-align: center;
-      gap: var(--nav-gap-between-items);
+      gap: variables.$nav-gap-between-items;
     }
   }
 
@@ -50,10 +40,10 @@ nav {
   }
 
   .#{&}__item {
-    color: var(--nav-primary-text-color);
-    height: var(--nav-height);
+    color: variables.$nav-primary-text-color;
+    height: variables.$nav-height;
     text-decoration: none;
     list-style-type: none;
-    @include flexbox.center();
+    @include mixins.flexCenter();
   }
 }
