@@ -24,6 +24,7 @@ nav {
   .#{&}__logo {
     @include mixins.flexCenter();
     color: variables.$nav-primary-text-color;
+    cursor: pointer;
   }
 
   .#{&}__ul {
@@ -34,10 +35,16 @@ nav {
     }
   }
 
+  .#{&}__link-logo {
+    text-decoration: none;
+    @include mixins.flexCenter();
+  }
+
   .#{&}__link {
     text-decoration: none;
     position: relative;
     min-width: variables.$nav-link-min-width;
+    @include mixins.flexCenter();
   }
 
   .#{&}__link::before {
@@ -63,5 +70,6 @@ nav {
     text-decoration: none;
     list-style-type: none;
     @include mixins.flexCenter();
+    font-family: variables.$nav-item-font-family;
   }
 }

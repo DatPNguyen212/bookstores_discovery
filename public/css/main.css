@@ -7,11 +7,14 @@
 }
 
 nav {
-  font-size: 1.25rem;
+  font-size: 1.1rem;
 }
 nav .nav__logo {
   font-family: "Nerko One", cursive;
   font-size: 1.25rem;
+}
+nav .nav__item {
+  font-family: "Open Sans", sans-serif;
 }
 
 nav {
@@ -39,6 +42,7 @@ nav .nav__logo {
   align-items: center;
   text-align: center;
   color: white;
+  cursor: pointer;
 }
 nav .nav__ul {
   display: flex;
@@ -47,10 +51,23 @@ nav .nav__ul {
   text-align: center;
   gap: 2rem;
 }
+nav .nav__link-logo {
+  text-decoration: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
 nav .nav__link {
   text-decoration: none;
   position: relative;
   min-width: 4rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 nav .nav__link::before {
   content: "";
@@ -76,6 +93,7 @@ nav .nav__item {
   justify-content: center;
   align-items: center;
   text-align: center;
+  font-family: "Open Sans", sans-serif;
 }
 
 /*# sourceMappingURL=main.css.map */
