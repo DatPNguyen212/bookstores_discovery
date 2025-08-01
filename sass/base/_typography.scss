@@ -1,0 +1,8 @@
+@use '../abstracts/_variables.scss';
+nav {
+  font-size: variables.$nav-font-size;
+  .#{&}__logo {
+    font-family: variables.$nav-logo-font-family;
+    font-size: variables.$nav-logo-font-size;
+  }
+}

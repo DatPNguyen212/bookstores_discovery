@@ -9,7 +9,6 @@ nav {
     justify-content: space-between;
     align-items: center;
   }
-  font-size: variables.$nav-font-size;
 
   .#{&}__left {
     @include mixins.displayFlex(row) {
@@ -37,6 +36,25 @@ nav {
 
   .#{&}__link {
     text-decoration: none;
+    position: relative;
+    min-width: variables.$nav-link-min-width;
+  }
+
+  .#{&}__link::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    height: variables.$nav-link-hover-underline-height;
+    left: 0;
+    right: 0;
+    background: variables.$nav-link-hover-underline-color;
+    transition: transform variables.$nav-link-underline-duration
+      variables.$nav-link-underline-timing-fn;
+    transform: scaleX(0);
+  }
+
+  .#{&}__link:hover::before {
+    transform: scaleX(1);
   }
 
   .#{&}__item {

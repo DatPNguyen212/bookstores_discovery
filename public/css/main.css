@@ -7,6 +7,14 @@
 }
 
 nav {
+  font-size: 1.25rem;
+}
+nav .nav__logo {
+  font-family: "Nerko One", cursive;
+  font-size: 1.25rem;
+}
+
+nav {
   width: 100vw;
   height: 4rem;
   background: linear-gradient(to right, #1e130c, #9a8478);
@@ -14,7 +22,6 @@ nav {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  font-size: 1.25rem;
 }
 nav .nav__left {
   display: flex;
@@ -42,6 +49,22 @@ nav .nav__ul {
 }
 nav .nav__link {
   text-decoration: none;
+  position: relative;
+  min-width: 4rem;
+}
+nav .nav__link::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  height: 0.25rem;
+  left: 0;
+  right: 0;
+  background: #e26d5a;
+  transition: transform 0.2s ease;
+  transform: scaleX(0);
+}
+nav .nav__link:hover::before {
+  transform: scaleX(1);
 }
 nav .nav__item {
   color: white;

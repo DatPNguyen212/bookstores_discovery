@@ -1,3 +1,4 @@
+// nav component
 $nav-font-size: 1.25rem;
 $nav-height: 4rem;
 $nav-background-color: linear-gradient(to right, #1e130c, #9a8478);
@@ -7,3 +8,10 @@ $nav-leftmost-space: 1.5rem;
 $nav-rightmost-space: 1.5rem;
 $nav-primary-text-color: 1.5rem;
 $nav-primary-text-color: white;
+$nav-logo-font-family: 'Nerko One', cursive;
+$nav-logo-font-size: 1.25rem;
+$nav-link-hover-underline-height: 0.25rem;
+$nav-link-hover-underline-color: #e26d5a;
+$nav-link-underline-duration: 0.2s;
+$nav-link-underline-timing-fn: ease;
+$nav-link-min-width: 4rem;
