@@ -20,8 +20,11 @@
       rel="stylesheet"
     />
   </head>
-  <body>
-    <header><%- include("../partials/nav.ejs") %></header>
-    <%- body %>
+  <body class="site-body">
+    <header class="site-header"><%- include("../partials/nav.ejs") %></header>
+
+    <main class="site-main"><%- body %></main>
+
+    <%- include("../partials/footer.ejs") %>
   </body>
 </html>

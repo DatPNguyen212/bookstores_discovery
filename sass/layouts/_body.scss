@@ -1,0 +1,12 @@
+@use '../abstracts/_variables.scss';
+@use '../abstracts/_mixins.scss';
+
+.site-body {
+  @include mixins.displayFlex(column) {
+  }
+  min-height: 100vh;
+
+  .site-main {
+    flex-grow: 1;
+  }
+}

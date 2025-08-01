@@ -1,0 +1,13 @@
+@use '../abstracts/_variables.scss';
+@use '../abstracts/_mixins.scss';
+
+.site-footer {
+  height: variables.$site-footer-height;
+  width: 100vw;
+  background: variables.$site-footer-background-color;
+  color: variables.$site-footer-text-color;
+  @include mixins.displayFlex(row) {
+    align-items: center;
+  }
+  padding-left: variables.$site-footer-padding-left;
+}

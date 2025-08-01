@@ -1,7 +1,7 @@
 @use '../abstracts/_mixins.scss';
 @use '../abstracts/_variables.scss';
 
-nav {
+.nav {
   width: 100vw;
   height: variables.$nav-height;
   background: variables.$nav-background-color;
@@ -10,24 +10,24 @@ nav {
     align-items: center;
   }
 
-  .#{&}__left {
+  #{&}__left {
     @include mixins.displayFlex(row) {
       gap: variables.$nav-gap-logo-and-left;
     }
     margin-left: variables.$nav-leftmost-space;
   }
 
-  .#{&}__right {
+  #{&}__right {
     margin-right: variables.$nav-rightmost-space;
   }
 
-  .#{&}__logo {
+  #{&}__logo {
     @include mixins.flexCenter();
     color: variables.$nav-primary-text-color;
     cursor: pointer;
   }
 
-  .#{&}__ul {
+  #{&}__ul {
     @include mixins.displayFlex(row) {
       align-items: center;
       text-align: center;
@@ -35,19 +35,19 @@ nav {
     }
   }
 
-  .#{&}__link-logo {
+  #{&}__link-logo {
     text-decoration: none;
     @include mixins.flexCenter();
   }
 
-  .#{&}__link {
+  #{&}__link {
     text-decoration: none;
     position: relative;
     min-width: variables.$nav-link-min-width;
     @include mixins.flexCenter();
   }
 
-  .#{&}__link::before {
+  #{&}__link::before {
     content: '';
     position: absolute;
     bottom: 0;
@@ -60,16 +60,15 @@ nav {
     transform: scaleX(0);
   }
 
-  .#{&}__link:hover::before {
+  #{&}__link:hover::before {
     transform: scaleX(1);
   }
 
-  .#{&}__item {
+  #{&}__item {
     color: variables.$nav-primary-text-color;
     height: variables.$nav-height;
     text-decoration: none;
     list-style-type: none;
     @include mixins.flexCenter();
-    font-family: variables.$nav-item-font-family;
   }
 }

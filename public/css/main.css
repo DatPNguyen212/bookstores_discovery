@@ -6,18 +6,22 @@
   box-sizing: border-box;
 }
 
-nav {
+:root {
+  font-family: "Roboto", sans-serif;
+}
+
+.nav {
   font-size: 1.1rem;
 }
-nav .nav__logo {
+.nav .nav__logo {
   font-family: "Nerko One", cursive;
   font-size: 1.25rem;
 }
-nav .nav__item {
+.nav .nav__item {
   font-family: "Open Sans", sans-serif;
 }
 
-nav {
+.nav {
   width: 100vw;
   height: 4rem;
   background: linear-gradient(to right, #1e130c, #9a8478);
@@ -26,16 +30,16 @@ nav {
   justify-content: space-between;
   align-items: center;
 }
-nav .nav__left {
+.nav .nav__left {
   display: flex;
   flex-direction: row;
   gap: 3rem;
   margin-left: 1.5rem;
 }
-nav .nav__right {
+.nav .nav__right {
   margin-right: 1.5rem;
 }
-nav .nav__logo {
+.nav .nav__logo {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -44,14 +48,14 @@ nav .nav__logo {
   color: white;
   cursor: pointer;
 }
-nav .nav__ul {
+.nav .nav__ul {
   display: flex;
   flex-direction: row;
   align-items: center;
   text-align: center;
   gap: 2rem;
 }
-nav .nav__link-logo {
+.nav .nav__link-logo {
   text-decoration: none;
   display: flex;
   flex-direction: row;
@@ -59,7 +63,7 @@ nav .nav__link-logo {
   align-items: center;
   text-align: center;
 }
-nav .nav__link {
+.nav .nav__link {
   text-decoration: none;
   position: relative;
   min-width: 4rem;
@@ -69,7 +73,7 @@ nav .nav__link {
   align-items: center;
   text-align: center;
 }
-nav .nav__link::before {
+.nav .nav__link::before {
   content: "";
   position: absolute;
   bottom: 0;
@@ -80,10 +84,10 @@ nav .nav__link::before {
   transition: transform 0.2s ease;
   transform: scaleX(0);
 }
-nav .nav__link:hover::before {
+.nav .nav__link:hover::before {
   transform: scaleX(1);
 }
-nav .nav__item {
+.nav .nav__item {
   color: white;
   height: 4rem;
   text-decoration: none;
@@ -93,7 +97,26 @@ nav .nav__item {
   justify-content: center;
   align-items: center;
   text-align: center;
-  font-family: "Open Sans", sans-serif;
+}
+
+.site-body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.site-body .site-main {
+  flex-grow: 1;
+}
+
+.site-footer {
+  height: 4rem;
+  width: 100vw;
+  background: black;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-left: 1.5rem;
 }
 
 /*# sourceMappingURL=main.css.map */
