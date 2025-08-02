@@ -108,7 +108,7 @@
   font-size: 1rem;
   background: hsl(240, 50%, 50%);
   color: #fff;
-  border-radius: 10px;
+  border-radius: 0.625rem;
 }
 
 .btn.btn-show {
@@ -121,6 +121,40 @@
 
 .btn.btn-delete {
   background: hsl(0, 50%, 50%);
+}
+
+.card-grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-rows: default;
+}
+
+.card {
+  width: 18.75rem;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 1rem;
+  padding: 0.625rem 0.625rem;
+}
+.card .card__img {
+  width: 100%;
+  aspect-ratio: 4/3;
+  border-radius: 16px;
+}
+.card .card__body {
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.625rem;
+}
+
+.btn-row-container {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
 }
 
 .site-body {

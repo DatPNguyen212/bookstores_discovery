@@ -3,11 +3,17 @@
   flex-direction: $flex-direction;
   @content;
 }
-
 @mixin flexCenter() {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   text-align: center;
+}
+
+@mixin displayGrid($number-of-columns: default, $number-of-rows: default) {
+  display: grid;
+  grid-template-columns: $number-of-columns;
+  grid-template-rows: $number-of-rows;
+  @content;
 }

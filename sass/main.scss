@@ -9,6 +9,9 @@
 // Components
 @use './components/_nav.scss';
 @use './components/_button.scss';
+@use './components/_card-grid.scss';
+@use './components/_card.scss';
+@use './components/btn-flex';
 
 // Layouts
 @use './layouts/_body.scss';

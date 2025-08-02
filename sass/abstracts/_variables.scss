@@ -32,8 +32,21 @@ $btn-padding-x: 0.8em;
 $btn-font-size: 1rem;
 $btn-background-color: hsl(240, 50%, 50%);
 $btn-text-color: #fff;
-$btn-border-radius: 10px;
+$btn-border-radius: 0.625rem;
 
 $btn-show-color: hsl(200, 50%, 50%);
 $btn-edit-color: hsl(168, 81%, 31%);
 $btn-delete-color: hsl(0, 50%, 50%);
+
+// btn-flex component
+$btn-row-margin-top: 0.75rem;
+
+//card component
+$card-width: 18.75rem;
+$card-background-color: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+$card-border-radius: 1rem;
+$card-padding-y: 0.625rem;
+$card-padding-x: 0.625rem;
+
+$card-body-padding: 0.5rem;
+$card-body-gap: 0.625rem;

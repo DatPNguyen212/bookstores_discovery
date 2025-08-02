@@ -1,0 +1,22 @@
+@use '../abstracts/_variables.scss';
+@use '../abstracts/_mixins.scss';
+.card {
+  width: variables.$card-width;
+  background: variables.$card-background-color;
+  border-radius: variables.$card-border-radius;
+  padding: variables.$card-padding-y variables.$card-padding-x;
+
+  #{&}__img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    border-radius: 16px;
+  }
+
+  #{&}__body {
+    padding: variables.$card-body-padding;
+    @include mixins.displayFlex(column) {
+      justify-content: center;
+      gap: variables.$card-body-gap;
+    }
+  }
+}

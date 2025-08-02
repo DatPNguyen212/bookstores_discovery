@@ -1,0 +1,10 @@
+@use '../abstracts/_variables.scss';
+@use '../abstracts/_mixins.scss';
+.btn-row-container {
+  margin-top: variables.$btn-row-margin-top;
+  @include mixins.displayFlex(row) {
+    justify-content: space-around;
+    align-items: center;
+    text-align: center;
+  }
+}
