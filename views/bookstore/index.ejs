@@ -1,2 +1,26 @@
 <% layout("./layouts/boilerplate.ejs") %>
-<h1>Index page</h1>
+<div class="cards-container">
+  <div class="card">
+    <header class="card__header">
+      <img
+        src="https://picsum.photos/200/300"
+        alt="bookstore"
+        class="card__img"
+      />
+      <h2 class="card__title">Bookstore Name</h2>
+    </header>
+    <div class="card__body">
+      <p class="card__description">
+        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Similique
+        sequi, cupiditate facilis nobis doloremque porro hic eos enim ducimus
+        nemo.
+      </p>
+    </div>
+    <footer class="card__footer">
+      <p class="card__author">Posted by John Wick</p>
+      <a href="#" class="btn btn-show">Show More</a>
+      <a href="#" class="btn btn-edit">Edit</a>
+      <a href="#" class="btn btn-delete">Delete</a>
+    </footer>
+  </div>
+</div>

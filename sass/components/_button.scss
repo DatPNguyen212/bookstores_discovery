@@ -1,0 +1,21 @@
+@use '../abstracts/_variables.scss';
+
+.btn {
+  text-decoration: none;
+  padding: variables.$btn-padding-y variables.$btn-padding-x;
+  display: block;
+  width: fit-content;
+  height: fit-content;
+  font-size: variables.$btn-font-size;
+  background: variables.$btn-background-color;
+  color: variables.$btn-text-color;
+  border-radius: variables.$btn-border-radius;
+}
+
+.btn.btn-show {
+  background: variables.$btn-show-color;
+}
+
+.btn.btn-edit {
+  background: variables.$btn-edit-color;
+}
