@@ -119,6 +119,10 @@
   background: hsl(168, 81%, 31%);
 }
 
+.btn.btn-delete {
+  background: hsl(0, 50%, 50%);
+}
+
 .site-body {
   display: flex;
   flex-direction: column;
