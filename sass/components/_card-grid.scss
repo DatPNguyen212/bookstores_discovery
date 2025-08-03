@@ -1,4 +1,11 @@
 @use '../abstracts/_mixins.scss';
+@use '../abstracts/_variables.scss';
 .card-grid-container {
-  @include mixins.displayGrid(repeat(auto-fill, minmax(300px, 1fr)));
+  margin-top: variables.$card-grid-container-margin-top;
+  margin-bottom: variables.$card-grid-container-margin-bottom;
+  @include mixins.displayGrid(repeat(auto-fill, minmax(300px, 1fr))) {
+    justify-items: center;
+    align-items: center;
+    row-gap: variables.$card-grid-container-row-gap;
+  }
 }

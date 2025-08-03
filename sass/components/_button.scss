@@ -16,10 +16,22 @@
   background: variables.$btn-show-color;
 }
 
+.btn.btn-show:hover {
+  background: variables.$btn-show-hover-color;
+}
+
 .btn.btn-edit {
   background: variables.$btn-edit-color;
 }
 
+.btn.btn-edit:hover {
+  background: variables.$btn-edit-hover-color;
+}
+
 .btn.btn-delete {
   background: variables.$btn-delete-color;
+}
+
+.btn.btn-delete:hover {
+  background: variables.$btn-delete-hover-color;
 }

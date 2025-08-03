@@ -3,10 +3,13 @@
 
 .site-body {
   @include mixins.displayFlex(column) {
+    justify-content: center;
+    align-items: center;
   }
   min-height: 100vh;
 
   .site-main {
     flex-grow: 1;
+    width: variables.$site-main-width;
   }
 }

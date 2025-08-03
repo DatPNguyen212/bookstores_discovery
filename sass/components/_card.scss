@@ -6,17 +6,29 @@
   border-radius: variables.$card-border-radius;
   padding: variables.$card-padding-y variables.$card-padding-x;
 
+  #{&}__link-container {
+    text-decoration: none;
+  }
+
   #{&}__img {
     width: 100%;
-    aspect-ratio: 4/3;
-    border-radius: 16px;
+    aspect-ratio: variables.$card-img-aspect-ratio;
+    border-radius: variables.$card-img-border-radius;
+  }
+
+  #{&}__title {
+    font-size: variables.$card-title-font-size;
   }
 
   #{&}__body {
     padding: variables.$card-body-padding;
     @include mixins.displayFlex(column) {
       justify-content: center;
-      gap: variables.$card-body-gap;
+      gap: variables.$card-body-flex-gap;
     }
+  }
+
+  #{&}__author {
+    color: variables.$card-author-text-color;
   }
 }
