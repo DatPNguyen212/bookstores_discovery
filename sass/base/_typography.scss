@@ -3,15 +3,3 @@
 :root {
   font-family: variables.$site-primary-font-family;
 }
-
-.nav {
-  font-size: variables.$nav-font-size;
-  #{&}__logo {
-    font-family: variables.$nav-logo-font-family;
-    font-size: variables.$nav-logo-font-size;
-  }
-
-  #{&}__item {
-    font-family: variables.$nav-item-font-family;
-  }
-}

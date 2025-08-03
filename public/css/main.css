@@ -11,17 +11,6 @@
 }
 
 .nav {
-  font-size: 1.1rem;
-}
-.nav .nav__logo {
-  font-family: "Nerko One", cursive;
-  font-size: 1.25rem;
-}
-.nav .nav__item {
-  font-family: "Open Sans", sans-serif;
-}
-
-.nav {
   width: 100vw;
   height: 4rem;
   background: linear-gradient(to right, #1e130c, #9a8478);
@@ -29,6 +18,7 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  font-size: 1.1rem;
 }
 .nav .nav__left {
   display: flex;
@@ -47,6 +37,8 @@
   text-align: center;
   color: white;
   cursor: pointer;
+  font-family: "Nerko One", cursive;
+  font-size: 1.25rem;
 }
 .nav .nav__ul {
   display: flex;
@@ -97,6 +89,7 @@
   justify-content: center;
   align-items: center;
   text-align: center;
+  font-family: "Open Sans", sans-serif;
 }
 
 .btn {
