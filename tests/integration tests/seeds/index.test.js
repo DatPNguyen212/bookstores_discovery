@@ -32,6 +32,44 @@ vi.mock('../../../utils/dbUtils.js', () => {
   }
 })
 
+vi.mock('fs', () => {
+  const vnDataSetJsonMock = JSON.stringify([
+    {
+      code: 'SG',
+      name: 'Ho Chi Minh',
+      district: [
+        {
+          name: 'Binh Chanh',
+          pre: 'Huyen',
+          ward: [{ name: 'An Phu Tay', pre: 'Xa' }],
+          street: ['1'],
+        },
+      ],
+    },
+    {
+      code: 'SG',
+      name: 'Ho Chi Minh',
+      district: [
+        {
+          name: 'Binh Chanh',
+          pre: 'Huyen',
+          ward: [{ name: 'An Phu Tay', pre: 'Xa' }],
+          street: ['1'],
+        },
+      ],
+    },
+  ])
+  return {
+    default: {
+      promises: {
+        readFile: vi.fn(() => {
+          return vnDataSetJsonMock
+        }),
+      },
+    },
+  }
+})
+
 describe('seedBookstore()', () => {
   let testConnection
   let Bookstore

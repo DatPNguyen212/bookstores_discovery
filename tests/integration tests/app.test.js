@@ -1,8 +1,62 @@
-import { describe, it, expect } from 'vitest'
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  afterAll,
+} from 'vitest'
 import request from 'supertest'
 import app from '../../app.js'
+import * as cheerio from 'cheerio'
+import testDBUtils from '../../utils/testDBUtils/testDBUtils.js'
+import models from '../../models/index.js'
+import seedBookstore from '../../seeds/index.js'
+import setupDB from '../../config/setupDB.js'
+import mongoose from 'mongoose'
+
+// vi.mock('../../config/setupDB.js', () => {
+//   return {
+//     default: {
+//       connect: vi.fn(async () => {}),
+//       close: vi.fn(async () => {}),
+//     },
+//   }
+// })
+
+vi.mock('../../utils/dbUtils.js', () => {
+  return {
+    default: {
+      clearCollection: vi.fn(async () => {}),
+    },
+  }
+})
 
 describe('Integration tests for routes', () => {
+  let testConnection
+  let Bookstore
+  let bookstoreModelClassSpy
+
+  beforeEach(async () => {
+    testConnection = await testDBUtils.connect()
+    Bookstore = testConnection.model('Bookstore', models.bookstore.schema)
+    // bookstoreModelClassSpy = vi
+    //   .spyOn(models.bookstore, 'ModelClass', 'get')
+    //   .mockReturnValue(Bookstore)
+    mongoose.connection = testConnection.connection
+  })
+
+  afterEach(async () => {
+    await testDBUtils.clearDB()
+    mongoose.connection = null
+    vi.restoreAllMocks()
+  })
+
+  afterAll(async () => {
+    await testDBUtils.closeDB()
+  })
+
   describe('GET /', () => {
     it('response.text should contain <h1>Homepage</h1>', async () => {
       const route = '/'
@@ -24,13 +78,56 @@ describe('Integration tests for routes', () => {
   })
 
   describe('GET /bookstores', () => {
-    it('response.text should contain `<h1>Index page</h1>`', async () => {
+    // it('response.text should contain `<h1>Index page</h1>`', async () => {
+    //   const route = '/bookstores'
+
+    //   const response = await request(app).get(route)
+
+    //   expect(response.text).toContain('<h1>Index page</h1>')
+    // })
+
+    it('given a populated mock bookstore document, response.text should display the correct bookstore name, image, description, author of the document ', async () => {
+      const bookstoreObjMock = {
+        name: 'john',
+        address: '3, Ba Thang Hai Street, 3 District, Ho Chi Minh City',
+        description: 'test',
+        images: 'https://picsum.photos/800/600',
+        openDays: ['Monday'],
+      }
+      await Bookstore.create(bookstoreObjMock)
       const route = '/bookstores'
 
       const response = await request(app).get(route)
 
-      expect(response.text).toContain('<h1>Index page</h1>')
+      const $ = cheerio.load(response.text)
+      expect($('.card__title').text()).toBe(bookstoreObjMock.name)
+      expect($('.card__description').text()).toBe(bookstoreObjMock.description)
+      expect($('.card__img').attr('src')).toBe('https://picsum.photos/800/600')
     })
+  })
+  it('given 2 populated mock bookstore documents, response.text should have the correct number of bookstore card componenets', async () => {
+    const bookstoreObjMock1 = {
+      name: 'john',
+      address: '3, Ba Thang Hai Street, 3 District, Ho Chi Minh City',
+      description: 'test',
+      images: 'https://picsum.photos/800/600',
+      openDays: ['Monday'],
+    }
+    const bookstoreObjMock2 = {
+      name: 'john',
+      address: '3, Ba Thang Hai Street, 3 District, Ho Chi Minh City',
+      description: 'test',
+      images: 'https://picsum.photos/800/600',
+      openDays: ['Monday'],
+    }
+    await Bookstore.create(bookstoreObjMock1)
+    await Bookstore.create(bookstoreObjMock2)
+    const route = '/bookstores'
+
+    const response = await request(app).get(route)
+    const $ = cheerio.load(response.text)
+
+    expect($('.card')).toHaveLength(2)
   })
 
   describe('GET /bookstores/new', () => {

@@ -444,7 +444,7 @@ describe('seedHelpers.genObjForBookstoreClass', () => {
     expect(res.description).toBe(DESCRIPTION)
   })
   it('should return an obj where images property is of a predetermined value', async () => {
-    const IMG_LINK = 'https://picsum.photos/800/300'
+    const IMG_LINK = 'https://picsum.photos/800/600'
 
     const res = await seedHelpers.genObjForBookstoreClass()
 
@@ -458,7 +458,7 @@ describe('seedHelpers.genObjForBookstoreClass', () => {
     const DESCRIPTION =
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus semper suscipit scelerisque. Etiam nec tortor id odio facilisis sodales id a justo. Proin porta, turpis eget sodales mattis, est mauris.'
 
-    const IMG_LINK = 'https://picsum.photos/800/300'
+    const IMG_LINK = 'https://picsum.photos/800/600'
 
     const res = await seedHelpers.genObjForBookstoreClass()
 

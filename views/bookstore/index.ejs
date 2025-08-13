@@ -1,22 +1,15 @@
 <% layout("./layouts/boilerplate.ejs") %>
 <div class="card-grid-container">
+  <% for (let bookstore of bookstores) { %>
   <div class="card">
     <header class="card__header">
-      <a href="card__link-container">
-        <img
-          src="https://picsum.photos/800/600"
-          alt="bookstore"
-          class="card__img"
-        />
+      <a class="card__link-container">
+        <img src="<%= bookstore.images %>" alt="bookstore" class="card__img" />
       </a>
     </header>
     <div class="card__body">
-      <h2 class="card__title">Bookstore Name</h2>
-      <p class="card__description">
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Similique
-        sequi, cupiditate facilis nobis doloremque porro hic eos enim ducimus
-        nemo.
-      </p>
+      <h2 class="card__title"><%= bookstore.name %></h2>
+      <p class="card__description"><%= bookstore.description %></p>
       <p class="card__author">Posted by John Wick</p>
     </div>
     <footer class="card__footer">
@@ -27,4 +20,5 @@
       </div>
     </footer>
   </div>
+  <%} %>
 </div>

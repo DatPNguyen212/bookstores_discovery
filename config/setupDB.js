@@ -18,7 +18,7 @@ const setupDB = {
 
   async close() {
     if (mongoose.connection.readyState === 1) {
-      mongoose.connection.close()
+      await mongoose.connection.close()
     } else {
       console.log('There must be a connection in order to close it')
     }

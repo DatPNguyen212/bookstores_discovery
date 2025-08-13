@@ -126,7 +126,7 @@ const seedHelpers = {
     const DESCRIPTION =
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus semper suscipit scelerisque. Etiam nec tortor id odio facilisis sodales id a justo. Proin porta, turpis eget sodales mattis, est mauris.'
 
-    const IMG_LINK = 'https://picsum.photos/800/300'
+    const IMG_LINK = 'https://picsum.photos/800/600'
 
     const obj = {
       name: this.generateRandName(names.firstNames, names.lastNames),

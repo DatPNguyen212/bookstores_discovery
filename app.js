@@ -19,6 +19,12 @@ app.engine('ejs', engine)
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, './', 'views'))
 
+import setupDB from './config/setupDB.js'
+
+if (process.env.NODE_ENV !== 'test') {
+  setupDB.connect('mongodb://127.0.0.1:27017/bookstoreDiscovery')
+}
+
 app.use(express.static(path.join(__dirname, 'public')))
 
 // Bookstore routes
