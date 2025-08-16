@@ -37,4 +37,11 @@ describe('objectUtils.isPlainObject()', () => {
 
     expect(res).toBe(false)
   })
+  it('when null is passed, it should return false', () => {
+    const value = null
+
+    const res = objectUtils.isPlainObject(value)
+
+    expect(res).toBe(false)
+  })
 })
