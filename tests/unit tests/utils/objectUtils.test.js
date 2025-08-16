@@ -30,8 +30,15 @@ describe('objectUtils.isPlainObject()', () => {
 
     expect(res).toBe(false)
   })
-  it('when a FALSY value is passed, it should return false', () => {
+  it('when a NaN value is passed, it should return false', () => {
     const value = NaN
+
+    const res = objectUtils.isPlainObject(value)
+
+    expect(res).toBe(false)
+  })
+  it('when undefined value is passed, it should return false', () => {
+    const value = undefined
 
     const res = objectUtils.isPlainObject(value)
 
