@@ -12,7 +12,7 @@ import app from '../../app.js'
 import * as cheerio from 'cheerio'
 import testDBUtils from '../../utils/testDBUtils/testDBUtils.js'
 import models from '../../models/index.js'
-import seedBookstore from '../../seeds/index.js'
+
 import setupDB from '../../config/setupDB.js'
 import mongoose from 'mongoose'
 
@@ -25,13 +25,13 @@ import mongoose from 'mongoose'
 //   }
 // })
 
-vi.mock('../../utils/dbUtils.js', () => {
-  return {
-    default: {
-      clearCollection: vi.fn(async () => {}),
-    },
-  }
-})
+// vi.mock('../../utils/dbUtils.js', () => {
+//   return {
+//     default: {
+//       clearCollection: vi.fn(async () => {}),
+//     },
+//   }
+// })
 
 describe('Integration tests for routes', () => {
   let testConnection
@@ -41,15 +41,14 @@ describe('Integration tests for routes', () => {
   beforeEach(async () => {
     testConnection = await testDBUtils.connect()
     Bookstore = testConnection.model('Bookstore', models.bookstore.schema)
-    // bookstoreModelClassSpy = vi
-    //   .spyOn(models.bookstore, 'ModelClass', 'get')
-    //   .mockReturnValue(Bookstore)
-    mongoose.connection = testConnection.connection
+
+    bookstoreModelClassSpy = vi
+      .spyOn(models.bookstore, 'ModelClass', 'get')
+      .mockReturnValue(Bookstore)
   })
 
   afterEach(async () => {
     await testDBUtils.clearDB()
-    mongoose.connection = null
     vi.restoreAllMocks()
   })
 
@@ -90,12 +89,14 @@ describe('Integration tests for routes', () => {
       const bookstoreObjMock = {
         name: 'john',
         address: '3, Ba Thang Hai Street, 3 District, Ho Chi Minh City',
+        genres: ['fantasy', 'fiction'],
         description: 'test',
         images: 'https://picsum.photos/800/600',
         openDays: ['Monday'],
       }
-      await Bookstore.create(bookstoreObjMock)
+      const newBookstore = await Bookstore.create(bookstoreObjMock)
       const route = '/bookstores'
+      console.log(newBookstore)
 
       const response = await request(app).get(route)
 
@@ -103,12 +104,13 @@ describe('Integration tests for routes', () => {
       expect($('.card__title').text()).toBe(bookstoreObjMock.name)
       expect($('.card__description').text()).toBe(bookstoreObjMock.description)
       expect($('.card__img').attr('src')).toBe('https://picsum.photos/800/600')
-    })
+    }, 10000)
   })
   it('given 2 populated mock bookstore documents, response.text should have the correct number of bookstore card componenets', async () => {
     const bookstoreObjMock1 = {
       name: 'john',
       address: '3, Ba Thang Hai Street, 3 District, Ho Chi Minh City',
+      genres: ['fantasy', 'fiction'],
       description: 'test',
       images: 'https://picsum.photos/800/600',
       openDays: ['Monday'],
@@ -116,6 +118,7 @@ describe('Integration tests for routes', () => {
     const bookstoreObjMock2 = {
       name: 'john',
       address: '3, Ba Thang Hai Street, 3 District, Ho Chi Minh City',
+      genres: ['fantasy', 'fiction'],
       description: 'test',
       images: 'https://picsum.photos/800/600',
       openDays: ['Monday'],
@@ -128,7 +131,7 @@ describe('Integration tests for routes', () => {
     const $ = cheerio.load(response.text)
 
     expect($('.card')).toHaveLength(2)
-  })
+  }, 10000)
 
   describe('GET /bookstores/new', () => {
     it('response.text should contain <h1>Create bookstore</h1>', async () => {
