@@ -81,4 +81,70 @@ describe('setupDB.connect()', () => {
 
     expect(console.log).toBeCalledWith('error')
   })
+
+  it('when you pass a non-string value, it should throw an error', async () => {
+    const URI = 1
+
+    const fn = async () => {
+      await setupDB.connect(URI)
+    }
+
+    await expect(fn).rejects.toThrow(
+      'You must pass string data type to first parameter'
+    )
+  })
+})
+
+describe('setupDB.close()', () => {
+  it('when you pass a connection obj that has connected state, it should call that obj close method', async () => {
+    const connection = {
+      readyState: 1,
+      close: vi.fn(),
+    }
+    await setupDB.close(connection)
+
+    expect(connection.close).toBeCalled()
+  })
+  it('when connection state is not connected, it should log an error message', async () => {
+    const connection = {
+      readyState: 0,
+      close: vi.fn(),
+    }
+    vi.stubGlobal('console', {
+      log: vi.fn(),
+    })
+
+    try {
+      await setupDB.close(connection)
+    } catch (error) {}
+
+    expect(console.log).toBeCalledWith(
+      'There must be a connection before you can close it.'
+    )
+  })
+  it('when connection state is not connected, it should throw an error', async () => {
+    const connection = {
+      readyState: 0,
+      close: vi.fn(),
+    }
+
+    const fn = async () => {
+      await setupDB.close(connection)
+    }
+
+    await expect(fn).rejects.toThrow(
+      'There must be a connection before you can close it.'
+    )
+  })
+  it('when you pass a value that is not obj data type, it should throw an error', async () => {
+    const connection = [1, 2, 3]
+
+    const fn = async () => {
+      await setupDB.close(connection)
+    }
+
+    await expect(fn).rejects.toThrow(
+      'You must pass a connection obj to first parameter'
+    )
+  })
 })

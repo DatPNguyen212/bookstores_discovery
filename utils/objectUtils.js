@@ -1,6 +1,6 @@
 const objectUtils = {
   isPlainObject(value) {
-    return typeof value === 'object' && !Array.isArray(value)
+    return typeof value === 'object' && !Array.isArray(value) && value !== null
   },
 }
 
