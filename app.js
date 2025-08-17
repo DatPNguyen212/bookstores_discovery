@@ -21,8 +21,9 @@ app.set('views', path.join(__dirname, './', 'views'))
 
 import setupDB from './config/setupDB.js'
 
+let connection
 if (process.env.NODE_ENV !== 'test') {
-  setupDB.connect('mongodb://127.0.0.1:27017/bookstoreDiscovery')
+  connection = setupDB.connect('mongodb://127.0.0.1:27017/bookstoreDiscovery')
 }
 
 app.use(express.static(path.join(__dirname, 'public')))
@@ -47,4 +48,9 @@ if (path.normalize(fileURLToPath(import.meta.url)) === `${process.argv[1]}`) {
   })
 }
 
-export default app
+const main = {
+  app,
+  connection,
+}
+
+export default main

@@ -6,6 +6,7 @@ import names from './names.js'
 import pathUtils from '../utils/pathUtils.js'
 import path from 'path'
 import models from '../models/index.js'
+import objectUtils from '../utils/objectUtils.js'
 
 const seedHelpers = {
   moduleFileUrl: import.meta.url,
@@ -139,9 +140,15 @@ const seedHelpers = {
 
     return obj
   },
-  async genBookstoreDoc() {
+  async genBookstoreDoc(connection) {
+    if (!objectUtils.isPlainObject(connection)) {
+      throw new TypeError('First parameter should be a connection obj')
+    }
     const objForClass = await this.genObjForBookstoreClass()
-    await models.bookstore.ModelClass.create(objForClass)
+
+    const Bookstore = models.bookstore.getModelClass(connection)
+
+    await Bookstore.create(objForClass)
   },
 }
 

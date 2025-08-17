@@ -38,6 +38,4 @@ const bookstoreSchema = new mongoose.Schema({
   ],
 })
 
-const Bookstore = mongoose.model('Bookstore', bookstoreSchema)
-
-export { bookstoreSchema, Bookstore }
+export default bookstoreSchema

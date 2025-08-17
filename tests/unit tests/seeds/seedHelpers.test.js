@@ -476,33 +476,63 @@ describe('seedHelpers.genObjForBookstoreClass', () => {
 describe('seedHelpers.genBookstoreDoc()', () => {
   let genObjForBookstoreClassSpy
   let modelsBookstoreSpy
+  let ModelClassMock = {
+    create: vi.fn(),
+  }
+  let connectionMock = {
+    model: vi.fn(() => {
+      return ModelClassMock
+    }),
+  }
+
   beforeEach(() => {
     genObjForBookstoreClassSpy = vi
       .spyOn(seedHelpers, 'genObjForBookstoreClass')
       .mockImplementation(vi.fn(() => {}))
     modelsBookstoreSpy = vi.spyOn(models, 'bookstore', 'get').mockReturnValue({
-      ModelClass: {
-        create: vi.fn((obj) => {}),
-      },
+      getModelClass: vi.fn((connection) => {
+        return connection.model()
+      }),
     })
   })
 
   afterEach(() => {
     vi.restoreAllMocks()
   })
-  it('should call seedHelpers.genObjForBookstoreClass()', async () => {
-    await seedHelpers.genBookstoreDoc()
+  it('when you pass connection obj, it should call seedHelpers.genObjForBookstoreClass()', async () => {
+    await seedHelpers.genBookstoreDoc(connectionMock)
 
     expect(genObjForBookstoreClassSpy).toBeCalled()
   })
-  it('given genObjForBookstoreClass returns a mocked obj, it should call models.bookstore.create() with that mocked obj', async () => {
+
+  it('when you pass connection obj, it should call models.bookstore.getModelClass(connection)', async () => {
+    await seedHelpers.genBookstoreDoc(connectionMock)
+
+    expect(models.bookstore.getModelClass).toBeCalledWith(connectionMock)
+  })
+
+  it('given genObjForBookstoreClass returns a mocked obj, and models.bookstore.getModelClass(connection) return a mocked ModelClass, it should call that mocked ModelClass create method with that mocked obj', async () => {
     const objMock = {
       testing: 'test',
     }
     genObjForBookstoreClassSpy.mockReturnValue(objMock)
 
-    await seedHelpers.genBookstoreDoc()
+    await seedHelpers.genBookstoreDoc(connectionMock)
 
-    expect(models.bookstore.ModelClass.create).toBeCalledWith(objMock)
+    expect(
+      models.bookstore.getModelClass(connectionMock).create
+    ).toBeCalledWith(objMock)
+  })
+
+  it('if you pass a non-obj, it should throw an error', async () => {
+    connectionMock = 'test'
+
+    const fn = async () => {
+      await seedHelpers.genBookstoreDoc(connectionMock)
+    }
+
+    await expect(fn).rejects.toThrow(
+      'First parameter should be a connection obj'
+    )
   })
 })
