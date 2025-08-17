@@ -1,17 +1,26 @@
-import mongoose from 'mongoose'
+import objectUtils from './objectUtils.js'
+
 const dbUtils = {
-  getModelClass(modelName) {
+  getModelClass(connection, modelName) {
     if (typeof modelName !== 'string') {
-      throw new TypeError('First parameter should be of string data type')
+      throw new TypeError('Second parameter should be of string data type')
     }
-    return mongoose.connection.models[modelName]
+
+    if (!objectUtils.isPlainObject(connection)) {
+      throw new TypeError('First parameter should be a connection object')
+    }
+    return connection.models[modelName]
   },
 
-  async clearCollection(modelName) {
+  async clearCollection(connection, modelName) {
     if (typeof modelName !== 'string') {
-      throw new TypeError('First parameter should be of string data type')
+      throw new TypeError('Second parameter should be of string data type')
     }
-    const ModelClass = this.getModelClass(modelName)
+
+    if (!objectUtils.isPlainObject(connection)) {
+      throw new TypeError('First parameter should be a connection object')
+    }
+    const ModelClass = this.getModelClass(connection, modelName)
 
     await ModelClass.deleteMany({})
   },
