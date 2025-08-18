@@ -24,6 +24,15 @@ const bookstoreCtrl = {
       res.render('./bookstore/index.ejs', { bookstores })
     }
   },
+
+  renderCreatePage(connection) {
+    if (!objectUtils.isPlainObject(connection)) {
+      throw new TypeError('FIrst parameter should be a connection object')
+    }
+    return async (req, res, next) => {
+      res.render('./bookstore/create.ejs')
+    }
+  },
 }
 
 export default bookstoreCtrl

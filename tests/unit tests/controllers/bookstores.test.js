@@ -69,4 +69,61 @@ describe('bookstoreCtrl.renderIndexPage()', () => {
   })
 })
 
-// describe('bookstoreCtrl.renderCreatePage()', () => {})
+describe('bookstoreCtrl.renderCreatePage()', () => {
+  let findResult = [1, 2, 3]
+  let Bookstore = {
+    find: vi.fn(async () => {
+      return findResult
+    }),
+  }
+  let connection = {
+    models: {
+      Bookstore: Bookstore,
+    },
+  }
+  let getModelClassSpy
+  let req = {
+    query: {
+      test: 'test',
+    },
+  }
+  let res = {
+    render: vi.fn(() => {}),
+  }
+
+  let next = vi.fn()
+
+  beforeEach(() => {
+    getModelClassSpy = vi
+      .spyOn(dbUtils, 'getModelClass')
+      .mockReturnValue(Bookstore)
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('when you pass a connection obj, it should return a function', () => {
+    const res = bookstoreCtrl.renderCreatePage(connection)
+
+    expect(res).toBeInstanceOf(Function)
+  })
+
+  it('the return function should call res.render() with the correct arugments', async () => {
+    const returnFn = bookstoreCtrl.renderCreatePage(connection)
+
+    await returnFn(req, res, next)
+
+    expect(res.render).toBeCalledWith('./bookstore/create.ejs')
+  })
+
+  it('when you pass a non plain obj to it, it should throw an error', () => {
+    connection = [1, 2, 3]
+
+    const fn = () => {
+      bookstoreCtrl.renderCreatePage(connection)
+    }
+
+    expect(fn).toThrow('FIrst parameter should be a connection object')
+  })
+})
