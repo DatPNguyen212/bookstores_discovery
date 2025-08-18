@@ -26,15 +26,22 @@ describe('seedBookstore()', () => {
   let setupDBConnectSpy
   let genBookstoreDocSpy
   let clearCollectionSpy
+  let connectionMock = {
+    models: {
+      ModelClass: 'ModelName',
+    },
+  }
 
   beforeEach(() => {
     genObjForBookstoreClassSpy = vi
       .spyOn(seedHelpers, 'genObjForBookstoreClass')
       .mockImplementation(vi.fn(() => {}))
 
-    setupDBConnectSpy = vi
-      .spyOn(setupDB, 'connect')
-      .mockImplementation(vi.fn(() => {}))
+    setupDBConnectSpy = vi.spyOn(setupDB, 'connect').mockImplementation(
+      vi.fn(() => {
+        return connectionMock
+      })
+    )
 
     genBookstoreDocSpy = vi
       .spyOn(seedHelpers, 'genBookstoreDoc')
@@ -42,7 +49,7 @@ describe('seedBookstore()', () => {
 
     clearCollectionSpy = vi
       .spyOn(dbUtils, 'clearCollection')
-      .mockImplementation(vi.fn(() => {}))
+      .mockImplementation(vi.fn((connection, modelName) => {}))
   })
 
   afterEach(() => {
@@ -92,27 +99,29 @@ describe('seedBookstore()', () => {
     )
   })
 
-  it('when you pass a positive number, it should call dbUtils.clearCollection(`Bookstore`)', async () => {
+  it('when you pass a positive number, it should call dbUtils.clearCollection(connection, `Bookstore`)', async () => {
     const numberOfStores = 3
 
     await seedBookstore(numberOfStores)
 
-    expect(clearCollectionSpy).toBeCalledWith('Bookstore')
+    expect(clearCollectionSpy).toBeCalledWith(connectionMock, 'Bookstore')
   })
 
-  it('when you pass a positive number, it should call seedHelpers.genBookstoreDoc() that same amount of number of times', async () => {
+  it('when you pass a positive number, it should call seedHelpers.genBookstoreDoc() with connection obj returned by setupDB.connect(uri) that same amount of number of times', async () => {
     const numberOfStores = 3
 
     await seedBookstore(numberOfStores)
 
+    expect(genBookstoreDocSpy).toBeCalledWith(connectionMock)
     expect(genBookstoreDocSpy).toBeCalledTimes(numberOfStores)
   })
-  it('should call setupDB.close()', async () => {
+
+  it('should call setupDB.close() with connection obj returned by setupDB.connect()', async () => {
     const numberOfStores = 3
 
     await seedBookstore(numberOfStores)
 
-    expect(setupDB.close).toBeCalled()
+    expect(setupDB.close).toBeCalledWith(connectionMock)
   })
   it('given seedHelpers.genBookstoreDoc() returns a promise reject, it should call setupDB.close()', async () => {
     genBookstoreDocSpy.mockImplementation(

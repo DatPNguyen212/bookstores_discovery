@@ -78,9 +78,16 @@ describe('seedBookstore()', () => {
   beforeEach(async () => {
     testConnection = await testDBUtils.connect()
     Bookstore = testConnection.model('Bookstore', models.bookstore.schema)
+    // bookstoreModelClassSpy = vi
+    //   .spyOn(models.bookstore, 'ModelClass', 'get')
+    //   .mockReturnValue(Bookstore)
     bookstoreModelClassSpy = vi
-      .spyOn(models.bookstore, 'ModelClass', 'get')
-      .mockReturnValue(Bookstore)
+      .spyOn(models.bookstore, 'getModelClass')
+      .mockImplementation(
+        vi.fn(() => {
+          return Bookstore
+        })
+      )
   })
   afterEach(async () => {
     await testDBUtils.clearDB()
