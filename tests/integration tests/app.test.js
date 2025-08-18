@@ -8,7 +8,7 @@ import {
   afterAll,
 } from 'vitest'
 import request from 'supertest'
-import app from '../../app.js'
+import createApp from '../../app.js'
 import * as cheerio from 'cheerio'
 import testDBUtils from '../../utils/testDBUtils/testDBUtils.js'
 import models from '../../models/index.js'
@@ -38,16 +38,21 @@ describe('Integration tests for routes', () => {
   let Bookstore
   // let bookstoreModelClassSpy
   let setupDBConnectSpy
+  let app
 
   beforeEach(async () => {
     testConnection = await testDBUtils.connect()
     Bookstore = testConnection.model('Bookstore', models.bookstore.schema)
 
-    setupDBConnectSpy = vi.spyOn(setupDB, 'connect').mockImplementation(
-      vi.fn(async () => {
-        return testConnection
-      })
-    )
+    vi.stubGlobal('connection', testConnection)
+
+    app = createApp(connection)
+
+    // setupDBConnectSpy = vi.spyOn(setupDB, 'connect').mockImplementation(
+    //   vi.fn(async () => {
+    //     return testConnection
+    //   })
+    // )
 
     // bookstoreModelClassSpy = vi
     //   .spyOn(models.bookstore, 'ModelClass', 'get')
@@ -57,6 +62,7 @@ describe('Integration tests for routes', () => {
   afterEach(async () => {
     await testDBUtils.clearDB()
     vi.restoreAllMocks()
+    vi.unstubAllGlobals()
   })
 
   afterAll(async () => {
