@@ -8,7 +8,7 @@ import {
   afterAll,
 } from 'vitest'
 import request from 'supertest'
-import main from '../../app.js'
+import app from '../../app.js'
 import * as cheerio from 'cheerio'
 import testDBUtils from '../../utils/testDBUtils/testDBUtils.js'
 import models from '../../models/index.js'
@@ -36,15 +36,22 @@ import mongoose from 'mongoose'
 describe('Integration tests for routes', () => {
   let testConnection
   let Bookstore
-  let bookstoreModelClassSpy
+  // let bookstoreModelClassSpy
+  let setupDBConnectSpy
 
   beforeEach(async () => {
     testConnection = await testDBUtils.connect()
     Bookstore = testConnection.model('Bookstore', models.bookstore.schema)
 
-    bookstoreModelClassSpy = vi
-      .spyOn(models.bookstore, 'ModelClass', 'get')
-      .mockReturnValue(Bookstore)
+    setupDBConnectSpy = vi.spyOn(setupDB, 'connect').mockImplementation(
+      vi.fn(async () => {
+        return testConnection
+      })
+    )
+
+    // bookstoreModelClassSpy = vi
+    //   .spyOn(models.bookstore, 'ModelClass', 'get')
+    //   .mockReturnValue(Bookstore)
   })
 
   afterEach(async () => {
@@ -60,7 +67,7 @@ describe('Integration tests for routes', () => {
     it('response.text should contain <h1>Homepage</h1>', async () => {
       const route = '/'
 
-      const response = await request(main.app).get(route)
+      const response = await request(app).get(route)
 
       expect(response.text).toContain('<h1>Homepage</h1>')
     })
@@ -70,7 +77,7 @@ describe('Integration tests for routes', () => {
     it('response.text should contain <h1>Unfamiliar Route</h1>', async () => {
       const route = '/abc'
 
-      const response = await request(main.app).get(route)
+      const response = await request(app).get(route)
 
       expect(response.text).toContain('<h1>Unfamiliar Route</h1>')
     })
@@ -80,7 +87,7 @@ describe('Integration tests for routes', () => {
     // it('response.text should contain `<h1>Index page</h1>`', async () => {
     //   const route = '/bookstores'
 
-    //   const response = await request(main.app).get(route)
+    //   const response = await request(app).get(route)
 
     //   expect(response.text).toContain('<h1>Index page</h1>')
     // })
@@ -98,7 +105,7 @@ describe('Integration tests for routes', () => {
       const route = '/bookstores'
       console.log(newBookstore)
 
-      const response = await request(main.app).get(route)
+      const response = await request(app).get(route)
 
       const $ = cheerio.load(response.text)
       expect($('.card__title').text()).toBe(bookstoreObjMock.name)
@@ -127,7 +134,7 @@ describe('Integration tests for routes', () => {
     await Bookstore.create(bookstoreObjMock2)
     const route = '/bookstores'
 
-    const response = await request(main.app).get(route)
+    const response = await request(app).get(route)
     const $ = cheerio.load(response.text)
 
     expect($('.card')).toHaveLength(2)
@@ -137,7 +144,7 @@ describe('Integration tests for routes', () => {
     it('response.text should contain <h1>Create bookstore</h1>', async () => {
       const route = '/bookstores/new'
 
-      const response = await request(main.app).get(route)
+      const response = await request(app).get(route)
 
       expect(response.text).toContain('<h1>Create bookstore</h1>')
     })

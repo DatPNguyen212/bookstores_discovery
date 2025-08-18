@@ -48,9 +48,4 @@ if (path.normalize(fileURLToPath(import.meta.url)) === `${process.argv[1]}`) {
   })
 }
 
-const main = {
-  app,
-  connection,
-}
-
-export default main
+export default app

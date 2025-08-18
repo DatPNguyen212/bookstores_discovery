@@ -73,7 +73,7 @@ vi.mock('fs', () => {
 describe('seedBookstore()', () => {
   let testConnection
   let Bookstore
-  let bookstoreModelClassSpy
+  // let bookstoreModelClassSpy
   let setupDBConnectSpy
 
   beforeEach(async () => {

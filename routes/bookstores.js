@@ -1,9 +1,12 @@
 import express from 'express'
-const router = express.Router()
-import * as bookstoresCtrl from '../controllers/bookstores.js'
+// import * as bookstoresCtrl from '../controllers/bookstores.js'
 
-router.get('/new', bookstoresCtrl.renderCreatePage)
+function createBookstoreRouter() {
+  const router = express.Router()
+}
 
-router.get('/', bookstoresCtrl.renderIndexPage)
+// router.get('/new', bookstoresCtrl.renderCreatePage)
 
-export default router
+// router.get('/', bookstoresCtrl.renderIndexPage)
+
+export default createBookstoreRouter
