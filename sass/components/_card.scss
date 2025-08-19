@@ -18,6 +18,8 @@
 
   #{&}__title {
     font-size: variables.$card-title-font-size;
+    white-space: nowrap;
+    overflow: hidden;
   }
 
   #{&}__body {
