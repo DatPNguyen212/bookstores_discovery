@@ -1,6 +1,7 @@
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import bookstoreCtrl from '../../../controllers/bookstores.js'
 import dbUtils from '../../../utils/dbUtils.js'
+import models from '../../../models/index.js'
 
 describe('bookstoreCtrl.renderIndexPage()', () => {
   let findResult = [1, 2, 3]
@@ -9,10 +10,14 @@ describe('bookstoreCtrl.renderIndexPage()', () => {
       return findResult
     }),
   }
+
   let connection = {
     models: {
       Bookstore: Bookstore,
     },
+    model: vi.fn((modelName, schema) => {
+      return Bookstore
+    }),
   }
   let getModelClassSpy
   let req = {
@@ -80,6 +85,9 @@ describe('bookstoreCtrl.renderCreatePage()', () => {
     models: {
       Bookstore: Bookstore,
     },
+    model: vi.fn((modelName, schema) => {
+      return Bookstore
+    }),
   }
   let getModelClassSpy
   let req = {

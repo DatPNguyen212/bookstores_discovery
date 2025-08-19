@@ -1,3 +1,4 @@
+@use 'sass:color';
 // nav component
 $nav-font-size: 1.1rem;
 $nav-height: 4rem;
@@ -35,13 +36,13 @@ $btn-text-color: #fff;
 $btn-border-radius: 0.625rem;
 
 $btn-show-color: hsl(200, 50%, 50%);
-$btn-show-hover-color: lighten($btn-show-color, 5%);
+$btn-show-hover-color: color.adjust($btn-show-color, $lightness: 5%);
 
 $btn-edit-color: hsl(168, 81%, 31%);
-$btn-edit-hover-color: lighten($btn-edit-color, 5%);
+$btn-edit-hover-color: color.adjust($btn-edit-color, $lightness: 5%);
 
 $btn-delete-color: hsl(0, 50%, 50%);
-$btn-delete-hover-color: lighten($btn-delete-color, 5%);
+$btn-delete-hover-color: color.adjust($btn-delete-color, $lightness: 5%);
 
 // btn-flex component
 $btn-row-margin-top: 0.75rem;

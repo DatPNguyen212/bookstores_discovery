@@ -17,7 +17,7 @@ const bookstoreCtrl = {
     if (!objectUtils.isPlainObject(connection)) {
       throw new TypeError('First parameter should be a connection object')
     }
-    const Bookstore = dbUtils.getModelClass(connection, 'Bookstore')
+    const Bookstore = connection.model('Bookstore', models.bookstore.schema)
 
     return async (req, res, next) => {
       const bookstores = await Bookstore.find({})
