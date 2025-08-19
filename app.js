@@ -9,8 +9,6 @@ import path from 'path'
 import pathUtils from './utils/pathUtils.js'
 import { fileURLToPath } from 'url'
 
-import bookstoresRouter from './routes/bookstores.js'
-
 import engine from 'ejs-mate'
 
 import setupDB from './config/setupDB.js'
@@ -48,6 +46,7 @@ function createApp(connection) {
 async function startApp() {
   const PORT = process.env.PORT || 3000
 
+  // When testing, we're connecting to test DB in the test file there using testDBUtils.connect(), so ONLY when we're NOT testing, we actually use setupDB.connect() to connect to real database.
   if (process.env.NODE_ENV !== 'test') {
     connection = await setupDB.connect(
       'mongodb://127.0.0.1:27017/bookstoreDiscovery'

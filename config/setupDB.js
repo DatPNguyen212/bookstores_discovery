@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import objectUtils from '../utils/objectUtils'
+import objectUtils from '../utils/objectUtils.js'
 
 const setupDB = {
   async connect(uri) {

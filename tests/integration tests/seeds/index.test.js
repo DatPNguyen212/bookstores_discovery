@@ -11,7 +11,6 @@ import seedBookstore from '../../../seeds/index.js'
 import setupDB from '../../../config/setupDB.js'
 import models from '../../../models/index.js'
 import testDBUtils from '../../../utils/testDBUtils/testDBUtils.js'
-import dbUtils from '../../../utils/dbUtils.js'
 import seedHelpers from '../../../seeds/seedHelpers.js'
 
 vi.mock('../../../config/setupDB.js', () => {
@@ -73,7 +72,6 @@ vi.mock('fs', () => {
 describe('seedBookstore()', () => {
   let testConnection
   let Bookstore
-  // let bookstoreModelClassSpy
   let setupDBConnectSpy
 
   beforeEach(async () => {
@@ -84,16 +82,6 @@ describe('seedBookstore()', () => {
       })
     )
     Bookstore = testConnection.model('Bookstore', models.bookstore.schema)
-    // bookstoreModelClassSpy = vi
-    //   .spyOn(models.bookstore, 'ModelClass', 'get')
-    //   .mockReturnValue(Bookstore)
-    // bookstoreModelClassSpy = vi
-    //   .spyOn(models.bookstore, 'getModelClass')
-    //   .mockImplementation(
-    //     vi.fn(() => {
-    //       return Bookstore
-    //     })
-    //   )
   })
   afterEach(async () => {
     await testDBUtils.clearDB()

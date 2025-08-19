@@ -16,28 +16,9 @@ import models from '../../models/index.js'
 import setupDB from '../../config/setupDB.js'
 import mongoose from 'mongoose'
 
-// vi.mock('../../config/setupDB.js', () => {
-//   return {
-//     default: {
-//       connect: vi.fn(async () => {}),
-//       close: vi.fn(async () => {}),
-//     },
-//   }
-// })
-
-// vi.mock('../../utils/dbUtils.js', () => {
-//   return {
-//     default: {
-//       clearCollection: vi.fn(async () => {}),
-//     },
-//   }
-// })
-
 describe('Integration tests for routes', () => {
   let testConnection
   let Bookstore
-  // let bookstoreModelClassSpy
-  let setupDBConnectSpy
   let app
 
   beforeEach(async () => {
@@ -47,16 +28,6 @@ describe('Integration tests for routes', () => {
     vi.stubGlobal('connection', testConnection)
 
     app = createApp(connection)
-
-    // setupDBConnectSpy = vi.spyOn(setupDB, 'connect').mockImplementation(
-    //   vi.fn(async () => {
-    //     return testConnection
-    //   })
-    // )
-
-    // bookstoreModelClassSpy = vi
-    //   .spyOn(models.bookstore, 'ModelClass', 'get')
-    //   .mockReturnValue(Bookstore)
   })
 
   afterEach(async () => {
@@ -90,14 +61,6 @@ describe('Integration tests for routes', () => {
   })
 
   describe('GET /bookstores', () => {
-    // it('response.text should contain `<h1>Index page</h1>`', async () => {
-    //   const route = '/bookstores'
-
-    //   const response = await request(app).get(route)
-
-    //   expect(response.text).toContain('<h1>Index page</h1>')
-    // })
-
     it('given a populated mock bookstore document, response.text should display the correct bookstore name, image, description, author of the document ', async () => {
       const bookstoreObjMock = {
         name: 'john',

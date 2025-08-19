@@ -9,7 +9,15 @@ const dbUtils = {
       throw new TypeError('Second parameter should be of string data type')
     }
 
-    return connection.models[modelName]
+    const ModelClass = connection.models[modelName]
+
+    if (!ModelClass) {
+      throw new Error(
+        "Wrong modelName or the ModelClass you're looking for doesn't exist"
+      )
+    }
+
+    return ModelClass
   },
 
   async clearCollection(connection, modelName) {

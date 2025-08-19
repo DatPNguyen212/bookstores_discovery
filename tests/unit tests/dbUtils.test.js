@@ -32,6 +32,17 @@ describe('dbUtils.getModelClass()', () => {
 
     expect(res).toBeDefined()
   })
+  it('when you pass a connection in 1st param, and a model name that DOES NOT EXIST in that connection in 2nd param, it should throw an error', () => {
+    const modelName = 'ModelName2'
+
+    const fn = () => {
+      dbUtils.getModelClass(connectionMock, modelName)
+    }
+
+    expect(fn).toThrow(
+      "Wrong modelName or the ModelClass you're looking for doesn't exist"
+    )
+  })
   it('if you pass a non-string data type to 2nd parameter, it should throw an error', () => {
     const modelName = 3
 
@@ -41,13 +52,7 @@ describe('dbUtils.getModelClass()', () => {
 
     expect(fn).toThrow('Second parameter should be of string data type')
   })
-  it('when you pass the model name that does not exist in default connection, it should return undefined', () => {
-    const modelName = 'ModelName2'
 
-    const res = dbUtils.getModelClass(connectionMock, modelName)
-
-    expect(res).toBeUndefined()
-  })
   it('when you pass a non-plain object in first param, it should throw an error', () => {
     const modelName = 'ModelName'
     connectionMock = 'connection'
