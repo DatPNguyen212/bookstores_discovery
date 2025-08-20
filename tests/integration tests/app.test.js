@@ -118,4 +118,14 @@ describe('Integration tests for routes', () => {
       expect(response.text).toContain('<h1>Create bookstore</h1>')
     })
   })
+
+  describe('GET /bookstores/id', () => {
+    it('when you send GET /bookstores/invalidId, response status should be 500 internal error  ', async () => {
+      const route = '/bookstores/invalidId'
+
+      const response = await request(app).get(route)
+
+      expect(response.status).toBe(500)
+    })
+  })
 })
