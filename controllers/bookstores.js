@@ -2,6 +2,9 @@ import models from '../models/index.js'
 import app from '../app.js'
 import dbUtils from '../utils/dbUtils.js'
 import objectUtils from '../utils/objectUtils.js'
+import mongoose from 'mongoose'
+
+const ObjectId = mongoose.Types.ObjectId
 // const renderIndexPage = async (req, res, next) => {
 //   const bookstores = await Bookstore.find({})
 //   res.render('./bookstore/index.ejs', { bookstores })
@@ -37,6 +40,10 @@ const bookstoreCtrl = {
   renderShowPage(connection) {
     return async (req, res, next) => {
       const { id } = req.params
+
+      if (!ObjectId.isValid(id)) {
+        throw new Error('Invalid ID in URL')
+      }
 
       const Bookstore = connection.model('Bookstore', models.bookstore.schema)
 

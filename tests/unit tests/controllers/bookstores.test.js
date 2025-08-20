@@ -2,6 +2,9 @@ import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import bookstoreCtrl from '../../../controllers/bookstores.js'
 import dbUtils from '../../../utils/dbUtils.js'
 import models from '../../../models/index.js'
+import mongoose from 'mongoose'
+
+const ObjectId = mongoose.Types.ObjectId
 
 describe('bookstoreCtrl', () => {
   let findResult = [1, 2, 3]
@@ -35,7 +38,7 @@ describe('bookstoreCtrl', () => {
       test: 'test',
     },
     params: {
-      id: 'test',
+      id: new ObjectId(),
     },
   }
   let res = {
@@ -58,7 +61,11 @@ describe('bookstoreCtrl', () => {
         return Bookstore
       }),
     }
+
+    req.params.id = new ObjectId()
+
     vi.restoreAllMocks()
+    vi.unstubAllGlobals()
   })
 
   describe('bookstoreCtrl.renderIndexPage()', () => {
@@ -127,7 +134,7 @@ describe('bookstoreCtrl', () => {
 
       expect(result).toBeInstanceOf(Function)
     })
-    it('when you pass a connection obj, the return function should call res.render() with correct view file and findById result', async () => {
+    it('the return function should call res.render() with correct view file and findById result', async () => {
       const renderShowPage = bookstoreCtrl.renderShowPage(connection)
 
       await renderShowPage(req, res, next)
@@ -135,6 +142,17 @@ describe('bookstoreCtrl', () => {
       expect(res.render).toBeCalledWith('./bookstore/show.ejs', {
         bookstore: findByIdResult,
       })
+    })
+
+    it('the return function should throw an error if id param is not valid ObjectId', async () => {
+      req.params.id = 'invalidId'
+      const renderShowPage = bookstoreCtrl.renderShowPage(connection)
+
+      const fn = async () => {
+        await renderShowPage(req, res, next)
+      }
+
+      await expect(fn).rejects.toThrow('Invalid ID in URL')
     })
   })
 })
