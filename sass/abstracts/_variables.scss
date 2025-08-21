@@ -48,8 +48,6 @@ $btn-delete-hover-color: color.adjust($btn-delete-color, $lightness: 5%);
 $btn-row-margin-top: 0.75rem;
 
 // card-grid layout component
-$card-grid-container-margin-top: 1rem;
-$card-grid-container-margin-bottom: 1rem;
 $card-grid-container-row-gap: 1rem;
 
 //card component
@@ -68,4 +66,6 @@ $card-title-font-size: 1.5rem;
 $card-author-text-color: hsl(0, 0, 50%);
 
 // Body layout
+$site-main-padding-top: 1rem;
+$site-main-padding-bottom: 1rem;
 $site-main-width: 90vw;

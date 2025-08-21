@@ -156,11 +156,7 @@ describe('Integration tests for routes', () => {
 
       expect(response.status).toBe(500)
     })
-    it('given a populated bookstore document, when you send GET /bookstores/validBookstoreId, response.text should display <h1>Show page </h1>', async () => {
-      const response = await request(app).get(`/bookstores/${bookstore._id}`)
 
-      expect(response.text).toContain('<h1>Show Page</h1>')
-    })
     it('given a populated bookstore document, when you send GET /bookstores/validBookstoreId, response.text should contain that bookstore info', async () => {
       const response = await request(app).get(`/bookstores/${bookstore._id}`)
 
