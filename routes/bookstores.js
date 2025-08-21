@@ -6,9 +6,11 @@ function createBookstoreRouter(connection) {
   const router = express.Router()
 
   const renderCreatePage = bookstoreCtrl.renderCreatePage(connection)
+  const renderShowPage = bookstoreCtrl.renderShowPage(connection)
   const renderIndexPage = bookstoreCtrl.renderIndexPage(connection)
 
   router.get('/new', renderCreatePage)
+  router.get('/:id', renderShowPage)
   router.get('/', renderIndexPage)
 
   return router

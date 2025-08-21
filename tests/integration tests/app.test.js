@@ -16,6 +16,8 @@ import models from '../../models/index.js'
 import setupDB from '../../config/setupDB.js'
 import mongoose from 'mongoose'
 
+const ObjectId = mongoose.Types.ObjectId
+
 describe('Integration tests for routes', () => {
   let testConnection
   let Bookstore
@@ -63,6 +65,7 @@ describe('Integration tests for routes', () => {
   describe('GET /bookstores', () => {
     it('given a populated mock bookstore document, response.text should display the correct bookstore name, image, description, author of the document ', async () => {
       const bookstoreObjMock = {
+        _id: new ObjectId(),
         name: 'john',
         address: '3, Ba Thang Hai Street, 3 District, Ho Chi Minh City',
         genres: ['fantasy', 'fiction'],
@@ -80,10 +83,14 @@ describe('Integration tests for routes', () => {
       expect($('.card__title').text()).toBe(bookstoreObjMock.name)
       expect($('.card__description').text()).toBe(bookstoreObjMock.description)
       expect($('.card__img').attr('src')).toBe('https://picsum.photos/800/600')
+      expect($('.btn.btn-show').attr('href')).toBe(
+        `/bookstores/${bookstoreObjMock._id}`
+      )
     }, 10000)
   })
   it('given 2 populated mock bookstore documents, response.text should have the correct number of bookstore card componenets', async () => {
     const bookstoreObjMock1 = {
+      _id: new ObjectId(),
       name: 'john',
       address: '3, Ba Thang Hai Street, 3 District, Ho Chi Minh City',
       genres: ['fantasy', 'fiction'],
@@ -92,6 +99,7 @@ describe('Integration tests for routes', () => {
       openDays: ['Monday'],
     }
     const bookstoreObjMock2 = {
+      _id: new ObjectId(),
       name: 'john',
       address: '3, Ba Thang Hai Street, 3 District, Ho Chi Minh City',
       genres: ['fantasy', 'fiction'],
@@ -119,13 +127,53 @@ describe('Integration tests for routes', () => {
     })
   })
 
-  describe('GET /bookstores/id', () => {
+  describe('GET /bookstores/:id', () => {
+    let bookstore = {}
+    let newBookstore = {}
+
+    beforeEach(async () => {
+      bookstore = {
+        _id: new ObjectId(),
+        name: 'john',
+        address: '3, Ba Thang Hai Street, 3 District, Ho Chi Minh City',
+        genres: ['fantasy', 'fiction'],
+        description: 'test',
+        images: 'https://picsum.photos/800/600',
+        openDays: ['Monday'],
+      }
+      newBookstore = await Bookstore.create(bookstore)
+    })
+
+    afterEach(() => {
+      newBookstore = {}
+      bookstore = {}
+      vi.restoreAllMocks()
+    })
     it('when you send GET /bookstores/invalidId, response status should be 500 internal error  ', async () => {
       const route = '/bookstores/invalidId'
 
       const response = await request(app).get(route)
 
       expect(response.status).toBe(500)
+    })
+    it('given a populated bookstore document, when you send GET /bookstores/validBookstoreId, response.text should display <h1>Show page </h1>', async () => {
+      const response = await request(app).get(`/bookstores/${bookstore._id}`)
+
+      expect(response.text).toContain('<h1>Show Page</h1>')
+    })
+    it('given a populated bookstore document, when you send GET /bookstores/validBookstoreId, response.text should contain that bookstore info', async () => {
+      const response = await request(app).get(`/bookstores/${bookstore._id}`)
+
+      expect(response.text).toContain(bookstore.name)
+      expect(response.text).toContain(bookstore.address)
+      for (let genre of bookstore.genres) {
+        expect(response.text).toContain(genre)
+      }
+      expect(response.text).toContain(bookstore.description)
+      expect(response.text).toContain(bookstore.images)
+      for (let openDay of bookstore.openDays) {
+        expect(response.text).toContain(openDay)
+      }
     })
   })
 })
