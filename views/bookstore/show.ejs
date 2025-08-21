@@ -1,43 +1,47 @@
 <% layout("./layouts/boilerplate.ejs") %>
 <div class="store-detail">
-  <img
-    class="store-detail__img"
-    src="<%= bookstore.images %>"
-    alt="bookstore image"
-  />
-  <h2 class="store-detail__title"><%= bookstore.name %></h2>
+  <div class="store-detail__img-container">
+    <img
+      class="store-detail__img"
+      src="<%= bookstore.images %>"
+      alt="bookstore image"
+    />
+  </div>
+  <div class="store-detail__info-container">
+    <h2 class="store-detail__title"><%= bookstore.name %></h2>
 
-  <h3>Description</h3>
-  <p class="store-detail__description"><%= bookstore.description %></p>
+    <h3>Description</h3>
+    <p class="store-detail__description"><%= bookstore.description %></p>
 
-  <h3>Address</h3>
-  <p class="store-detail__address"><%= bookstore.address %></p>
+    <h3>Address</h3>
+    <p class="store-detail__address"><%= bookstore.address %></p>
 
-  <h3>Genres</h3>
-  <% for (let genre of bookstore.genres) { %>
-  <p class="store-detail__genre"><%= genre %></p>
-  <% } %>
+    <h3>Genres</h3>
+    <% for (let genre of bookstore.genres) { %>
+    <p class="store-detail__genre"><%= genre %></p>
+    <% } %>
 
-  <h3>Open Days</h3>
-  <% if (bookstore.openDays.find((item)=> { return item === "Monday" })) { %>
-  <p class="store-detail__openDay">Monday</p>
-  <% } %> <% if (bookstore.openDays.find((item)=> { return item === "Tuesday"
-  })) { %>
-  <p class="store-detail__openDay">Tuesday</p>
-  <% } %> <% if (bookstore.openDays.find((item)=> { return item === "Wednesday"
-  })) { %>
-  <p class="store-detail__openDay">Wednesday</p>
-  <% } %> <% if (bookstore.openDays.find((item)=> { return item === "Thursday"
-  })) { %>
-  <p class="store-detail__openDay">Thursday</p>
-  <% } %> <% if (bookstore.openDays.find((item)=> { return item === "Friday" }))
-  { %>
-  <p class="store-detail__openDay">Friday</p>
-  <% } %> <% if (bookstore.openDays.find((item)=> { return item === "Saturday"
-  })) { %>
-  <p class="store-detail__openDay">Saturday</p>
-  <% } %> <% if (bookstore.openDays.find((item)=> { return item === "Sunday" }))
-  { %>
-  <p class="store-detail__openDay">Sunday</p>
-  <% } %>
+    <h3>Open Days</h3>
+    <% if (bookstore.openDays.find((item)=> { return item === "Monday" })) { %>
+    <p class="store-detail__openDay">Monday</p>
+    <% } %> <% if (bookstore.openDays.find((item)=> { return item === "Tuesday"
+    })) { %>
+    <p class="store-detail__openDay">Tuesday</p>
+    <% } %> <% if (bookstore.openDays.find((item)=> { return item ===
+    "Wednesday" })) { %>
+    <p class="store-detail__openDay">Wednesday</p>
+    <% } %> <% if (bookstore.openDays.find((item)=> { return item === "Thursday"
+    })) { %>
+    <p class="store-detail__openDay">Thursday</p>
+    <% } %> <% if (bookstore.openDays.find((item)=> { return item === "Friday"
+    })) { %>
+    <p class="store-detail__openDay">Friday</p>
+    <% } %> <% if (bookstore.openDays.find((item)=> { return item === "Saturday"
+    })) { %>
+    <p class="store-detail__openDay">Saturday</p>
+    <% } %> <% if (bookstore.openDays.find((item)=> { return item === "Sunday"
+    })) { %>
+    <p class="store-detail__openDay">Sunday</p>
+    <% } %>
+  </div>
 </div>
