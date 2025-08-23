@@ -73,13 +73,36 @@ const seedHelpers = {
     return addressString
   },
 
-  generateRandGenre(genres) {
-    for (let genre of genres) {
-      if (typeof genre !== 'string') {
-        throw new TypeError('First parameter must be an array of strings')
+  generateRandGenres(genres) {
+    if (!Array.isArray(genres)) {
+      throw new TypeError(
+        'First param must be an array where each item is of string data type'
+      )
+    } else {
+      for (let item of genres) {
+        if (typeof item !== 'string') {
+          throw new TypeError(
+            'First param must be an array where each item is of string data type'
+          )
+        }
       }
     }
-    return arrayUtils.getRandItem(genres)
+    const numberOfItems = numberUtils.generateRandNum(1, genres.length)
+    let randGenresRes = []
+    let randGenre
+    let genresCopy = genres.map((item) => {
+      return item
+    })
+
+    for (let i = 0; i < numberOfItems; i++) {
+      randGenre = arrayUtils.getRandItem(genresCopy)
+      const index = genresCopy.indexOf(randGenre)
+      genresCopy.splice(index, 1)
+
+      randGenresRes.push(randGenre)
+    }
+
+    return randGenresRes
   },
 
   generateOpenDays() {
@@ -133,7 +156,7 @@ const seedHelpers = {
       name: this.generateRandName(names.firstNames, names.lastNames),
       address: await this.generateRandAddress(JSON_PATH),
       description: DESCRIPTION,
-      genres: this.generateRandGenre(GENRES),
+      genres: this.generateRandGenres(GENRES),
       images: IMG_LINK,
       openDays: this.generateOpenDays(),
     }

@@ -7,6 +7,7 @@ import names from '../../../seeds/names.js'
 import path from 'path'
 import pathUtils from '../../../utils/pathUtils.js'
 import models from '../../../models/index.js'
+import lodash from 'lodash'
 
 vi.mock('../../../utils/pathUtils.js', () => {
   return {
@@ -256,10 +257,51 @@ describe('seedHelpers.generateBookstoreObj()', () => {
   it('should return a predictable obj', () => {})
 })
 
-describe('seedHelpers.generateRandGenre()', () => {
+// describe('seedHelpers.generateRandGenres()', () => {
+//   let getRandItemSpy
+
+//   beforeEach(() => {
+//     getRandItemSpy = vi.spyOn(arrayUtils, 'getRandItem')
+//   })
+
+//   afterEach(() => {
+//     vi.restoreAllMocks()
+//   })
+
+//   it('when you pass an array to it, it should call arrayUtils.getRandomItem() with the array you passed', () => {
+//     const genres = ['fiction', 'fantasy']
+
+//     const res = seedHelpers.generateRandGenres(genres)
+
+//     expect(getRandItemSpy).toBeCalledWith(genres)
+//   })
+
+//   it('given arrayUtils.generateRandItem() return first item in your array argument, it should return that same value', () => {
+//     const genres = ['fiction', 'fantasy']
+
+//     getRandItemSpy.mockReturnValue(genres[0])
+
+//     const res = seedHelpers.generateRandGenres(genres)
+
+//     expect(res).toBe('fiction')
+//   })
+//   it('should throw an error if first parameter argument is not an array of strings', () => {
+//     const genres = [1, 2, 3]
+
+//     const fn = () => {
+//       seedHelpers.generateRandGenres(genres)
+//     }
+
+//     expect(fn).toThrow('First parameter must be an array of strings')
+//   })
+// })
+
+describe('seedHelpers.generateRandGenres()', () => {
+  let generateRandNumSpy
   let getRandItemSpy
 
   beforeEach(() => {
+    generateRandNumSpy = vi.spyOn(numberUtils, 'generateRandNum')
     getRandItemSpy = vi.spyOn(arrayUtils, 'getRandItem')
   })
 
@@ -267,31 +309,87 @@ describe('seedHelpers.generateRandGenre()', () => {
     vi.restoreAllMocks()
   })
 
-  it('when you pass an array to it, it should call arrayUtils.getRandomItem() with the array you passed', () => {
-    const genres = ['fiction', 'fantasy']
+  it('given numberUtils.generateRandNum() returns 3, when you pass an array of genres, it should return an array', () => {
+    generateRandNumSpy.mockReturnValueOnce(3)
 
-    const res = seedHelpers.generateRandGenre(genres)
+    const genres = ['fantasy', 'fiction', 'science', 'romance']
 
-    expect(getRandItemSpy).toBeCalledWith(genres)
+    const result = seedHelpers.generateRandGenres(genres)
+
+    expect(result).toBeInstanceOf(Array)
   })
 
-  it('given arrayUtils.generateRandItem() return first item in your array argument, it should return that same value', () => {
-    const genres = ['fiction', 'fantasy']
+  it('given numberUtils.generateRandNum() returns 3 and arrayUtils.getRandItem(genres) return same genre 2 times, when you pass an array of genres, each item in the return array should still be unique', () => {
+    generateRandNumSpy.mockReturnValueOnce(3)
 
-    getRandItemSpy.mockReturnValue(genres[0])
+    const genres = ['fantasy', 'fiction', 'science', 'romance']
 
-    const res = seedHelpers.generateRandGenre(genres)
+    const randGenres = seedHelpers.generateRandGenres(genres)
 
-    expect(res).toBe('fiction')
+    let isUnique = true
+
+    for (let i = 0; i < randGenres.length; i++) {
+      const randGenresCopy = randGenres.map((item) => {
+        return item
+      })
+      randGenresCopy.splice(i, 1)
+
+      for (let j = 0; j < randGenresCopy.length; j++) {
+        if (randGenres[i] === randGenresCopy[j]) {
+          isUnique = false
+          if (isUnique === false) {
+            break
+          }
+        }
+      }
+
+      if (isUnique === false) {
+        break
+      }
+    }
+
+    expect(isUnique).toBe(true)
   })
-  it('should throw an error if first parameter argument is not an array of strings', () => {
+  it('when you pass an array of 2 genres, it should return predictable array of genres', () => {
+    generateRandNumSpy.mockReturnValueOnce(2)
+    const genres = ['fantasy', 'fiction']
+
+    const res = seedHelpers.generateRandGenres(genres)
+
+    const possibleRes1 = ['fantasy', 'fiction']
+    const possibleRes2 = ['fiction', 'fantasy']
+    let isExpectedArray = false
+
+    if (
+      lodash.isEqual(res, possibleRes1) ||
+      lodash.isEqual(res, possibleRes2)
+    ) {
+      isExpectedArray = true
+    }
+
+    expect(isExpectedArray).toBe(true)
+  })
+  it('when you pass non array data type in 1st param, it should throw an error', () => {
+    const genres = 3
+
+    const fn = () => {
+      seedHelpers.generateRandGenres(genres)
+    }
+
+    expect(fn).toThrow(
+      'First param must be an array where each item is of string data type'
+    )
+  })
+  it('when you pass an array where each item is NOT string data type, it should throw an error', () => {
     const genres = [1, 2, 3]
 
     const fn = () => {
-      seedHelpers.generateRandGenre(genres)
+      seedHelpers.generateRandGenres(genres)
     }
 
-    expect(fn).toThrow('First parameter must be an array of strings')
+    expect(fn).toThrow(
+      'First param must be an array where each item is of string data type'
+    )
   })
 })
 
@@ -352,7 +450,7 @@ describe('seedHelpers.generateOpenDays()', () => {
 describe('seedHelpers.genObjForBookstoreClass', () => {
   let generateRandNameSpy
   let generateRandAddressSpy
-  let generateRandGenreSpy
+  let generateRandGenresSpy
   let generateOpenDaysSpy
   let moduleFileUrlSpy
   let pathJoinSpy
@@ -360,7 +458,7 @@ describe('seedHelpers.genObjForBookstoreClass', () => {
   beforeEach(() => {
     generateRandNameSpy = vi.spyOn(seedHelpers, 'generateRandName')
     generateRandAddressSpy = vi.spyOn(seedHelpers, 'generateRandAddress')
-    generateRandGenreSpy = vi.spyOn(seedHelpers, 'generateRandGenre')
+    generateRandGenresSpy = vi.spyOn(seedHelpers, 'generateRandGenres')
     generateOpenDaysSpy = vi.spyOn(seedHelpers, 'generateOpenDays')
     moduleFileUrlSpy = vi.spyOn(seedHelpers, 'moduleFileUrl', 'get')
     pathJoinSpy = vi.spyOn(path, 'join')
@@ -418,7 +516,7 @@ describe('seedHelpers.genObjForBookstoreClass', () => {
 
     await seedHelpers.genObjForBookstoreClass()
 
-    expect(generateRandGenreSpy).toBeCalledWith(GENRES)
+    expect(generateRandGenresSpy).toBeCalledWith(GENRES)
   })
   it('should call seedHelpers.generateOpenDays()', async () => {
     await seedHelpers.genObjForBookstoreClass()
@@ -453,7 +551,7 @@ describe('seedHelpers.genObjForBookstoreClass', () => {
   it("given seedHelpers methods' return values are mocked, it should return an object whose properties' values are predictable", async () => {
     generateRandNameSpy.mockReturnValue('name')
     generateRandAddressSpy.mockReturnValue('address')
-    generateRandGenreSpy.mockReturnValue(['fantasy', 'fiction'])
+    generateRandGenresSpy.mockReturnValue(['fantasy', 'fiction'])
     generateOpenDaysSpy.mockReturnValue(['Monday', 'Tuesday'])
     const DESCRIPTION =
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus semper suscipit scelerisque. Etiam nec tortor id odio facilisis sodales id a justo. Proin porta, turpis eget sodales mattis, est mauris.'
