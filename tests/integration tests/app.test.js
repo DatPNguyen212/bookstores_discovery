@@ -157,19 +157,37 @@ describe('Integration tests for routes', () => {
       expect(response.status).toBe(500)
     })
 
-    it('given a populated bookstore document, when you send GET /bookstores/validBookstoreId, response.text should contain that bookstore info', async () => {
+    it('given a populated bookstore document, when you send GET /bookstores/validBookstoreId, server should render the correct HTML elements with correct bookstore info', async () => {
       const response = await request(app).get(`/bookstores/${bookstore._id}`)
 
-      expect(response.text).toContain(bookstore.name)
-      expect(response.text).toContain(bookstore.address)
-      for (let genre of bookstore.genres) {
-        expect(response.text).toContain(genre)
-      }
-      expect(response.text).toContain(bookstore.description)
-      expect(response.text).toContain(bookstore.images)
-      for (let openDay of bookstore.openDays) {
-        expect(response.text).toContain(openDay)
-      }
+      const $ = cheerio.load(response.text)
+
+      expect($('.store-detail__title').text()).toBe(bookstore.name)
+
+      expect($('.store-detail__address').text()).toBe(bookstore.address)
+
+      const genreElements = $('.store-detail__genre')
+
+      genreElements.each((i, element) => {
+        const matchResult = bookstore.genres.find((genre) => {
+          return genre === $(element).text()
+        })
+        expect(matchResult).toBeDefined()
+      })
+
+      expect($('.store-detail__description').text()).toBe(bookstore.description)
+
+      expect($('.store-detail__img').attr('src')).toBe(bookstore.images)
+
+      const openDayElements = $('store-detail__openDay')
+
+      openDayElements.each((i, element) => {
+        const matchResult = bookstore.openDays.find((openDay) => {
+          return openDay === $(element).text()
+        })
+
+        expect(matchResult).toBeDefined()
+      })
     })
   })
 })
