@@ -2,7 +2,7 @@ import bookstoreSchema from './bookstores.js'
 import objectUtils from '../utils/objectUtils.js'
 
 const models = {
-  bookstore: {
+  Bookstore: {
     schema: bookstoreSchema,
     getModelClass(connection) {
       if (!objectUtils.isPlainObject(connection)) {

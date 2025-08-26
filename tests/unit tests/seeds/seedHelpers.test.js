@@ -603,13 +603,13 @@ describe('seedHelpers.genBookstoreDoc()', () => {
     expect(genObjForBookstoreClassSpy).toBeCalled()
   })
 
-  it('when you pass connection obj, it should call models.bookstore.getModelClass(connection)', async () => {
+  it('when you pass connection obj, it should call models.Bookstore.getModelClass(connection)', async () => {
     await seedHelpers.genBookstoreDoc(connectionMock)
 
-    expect(models.bookstore.getModelClass).toBeCalledWith(connectionMock)
+    expect(models.Bookstore.getModelClass).toBeCalledWith(connectionMock)
   })
 
-  it('given genObjForBookstoreClass returns a mocked obj, and models.bookstore.getModelClass(connection) return a mocked ModelClass, it should call that mocked ModelClass create method with that mocked obj', async () => {
+  it('given genObjForBookstoreClass returns a mocked obj, and models.Bookstore.getModelClass(connection) return a mocked ModelClass, it should call that mocked ModelClass create method with that mocked obj', async () => {
     const objMock = {
       testing: 'test',
     }
@@ -618,7 +618,7 @@ describe('seedHelpers.genBookstoreDoc()', () => {
     await seedHelpers.genBookstoreDoc(connectionMock)
 
     expect(
-      models.bookstore.getModelClass(connectionMock).create
+      models.Bookstore.getModelClass(connectionMock).create
     ).toBeCalledWith(objMock)
   })
 

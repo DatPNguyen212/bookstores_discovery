@@ -3,6 +3,7 @@ import seedHelpers from './seedHelpers.js'
 import dbUtils from '../utils/dbUtils.js'
 import { fileURLToPath } from 'url'
 import path from 'path'
+import models from '../models/index.js'
 
 async function seedBookstore(numberOfStores = 30) {
   if (typeof numberOfStores !== 'number') {
