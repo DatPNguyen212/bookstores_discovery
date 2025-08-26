@@ -24,7 +24,7 @@ async function seedBookstore(numberOfStores = 30) {
     throw new Error('Failed to connect to database')
   }
 
-  await dbUtils.clearCollection(connection, 'Bookstore')
+  await dbUtils.clearCollection(connection, models, 'Bookstore')
 
   for (let i = 0; i < numberOfStores; i++) {
     try {

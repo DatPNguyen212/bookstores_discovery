@@ -20,7 +20,7 @@ const bookstoreCtrl = {
     if (!objectUtils.isPlainObject(connection)) {
       throw new TypeError('First parameter should be a connection object')
     }
-    const Bookstore = connection.model('Bookstore', models.bookstore.schema)
+    const Bookstore = connection.model('Bookstore', models.Bookstore.schema)
 
     return async (req, res, next) => {
       const bookstores = await Bookstore.find({})
@@ -45,7 +45,7 @@ const bookstoreCtrl = {
         throw new Error('Invalid ID in URL')
       }
 
-      const Bookstore = connection.model('Bookstore', models.bookstore.schema)
+      const Bookstore = connection.model('Bookstore', models.Bookstore.schema)
 
       const bookstore = await Bookstore.findById(id)
 

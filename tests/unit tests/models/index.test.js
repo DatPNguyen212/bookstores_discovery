@@ -1,23 +1,23 @@
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import models from '../../../models/index.js'
 
-describe('models.bookstore.getModelClass()', () => {
+describe('models.Bookstore.getModelClass()', () => {
   let ModelClassMock = 'ModelClass'
   let connectionMock = {
     model: vi.fn((modelName, modelSchema) => {
       return ModelClassMock
     }),
   }
-  it('when you pass a mocked connection object to it, it should call connection.model(`Bookstore`, models.bookstore.schema)', () => {
-    const res = models.bookstore.getModelClass(connectionMock)
+  it('when you pass a mocked connection object to it, it should call connection.model(`Bookstore`, models.Bookstore.schema)', () => {
+    const res = models.Bookstore.getModelClass(connectionMock)
 
     expect(connectionMock.model).toBeCalledWith(
       'Bookstore',
-      models.bookstore.schema
+      models.Bookstore.schema
     )
   })
   it('when you pass a mocked connection object to it, it should return a predetermined ModelClass', () => {
-    const res = models.bookstore.getModelClass(connectionMock)
+    const res = models.Bookstore.getModelClass(connectionMock)
 
     expect(res).toBe(ModelClassMock)
   })
@@ -26,7 +26,7 @@ describe('models.bookstore.getModelClass()', () => {
     connectionMock = [1, 2, 3]
 
     const fn = () => {
-      models.bookstore.getModelClass(connectionMock)
+      models.Bookstore.getModelClass(connectionMock)
     }
 
     expect(fn).toThrow('First parameter must be a connection obj')

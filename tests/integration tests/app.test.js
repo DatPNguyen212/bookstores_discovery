@@ -25,7 +25,7 @@ describe('Integration tests for routes', () => {
 
   beforeEach(async () => {
     testConnection = await testDBUtils.connect()
-    Bookstore = testConnection.model('Bookstore', models.bookstore.schema)
+    Bookstore = testConnection.model('Bookstore', models.Bookstore.schema)
 
     vi.stubGlobal('connection', testConnection)
 

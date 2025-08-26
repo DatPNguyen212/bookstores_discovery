@@ -81,7 +81,7 @@ describe('seedBookstore()', () => {
         return testConnection
       })
     )
-    Bookstore = testConnection.model('Bookstore', models.bookstore.schema)
+    Bookstore = testConnection.model('Bookstore', models.Bookstore.schema)
   })
   afterEach(async () => {
     await testDBUtils.clearDB()

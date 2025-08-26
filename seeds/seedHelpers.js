@@ -169,7 +169,7 @@ const seedHelpers = {
     }
     const objForClass = await this.genObjForBookstoreClass()
 
-    const Bookstore = models.bookstore.getModelClass(connection)
+    const Bookstore = models.Bookstore.getModelClass(connection)
 
     await Bookstore.create(objForClass)
   },

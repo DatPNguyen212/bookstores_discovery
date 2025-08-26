@@ -11,6 +11,7 @@ import seedBookstore from '../../../seeds/index'
 import setupDB from '../../../config/setupDB'
 import seedHelpers from '../../../seeds/seedHelpers'
 import dbUtils from '../../../utils/dbUtils'
+import models from '../../../models/index.js'
 
 vi.mock('../../../config/setupDB.js', () => {
   return {
@@ -99,12 +100,16 @@ describe('seedBookstore()', () => {
     )
   })
 
-  it('when you pass a positive number, it should call dbUtils.clearCollection(connection, `Bookstore`)', async () => {
+  it('when you pass a positive number, it should call dbUtils.clearCollection(connection, models, `Bookstore`)', async () => {
     const numberOfStores = 3
 
     await seedBookstore(numberOfStores)
 
-    expect(clearCollectionSpy).toBeCalledWith(connectionMock, 'Bookstore')
+    expect(clearCollectionSpy).toBeCalledWith(
+      connectionMock,
+      models,
+      'Bookstore'
+    )
   })
 
   it('when you pass a positive number, it should call seedHelpers.genBookstoreDoc() with connection obj returned by setupDB.connect(uri) that same amount of number of times', async () => {
