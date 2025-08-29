@@ -35,3 +35,11 @@
 .btn.btn-delete:hover {
   background: variables.$btn-delete-hover-color;
 }
+
+.btn.btn-create {
+  background: variables.$btn-create-color;
+}
+
+.btn.btn-create:hover {
+  background: variables.$btn-create-hover-color;
+}

@@ -44,6 +44,9 @@ $btn-edit-hover-color: color.adjust($btn-edit-color, $lightness: 5%);
 $btn-delete-color: hsl(0, 50%, 50%);
 $btn-delete-hover-color: color.adjust($btn-delete-color, $lightness: 5%);
 
+$btn-create-color: hsl(300, 50%, 50%);
+$btn-create-hover-color: color.adjust($btn-create-color, $lightness: 5%);
+
 // btn-flex component
 $btn-row-margin-top: 0.75rem;
 

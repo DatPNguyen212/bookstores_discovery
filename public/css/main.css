@@ -128,6 +128,14 @@
   background: hsl(0, 50%, 55%);
 }
 
+.btn.btn-create {
+  background: hsl(300, 50%, 50%);
+}
+
+.btn.btn-create:hover {
+  background: hsl(300, 50%, 55%);
+}
+
 .card-grid-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
