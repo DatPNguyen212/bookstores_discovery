@@ -1,0 +1,40 @@
+@use '../abstracts/_variables.scss';
+@use '../abstracts/_mixins.scss';
+
+.form-create {
+  width: variables.$form-create-width;
+  background: variables.$form-create-background-color;
+  border-radius: variables.$form-create-border-radius;
+  padding: variables.$form-create-padding;
+
+  #{&}__body {
+    @include mixins.displayFlex(column) {
+      gap: variables.$form-create-input-wrapper-gaps;
+    }
+    margin-bottom: variables.$form-create-body-margin-bottom;
+  }
+
+  #{&}__label {
+    display: block;
+    text-align: left;
+    font-size: variables.$form-create-label-font-size;
+  }
+  #{&}__input {
+    display: block;
+    width: 100%;
+    padding: variables.$form-create-input-padding;
+    border-radius: variables.$form-create-input-border-radius;
+    border: variables.$form-create-input-border;
+    font-size: variables.$form-create-input-font-size;
+  }
+
+  #{&}__text-area {
+    width: 100%;
+    height: 200px;
+    padding: variables.$form-create-input-padding;
+    border-radius: variables.$form-create-input-border-radius;
+    border: variables.$form-create-input-border;
+    font-size: variables.$form-create-input-font-size;
+    font-family: variables.$site-primary-font-family;
+  }
+}

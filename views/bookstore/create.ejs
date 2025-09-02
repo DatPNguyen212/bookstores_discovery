@@ -1,2 +1,46 @@
 <% layout("./layouts/boilerplate.ejs") %>
-<h1>Create bookstore</h1>
+<div class="form-create-wrapper">
+  <form action="/bookstores" method="POST" class="form-create">
+    <header class="form-create__header">
+      <h1 class="form-create__title">Create bookstore</h1>
+    </header>
+
+    <div class="form-create__body">
+      <div class="form-create__input-wrapper">
+        <label for="name" class="form-create__label">Name</label>
+        <input id="name" type="text" name="name" class="form-create__input" />
+      </div>
+      <div class="form-create__input-wrapper">
+        <label for="address" class="form-create__label">Address</label>
+        <input
+          id="address"
+          type="text"
+          name="address"
+          class="form-create__input"
+        />
+      </div>
+      <div class="form-create__input-wrapper">
+        <label for="description" class="form-create__label">Description</label>
+
+        <textarea
+          name="description"
+          id="description"
+          class="form-create__text-area"
+        ></textarea>
+      </div>
+      <div class="form-create__input-wrapper">
+        <label for="images" class="form-create__label">Images</label>
+        <input
+          id="images"
+          type="text"
+          name="images"
+          class="form-create__input"
+        />
+      </div>
+    </div>
+
+    <footer class="form-create__footer">
+      <button type="submit" class="btn btn-submit">Submit</button>
+    </footer>
+  </form>
+</div>

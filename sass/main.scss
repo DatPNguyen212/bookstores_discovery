@@ -5,6 +5,7 @@
 // Base
 @use './base/_reset.scss';
 @use './base/_typography.scss';
+@use './base/_base.scss';
 
 // Components
 @use './components/_nav.scss';
@@ -13,11 +14,13 @@
 @use './components/_card.scss';
 @use './components/btn-flex';
 @use './components/_store-detail.scss';
+@use './components/_form-create.scss';
 
 // Layouts
 @use './layouts/_body.scss';
 @use './layouts/_footer.scss';
 
 // Pages
+@use './pages/_create.scss';
 
 // Themes

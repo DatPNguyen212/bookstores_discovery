@@ -1,4 +1,5 @@
 @use 'sass:color';
+@use 'sass:math';
 // nav component
 $nav-font-size: 1.1rem;
 $nav-height: 4rem;
@@ -47,6 +48,9 @@ $btn-delete-hover-color: color.adjust($btn-delete-color, $lightness: 5%);
 $btn-create-color: hsl(300, 50%, 50%);
 $btn-create-hover-color: color.adjust($btn-create-color, $lightness: 5%);
 
+$btn-submit-color: hsl(262, 50%, 50%);
+$btn-submit-hover-color: color.adjust($btn-submit-color, $lightness: 5%);
+
 // btn-flex component
 $btn-row-margin-top: 0.75rem;
 
@@ -59,14 +63,14 @@ $card-background-color: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 $card-border-radius: 1rem;
 $card-padding-y: 0.625rem;
 $card-padding-x: 0.625rem;
-$card-img-aspect-ratio: 4/3;
+$card-img-aspect-ratio: math.div(4, 3);
 $card-img-border-radius: 1rem;
 
 $card-body-padding: 0.5rem;
 $card-body-flex-gap: 0.625rem;
 $card-title-font-size: 1.5rem;
 
-$card-author-text-color: hsl(0, 0, 50%);
+$card-author-text-color: hsl(0, 0%, 50%);
 
 // Body layout
 $site-main-padding-top: 1rem;
@@ -80,3 +84,20 @@ $store-detail-padding-y: 1rem;
 $store-detail-padding-x: 1rem;
 $store-detail-border-radius: 0.6rem;
 $store-detail-img-container-border-radius: 0.6rem;
+
+// form-create
+$form-create-width: 40vw;
+$form-create-background-color: linear-gradient(to left, #ec6f66, #f3a183);
+$form-create-border-radius: 1rem;
+$form-create-padding: 1rem;
+
+$form-create-body-margin-bottom: 1rem;
+
+$form-create-input-wrapper-gaps: 1rem;
+
+$form-create-label-font-size: 1.2rem;
+
+$form-create-input-padding: 0.5rem;
+$form-create-input-border: 0.5px solid black;
+$form-create-input-border-radius: 0.5rem;
+$form-create-input-font-size: 1.1rem;

@@ -1,0 +1,5 @@
+@use '../abstracts/_mixins.scss';
+.form-create-wrapper {
+  @include mixins.flexCenter();
+  flex-grow: 1;
+}

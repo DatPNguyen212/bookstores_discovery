@@ -13,5 +13,6 @@
     padding-bottom: variables.$site-main-padding-bottom;
     flex-grow: 1;
     width: variables.$site-main-width;
+    @include mixins.displayFlex(column);
   }
 }

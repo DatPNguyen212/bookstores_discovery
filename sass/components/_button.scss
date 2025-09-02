@@ -10,6 +10,7 @@
   background: variables.$btn-background-color;
   color: variables.$btn-text-color;
   border-radius: variables.$btn-border-radius;
+  cursor: pointer;
 }
 
 .btn.btn-show {
@@ -42,4 +43,12 @@
 
 .btn.btn-create:hover {
   background: variables.$btn-create-hover-color;
+}
+
+.btn.btn-submit {
+  background: variables.$btn-submit-color;
+}
+
+.btn.btn-submit:hover {
+  background: variables.$btn-submit-hover-color;
 }

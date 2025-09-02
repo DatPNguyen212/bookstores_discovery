@@ -10,7 +10,7 @@
     "test": "cross-env NODE_ENV=test vitest --run --reporter verbose",
     "coverage": "vitest run --coverage",
     "compile": "sass --watch sass:public/css",
-    "reload": "browser-sync start --proxy http://localhost:3000 --files public/css/*.css --port 3001",
+    "reload": "browser-sync start --proxy http://localhost:3000 --files public/css/*.css views/*/*.ejs --port 3001",
     "dev": "concurrently \"nodemon app.js\" \"npm run compile\" \"npm run reload\""
   },
   "devDependencies": {
