@@ -15,7 +15,6 @@ const bookstoreSchema = new mongoose.Schema({
         'mystery',
         'thriller',
         'historical',
-        'fiction',
         'horror',
         'non-fiction',
       ],

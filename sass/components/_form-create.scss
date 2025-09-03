@@ -9,16 +9,53 @@
 
   #{&}__body {
     @include mixins.displayFlex(column) {
-      gap: variables.$form-create-input-wrapper-gaps;
+      gap: variables.$form-create-body-gap;
     }
     margin-bottom: variables.$form-create-body-margin-bottom;
   }
 
+  // grid layout
+
+  #{&}__checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  // input wrappers
+  #{&}__input-wrapper {
+  }
+  #{&}__input-wrapper--checkbox {
+    padding-left: variables.$form-create-checkbox-wrapper-padding-left;
+    @include mixins.displayFlex(row) {
+      justify-content: flex-start;
+      align-items: center;
+      gap: variables.$form-create-checkbox-wrapper-gap;
+    }
+  }
+
+  #{&}__fieldset {
+    border: none;
+  }
+
+  // labels
   #{&}__label {
     display: block;
     text-align: left;
     font-size: variables.$form-create-label-font-size;
   }
+
+  #{&}__label--inline {
+    display: inline;
+    text-align: left;
+    font-size: variables.$form-create-label-font-size;
+  }
+  #{&}__legend {
+    display: block;
+    text-align: left;
+    font-size: variables.$form-create-legend-font-size;
+  }
+
+  // inputs
   #{&}__input {
     display: block;
     width: 100%;
@@ -30,11 +67,11 @@
 
   #{&}__text-area {
     width: 100%;
-    height: 200px;
-    padding: variables.$form-create-input-padding;
-    border-radius: variables.$form-create-input-border-radius;
-    border: variables.$form-create-input-border;
-    font-size: variables.$form-create-input-font-size;
+    height: variables.$form-create-text-area-height;
+    padding: variables.$form-create-text-area-padding;
+    border-radius: variables.$form-create-text-area-border-radius;
+    border: variables.$form-create-text-area-border;
+    font-size: variables.$form-create-text-area-font-size;
     font-family: variables.$site-primary-font-family;
   }
 }

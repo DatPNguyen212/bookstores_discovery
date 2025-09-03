@@ -509,7 +509,6 @@ describe('seedHelpers.genObjForBookstoreClass', () => {
       'mystery',
       'thriller',
       'historical',
-      'fiction',
       'horror',
       'non-fiction',
     ]

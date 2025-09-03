@@ -140,7 +140,6 @@ const seedHelpers = {
       'mystery',
       'thriller',
       'historical',
-      'fiction',
       'horror',
       'non-fiction',
     ]
