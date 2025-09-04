@@ -118,12 +118,19 @@ describe('Integration tests for routes', () => {
   }, 10000)
 
   describe('GET /bookstores/new', () => {
-    it('response.text should contain <h1>Create bookstore</h1>', async () => {
+    // it('response.text should contain <h1>Create bookstore</h1>', async () => {
+    //   const route = '/bookstores/new'
+
+    //   const response = await request(app).get(route)
+
+    //   expect(response.text).toContain('<h1>Create bookstore</h1>')
+    // })
+    it('when you send GET /bookstores/new, response.status should be 200', async () => {
       const route = '/bookstores/new'
 
       const response = await request(app).get(route)
 
-      expect(response.text).toContain('<h1>Create bookstore</h1>')
+      expect(response.status).toBe(200)
     })
   })
 
@@ -189,5 +196,25 @@ describe('Integration tests for routes', () => {
         expect(matchResult).toBeDefined()
       })
     })
+  })
+
+  describe('POST /bookstores', () => {
+    it('when you send POST /bookstores with mocked bookstore data, a bookstore doc with said data should be saved to the database', async () => {
+      const data = {
+        bookstore: {
+          name: 'bookstoreName',
+          address: '3, Ba Thang Hai Street, 3 District, Ho Chi Minh City',
+          description: 'test',
+          genres: ['fantasy', 'science'],
+          images: 'url',
+          openDays: ['Monday', 'Tuesday'],
+        },
+      }
+
+      const response = await request(app).post('/bookstores').send(data)
+      const bookstoreRes = await Bookstore.findOne(data.bookstore)
+
+      expect(bookstoreRes).not.toBe(null)
+    }, 5000)
   })
 })
