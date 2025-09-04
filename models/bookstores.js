@@ -3,7 +3,10 @@ import mongoose from 'mongoose'
 const bookstoreSchema = new mongoose.Schema({
   name: String,
   address: String,
-  description: String,
+  description: {
+    type: String,
+    maxLength: 500,
+  },
   genres: [
     {
       type: String,
