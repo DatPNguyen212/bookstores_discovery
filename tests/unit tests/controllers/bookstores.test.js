@@ -16,12 +16,25 @@ describe('bookstoreCtrl', () => {
     images: 'url',
     openDays: ['Monday', 'Tuesday'],
   }
+
+  let newBookstore = {
+    _id: new ObjectId(),
+    name: 'bookstoreName',
+    address: '3, Ba Thang Hai Street, 3 District, Ho Chi Minh City',
+    description: 'test',
+    genres: ['fantasy', 'science'],
+    images: 'url',
+    openDays: ['Monday', 'Tuesday'],
+  }
   let Bookstore = {
     find: vi.fn(async () => {
       return findResult
     }),
     findById: vi.fn(async () => {
       return findByIdResult
+    }),
+    create: vi.fn(async () => {
+      return newBookstore
     }),
   }
   let connection = {
@@ -32,7 +45,8 @@ describe('bookstoreCtrl', () => {
       return Bookstore
     }),
   }
-  let getModelClassSpy
+  // let getModelClassSpy
+
   let req = {
     query: {
       test: 'test',
@@ -40,16 +54,27 @@ describe('bookstoreCtrl', () => {
     params: {
       id: new ObjectId(),
     },
+    body: {
+      bookstore: {
+        name: 'bookstoreName',
+        address: '3, Ba Thang Hai Street, 3 District, Ho Chi Minh City',
+        description: 'test',
+        genres: ['fantasy', 'science'],
+        images: 'url',
+        openDays: ['Monday', 'Tuesday'],
+      },
+    },
   }
   let res = {
     render: vi.fn(() => {}),
+    redirect: vi.fn(() => {}),
   }
 
   let next = vi.fn()
   beforeEach(() => {
-    getModelClassSpy = vi
-      .spyOn(dbUtils, 'getModelClass')
-      .mockReturnValue(Bookstore)
+    // getModelClassSpy = vi
+    //   .spyOn(dbUtils, 'getModelClass')
+    //   .mockReturnValue(Bookstore)
   })
 
   afterEach(() => {
@@ -70,9 +95,17 @@ describe('bookstoreCtrl', () => {
 
   describe('bookstoreCtrl.renderIndexPage()', () => {
     it('when you pass connection obj, it should return a function', () => {
-      const res = bookstoreCtrl.renderIndexPage(connection)
+      const result = bookstoreCtrl.renderIndexPage(connection)
 
-      expect(res).toBeInstanceOf(Function)
+      expect(result).toBeInstanceOf(Function)
+    })
+    it('should call connection.model(`Bookstore`, models.Bookstore.schema)', () => {
+      const result = bookstoreCtrl.renderIndexPage(connection)
+
+      expect(connection.model).toBeCalledWith(
+        'Bookstore',
+        models.Bookstore.schema
+      )
     })
     it('the return function should call Bookstore.find({})', () => {
       const returnFn = bookstoreCtrl.renderIndexPage(connection)
@@ -153,6 +186,38 @@ describe('bookstoreCtrl', () => {
       }
 
       await expect(fn).rejects.toThrow('Invalid ID in URL')
+    })
+  })
+
+  describe('bookstoreCtrl.createBookstore()', () => {
+    it('when you pass a connection obj, should return a function', () => {
+      const result = bookstoreCtrl.createBookstore(connection)
+
+      expect(result).toBeInstanceOf(Function)
+    })
+
+    it('should call connection.model(`Bookstore`, models.Bookstore.schema)', () => {
+      const result = bookstoreCtrl.createBookstore(connection)
+
+      expect(connection.model).toBeCalledWith(
+        'Bookstore',
+        models.Bookstore.schema
+      )
+    })
+    it('the return function when called should call Bookstore.create(req.body.bookstore)', async () => {
+      const returnFn = bookstoreCtrl.createBookstore(connection)
+
+      await returnFn(req, res, next)
+
+      expect(Bookstore.create).toBeCalled(req.body.bookstore)
+    })
+
+    it('the return function when called should call res.redirect(/bookstores/id) where id is the id of the newly created bookstore doc', async () => {
+      const returnFn = bookstoreCtrl.createBookstore(connection)
+
+      await returnFn(req, res, next)
+
+      expect(res.redirect).toBeCalledWith(`/bookstores/${newBookstore._id}`)
     })
   })
 })

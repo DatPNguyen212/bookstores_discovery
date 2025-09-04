@@ -52,6 +52,14 @@ const bookstoreCtrl = {
       res.render('./bookstore/show.ejs', { bookstore })
     }
   },
+  createBookstore(connection) {
+    const Bookstore = connection.model('Bookstore', models.Bookstore.schema)
+    return async (req, res, next) => {
+      const newBookstore = await Bookstore.create(req.body.bookstore)
+
+      res.redirect(`/bookstores/${newBookstore._id}`)
+    }
+  },
 }
 
 export default bookstoreCtrl

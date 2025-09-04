@@ -8,10 +8,13 @@ function createBookstoreRouter(connection) {
   const renderCreatePage = bookstoreCtrl.renderCreatePage(connection)
   const renderShowPage = bookstoreCtrl.renderShowPage(connection)
   const renderIndexPage = bookstoreCtrl.renderIndexPage(connection)
+  const createBookstore = bookstoreCtrl.createBookstore(connection)
 
   router.get('/new', renderCreatePage)
   router.get('/:id', renderShowPage)
   router.get('/', renderIndexPage)
+
+  router.post('/', createBookstore)
 
   return router
 }

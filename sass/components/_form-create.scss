@@ -65,6 +65,9 @@
     font-size: variables.$form-create-input-font-size;
   }
 
+  #{&}__input--checkbox {
+  }
+
   #{&}__text-area {
     width: 100%;
     height: variables.$form-create-text-area-height;

@@ -8,14 +8,19 @@
     <div class="form-create__body">
       <div class="form-create__input-wrapper">
         <label for="name" class="form-create__label">Name</label>
-        <input id="name" type="text" name="name" class="form-create__input" />
+        <input
+          id="name"
+          type="text"
+          name="bookstore[name]"
+          class="form-create__input"
+        />
       </div>
       <div class="form-create__input-wrapper">
         <label for="address" class="form-create__label">Address</label>
         <input
           id="address"
           type="text"
-          name="address"
+          name="bookstore[address]"
           class="form-create__input"
         />
       </div>
@@ -23,7 +28,7 @@
         <label for="description" class="form-create__label">Description</label>
 
         <textarea
-          name="description"
+          name="bookstore[description]"
           id="description"
           class="form-create__text-area"
         ></textarea>
@@ -33,7 +38,7 @@
         <input
           id="images"
           type="text"
-          name="images"
+          name="bookstore[images]"
           class="form-create__input"
         />
       </div>
@@ -45,7 +50,7 @@
           <div class="form-create__input-wrapper--checkbox">
             <input
               type="checkbox"
-              name="genres"
+              name="bookstore[genres]"
               class="form-create__input--checkbox"
               id="fantasy"
               value="fantasy"
@@ -58,7 +63,7 @@
           <div class="form-create__input-wrapper--checkbox">
             <input
               type="checkbox"
-              name="genres"
+              name="bookstore[genres]"
               class="form-create__input--checkbox"
               id="science"
               value="science"
@@ -71,7 +76,7 @@
           <div class="form-create__input-wrapper--checkbox">
             <input
               type="checkbox"
-              name="genres"
+              name="bookstore[genres]"
               class="form-create__input--checkbox"
               id="fiction"
               value="fiction"
@@ -84,7 +89,7 @@
           <div class="form-create__input-wrapper--checkbox">
             <input
               type="checkbox"
-              name="genres"
+              name="bookstore[genres]"
               class="form-create__input--checkbox"
               id="romance"
               value="romance"
@@ -97,7 +102,7 @@
           <div class="form-create__input-wrapper--checkbox">
             <input
               type="checkbox"
-              name="genres"
+              name="bookstore[genres]"
               class="form-create__input--checkbox"
               id="mystery"
               value="mystery"
@@ -110,7 +115,7 @@
           <div class="form-create__input-wrapper--checkbox">
             <input
               type="checkbox"
-              name="genres"
+              name="bookstore[genres]"
               class="form-create__input--checkbox"
               id="thriller"
               value="thriller"
@@ -123,7 +128,7 @@
           <div class="form-create__input-wrapper--checkbox">
             <input
               type="checkbox"
-              name="genres"
+              name="bookstore[genres]"
               class="form-create__input--checkbox"
               id="historical"
               value="historical"
@@ -136,7 +141,7 @@
           <div class="form-create__input-wrapper--checkbox">
             <input
               type="checkbox"
-              name="genres"
+              name="bookstore[genres]"
               class="form-create__input--checkbox"
               id="horror"
               value="horror"
@@ -149,7 +154,7 @@
           <div class="form-create__input-wrapper--checkbox">
             <input
               type="checkbox"
-              name="genres"
+              name="bookstore[genres]"
               class="form-create__input--checkbox"
               id="non-fiction"
               value="non-fiction"
@@ -171,6 +176,7 @@
               class="form-create__input--checkbox"
               id="Monday"
               value="Monday"
+              name="bookstore[openDays]"
             />
             <label for="Monday" class="form-create__label--inline"
               >Monday</label
@@ -182,6 +188,7 @@
               class="form-create__input--checkbox"
               id="Tuesday"
               value="Tuesday"
+              name="bookstore[openDays]"
             />
             <label for="Tuesday" class="form-create__label--inline"
               >Tuesday</label
@@ -193,6 +200,7 @@
               class="form-create__input--checkbox"
               id="Wednesday"
               value="Wednesday"
+              name="bookstore[openDays]"
             />
             <label for="Wednesday" class="form-create__label--inline"
               >Wednesday</label
@@ -204,6 +212,7 @@
               class="form-create__input--checkbox"
               id="Thursday"
               value="Thursday"
+              name="bookstore[openDays]"
             />
             <label for="Thursday" class="form-create__label--inline"
               >Thursday</label
@@ -216,6 +225,7 @@
               class="form-create__input--checkbox"
               id="Friday"
               value="Friday"
+              name="bookstore[openDays]"
             />
             <label for="Friday" class="form-create__label--inline"
               >Friday</label
@@ -228,6 +238,7 @@
               class="form-create__input--checkbox"
               id="Saturday"
               value="Saturday"
+              name="bookstore[openDays]"
             />
             <label for="Saturday" class="form-create__label--inline"
               >Saturday</label
@@ -240,6 +251,7 @@
               class="form-create__input--checkbox"
               id="Sunday"
               value="Sunday"
+              name="bookstore[openDays]"
             />
             <label for="Sunday" class="form-create__label--inline"
               >Sunday</label
