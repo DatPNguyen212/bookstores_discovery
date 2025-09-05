@@ -125,12 +125,13 @@ describe('Integration tests for routes', () => {
 
     //   expect(response.text).toContain('<h1>Create bookstore</h1>')
     // })
-    it('when you send GET /bookstores/new, response.status should be 200', async () => {
+    it('when you send GET /bookstores/new, response.text should contain element with form-create class', async () => {
       const route = '/bookstores/new'
 
       const response = await request(app).get(route)
+      const $ = cheerio.load(response.text)
 
-      expect(response.status).toBe(200)
+      expect($('.form-create').length).not.toBe(0)
     })
   })
 
@@ -216,5 +217,23 @@ describe('Integration tests for routes', () => {
 
       expect(bookstoreRes).not.toBe(null)
     }, 5000)
+  })
+  it('when you send POST /bookstores with mocked bookstore data, it should redirect you to the show page of the created bookstore', async () => {
+    const data = {
+      bookstore: {
+        _id: new ObjectId(),
+        name: 'bookstoreName',
+        address: '3, Ba Thang Hai Street, 3 District, Ho Chi Minh City',
+        description: 'test',
+        genres: ['fantasy', 'science'],
+        images: 'url',
+        openDays: ['Monday', 'Tuesday'],
+      },
+    }
+
+    const response = await request(app).post('/bookstores').send(data)
+
+    expect(response.status).toBe(302)
+    expect(response.headers.location).toBe(`/bookstores/${data.bookstore._id}`)
   })
 })
