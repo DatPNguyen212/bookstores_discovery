@@ -14,10 +14,11 @@ import engine from 'ejs-mate'
 import setupDB from './config/setupDB.js'
 
 import createBookstoreRouter from './routes/bookstores.js'
+import bookstoreCtrl from './controllers/bookstores.js'
 
 let connection
 
-function createApp(connection) {
+function createApp(connection, bookstoreCtrl) {
   const app = express()
 
   const __dirname = pathUtils.getDirnamePathFromUrl(import.meta.url)
@@ -31,7 +32,7 @@ function createApp(connection) {
   app.use(express.static(path.join(__dirname, 'public')))
 
   // Bookstore routes
-  app.use('/bookstores', createBookstoreRouter(connection))
+  app.use('/bookstores', createBookstoreRouter(connection, bookstoreCtrl))
 
   // GET homepage
   app.get('/', (req, res, next) => {
@@ -41,6 +42,12 @@ function createApp(connection) {
   // GET fallback
   app.get(/(.)*/, (req, res, next) => {
     res.render('error.ejs')
+  })
+
+  app.use((err, req, res, next) => {
+    const { status, message } = err
+
+    res.render('error.ejs', { status, message })
   })
 
   return app
@@ -56,7 +63,7 @@ async function startApp() {
     )
   }
 
-  const app = createApp(connection)
+  const app = createApp(connection, bookstoreCtrl)
 
   // Check if this file is directly run by node command, if true then make app listen at port
   if (path.normalize(fileURLToPath(import.meta.url)) === `${process.argv[1]}`) {

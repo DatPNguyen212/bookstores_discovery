@@ -1,8 +1,8 @@
 import express from 'express'
 // import * as bookstoresCtrl from '../controllers/bookstores.js'
-import bookstoreCtrl from '../controllers/bookstores.js'
+// import bookstoreCtrl from '../controllers/bookstores.js'
 
-function createBookstoreRouter(connection) {
+function createBookstoreRouter(connection, bookstoreCtrl) {
   const router = express.Router()
 
   const renderCreatePage = bookstoreCtrl.renderCreatePage(connection)

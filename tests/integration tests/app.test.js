@@ -15,6 +15,9 @@ import models from '../../models/index.js'
 
 import setupDB from '../../config/setupDB.js'
 import mongoose from 'mongoose'
+import bookstoreCtrl from '../../controllers/bookstores.js'
+import catchError from '../../utils/catchError.js'
+import ExpressError from '../../utils/ExpressError.js'
 
 const ObjectId = mongoose.Types.ObjectId
 
@@ -29,7 +32,7 @@ describe('Integration tests for routes', () => {
 
     vi.stubGlobal('connection', testConnection)
 
-    app = createApp(connection)
+    app = createApp(connection, bookstoreCtrl)
   })
 
   afterEach(async () => {
@@ -53,12 +56,12 @@ describe('Integration tests for routes', () => {
   })
 
   describe('GET to routes that are NOT DEFINED/fallback route', () => {
-    it('response.text should contain <h1>Unfamiliar Route</h1>', async () => {
+    it('response.text should contain <h1>Error</h1>', async () => {
       const route = '/abc'
 
       const response = await request(app).get(route)
 
-      expect(response.text).toContain('<h1>Unfamiliar Route</h1>')
+      expect(response.text).toContain('<h1>Error</h1>')
     })
   })
 
@@ -87,35 +90,57 @@ describe('Integration tests for routes', () => {
         `/bookstores/${bookstoreObjMock._id}`
       )
     }, 10000)
+    it('given 2 populated mock bookstore documents, response.text should have the correct number of bookstore card componenets', async () => {
+      const bookstoreObjMock1 = {
+        _id: new ObjectId(),
+        name: 'john',
+        address: '3, Ba Thang Hai Street, 3 District, Ho Chi Minh City',
+        genres: ['fantasy', 'fiction'],
+        description: 'test',
+        images: 'https://picsum.photos/800/600',
+        openDays: ['Monday'],
+      }
+      const bookstoreObjMock2 = {
+        _id: new ObjectId(),
+        name: 'john',
+        address: '3, Ba Thang Hai Street, 3 District, Ho Chi Minh City',
+        genres: ['fantasy', 'fiction'],
+        description: 'test',
+        images: 'https://picsum.photos/800/600',
+        openDays: ['Monday'],
+      }
+      await Bookstore.create(bookstoreObjMock1)
+      await Bookstore.create(bookstoreObjMock2)
+      const route = '/bookstores'
+
+      const response = await request(app).get(route)
+      const $ = cheerio.load(response.text)
+
+      expect($('.card')).toHaveLength(2)
+    }, 10000)
+
+    it('given renderIndexPage handler throws an error, response.text should contain error message and status"', async () => {
+      let error
+      const renderIndexPageSpy = vi
+        .spyOn(bookstoreCtrl, 'renderIndexPage')
+        .mockImplementation(
+          vi.fn(() => {
+            return catchError(async (req, res, next) => {
+              error = new ExpressError('error', 500)
+              throw error
+            })
+          })
+        )
+
+      app = createApp(connection, bookstoreCtrl)
+      const route = '/bookstores'
+
+      const response = await request(app).get(route)
+
+      expect(response.text).toContain(error.message)
+      expect(response.text).toContain(error.status)
+    })
   })
-  it('given 2 populated mock bookstore documents, response.text should have the correct number of bookstore card componenets', async () => {
-    const bookstoreObjMock1 = {
-      _id: new ObjectId(),
-      name: 'john',
-      address: '3, Ba Thang Hai Street, 3 District, Ho Chi Minh City',
-      genres: ['fantasy', 'fiction'],
-      description: 'test',
-      images: 'https://picsum.photos/800/600',
-      openDays: ['Monday'],
-    }
-    const bookstoreObjMock2 = {
-      _id: new ObjectId(),
-      name: 'john',
-      address: '3, Ba Thang Hai Street, 3 District, Ho Chi Minh City',
-      genres: ['fantasy', 'fiction'],
-      description: 'test',
-      images: 'https://picsum.photos/800/600',
-      openDays: ['Monday'],
-    }
-    await Bookstore.create(bookstoreObjMock1)
-    await Bookstore.create(bookstoreObjMock2)
-    const route = '/bookstores'
-
-    const response = await request(app).get(route)
-    const $ = cheerio.load(response.text)
-
-    expect($('.card')).toHaveLength(2)
-  }, 10000)
 
   describe('GET /bookstores/new', () => {
     // it('response.text should contain <h1>Create bookstore</h1>', async () => {
@@ -157,12 +182,13 @@ describe('Integration tests for routes', () => {
       bookstore = {}
       vi.restoreAllMocks()
     })
-    it('when you send GET /bookstores/invalidId, response status should be 500 internal error  ', async () => {
+    it('when you send GET /bookstores/invalidId, response.text should contain correct error message and status', async () => {
       const route = '/bookstores/invalidId'
 
       const response = await request(app).get(route)
 
-      expect(response.status).toBe(500)
+      expect(response.text).toContain('404')
+      expect(response.text).toContain('Invalid ID in URL')
     })
 
     it('given a populated bookstore document, when you send GET /bookstores/validBookstoreId, server should render the correct HTML elements with correct bookstore info', async () => {
@@ -217,23 +243,25 @@ describe('Integration tests for routes', () => {
 
       expect(bookstoreRes).not.toBe(null)
     }, 5000)
-  })
-  it('when you send POST /bookstores with mocked bookstore data, it should redirect you to the show page of the created bookstore', async () => {
-    const data = {
-      bookstore: {
-        _id: new ObjectId(),
-        name: 'bookstoreName',
-        address: '3, Ba Thang Hai Street, 3 District, Ho Chi Minh City',
-        description: 'test',
-        genres: ['fantasy', 'science'],
-        images: 'url',
-        openDays: ['Monday', 'Tuesday'],
-      },
-    }
+    it('when you send POST /bookstores with mocked bookstore data, it should redirect you to the show page of the created bookstore', async () => {
+      const data = {
+        bookstore: {
+          _id: new ObjectId(),
+          name: 'bookstoreName',
+          address: '3, Ba Thang Hai Street, 3 District, Ho Chi Minh City',
+          description: 'test',
+          genres: ['fantasy', 'science'],
+          images: 'url',
+          openDays: ['Monday', 'Tuesday'],
+        },
+      }
 
-    const response = await request(app).post('/bookstores').send(data)
+      const response = await request(app).post('/bookstores').send(data)
 
-    expect(response.status).toBe(302)
-    expect(response.headers.location).toBe(`/bookstores/${data.bookstore._id}`)
+      expect(response.status).toBe(302)
+      expect(response.headers.location).toBe(
+        `/bookstores/${data.bookstore._id}`
+      )
+    })
   })
 })
