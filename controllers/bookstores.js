@@ -3,7 +3,7 @@ import app from '../app.js'
 import dbUtils from '../utils/dbUtils.js'
 import objectUtils from '../utils/objectUtils.js'
 import mongoose from 'mongoose'
-import catchError from '../utils/catchError.js'
+import catchAsync from '../utils/catchAsync.js'
 import ExpressError from '../utils/ExpressError.js'
 
 const ObjectId = mongoose.Types.ObjectId
@@ -24,8 +24,13 @@ const bookstoreCtrl = {
     }
     const Bookstore = connection.model('Bookstore', models.Bookstore.schema)
 
-    return catchError(async (req, res, next) => {
+    return catchAsync(async (req, res, next) => {
       const bookstores = await Bookstore.find({})
+
+      if (bookstores.length === 0) {
+        throw new ExpressError('No bookstores found', 404)
+      }
+
       res.render('./bookstore/index.ejs', { bookstores })
     })
   },
@@ -34,13 +39,13 @@ const bookstoreCtrl = {
     if (!objectUtils.isPlainObject(connection)) {
       throw new TypeError('First parameter should be a connection object')
     }
-    return catchError(async (req, res, next) => {
+    return catchAsync(async (req, res, next) => {
       res.render('./bookstore/create.ejs')
     })
   },
 
   renderShowPage(connection) {
-    return catchError(async (req, res, next) => {
+    return catchAsync(async (req, res, next) => {
       const { id } = req.params
 
       if (!ObjectId.isValid(id)) {
@@ -56,7 +61,7 @@ const bookstoreCtrl = {
   },
   createBookstore(connection) {
     const Bookstore = connection.model('Bookstore', models.Bookstore.schema)
-    return catchError(async (req, res, next) => {
+    return catchAsync(async (req, res, next) => {
       const newBookstore = await Bookstore.create(req.body.bookstore)
 
       res.redirect(`/bookstores/${newBookstore._id}`)

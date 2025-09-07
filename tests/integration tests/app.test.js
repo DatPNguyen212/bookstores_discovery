@@ -16,7 +16,7 @@ import models from '../../models/index.js'
 import setupDB from '../../config/setupDB.js'
 import mongoose from 'mongoose'
 import bookstoreCtrl from '../../controllers/bookstores.js'
-import catchError from '../../utils/catchError.js'
+import catchAsync from '../../utils/catchAsync.js'
 import ExpressError from '../../utils/ExpressError.js'
 
 const ObjectId = mongoose.Types.ObjectId
@@ -32,7 +32,7 @@ describe('Integration tests for routes', () => {
 
     vi.stubGlobal('connection', testConnection)
 
-    app = createApp(connection, bookstoreCtrl)
+    app = createApp(connection)
   })
 
   afterEach(async () => {
@@ -119,26 +119,23 @@ describe('Integration tests for routes', () => {
       expect($('.card')).toHaveLength(2)
     }, 10000)
 
-    it('given renderIndexPage handler throws an error, response.text should contain error message and status"', async () => {
-      let error
-      const renderIndexPageSpy = vi
-        .spyOn(bookstoreCtrl, 'renderIndexPage')
-        .mockImplementation(
-          vi.fn(() => {
-            return catchError(async (req, res, next) => {
-              error = new ExpressError('error', 500)
-              throw error
-            })
-          })
-        )
-
-      app = createApp(connection, bookstoreCtrl)
+    it('given Bookstore.find() returns empty array, when you send GET /bookstores, response.text should contain correct error message and status', async () => {
+      const BookstoreModelMock = {
+        find: vi.fn(async () => {
+          return []
+        }),
+      }
+      const connectionModelSpy = vi
+        .spyOn(connection, 'model')
+        .mockReturnValue(BookstoreModelMock)
       const route = '/bookstores'
+
+      app = createApp(connection)
 
       const response = await request(app).get(route)
 
-      expect(response.text).toContain(error.message)
-      expect(response.text).toContain(error.status)
+      expect(response.text).toContain('No bookstores found')
+      expect(response.text).toContain('404')
     })
   })
 

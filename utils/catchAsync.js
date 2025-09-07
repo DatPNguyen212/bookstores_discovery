@@ -1,4 +1,4 @@
-function catchError(fn) {
+function catchAsync(fn) {
   return (req, res, next) => {
     fn(req, res, next).catch((error) => {
       return next(error)
@@ -6,4 +6,4 @@ function catchError(fn) {
   }
 }
 
-export default catchError
+export default catchAsync

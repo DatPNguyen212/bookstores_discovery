@@ -18,7 +18,7 @@ import bookstoreCtrl from './controllers/bookstores.js'
 
 let connection
 
-function createApp(connection, bookstoreCtrl) {
+function createApp(connection) {
   const app = express()
 
   const __dirname = pathUtils.getDirnamePathFromUrl(import.meta.url)
@@ -32,7 +32,7 @@ function createApp(connection, bookstoreCtrl) {
   app.use(express.static(path.join(__dirname, 'public')))
 
   // Bookstore routes
-  app.use('/bookstores', createBookstoreRouter(connection, bookstoreCtrl))
+  app.use('/bookstores', createBookstoreRouter(connection))
 
   // GET homepage
   app.get('/', (req, res, next) => {
@@ -45,7 +45,7 @@ function createApp(connection, bookstoreCtrl) {
   })
 
   app.use((err, req, res, next) => {
-    const { status, message } = err
+    const { status = 500, message = 'Something went wrong' } = err
 
     res.render('error.ejs', { status, message })
   })
@@ -63,7 +63,7 @@ async function startApp() {
     )
   }
 
-  const app = createApp(connection, bookstoreCtrl)
+  const app = createApp(connection)
 
   // Check if this file is directly run by node command, if true then make app listen at port
   if (path.normalize(fileURLToPath(import.meta.url)) === `${process.argv[1]}`) {
