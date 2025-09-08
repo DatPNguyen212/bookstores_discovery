@@ -39,12 +39,15 @@ const bookstoreCtrl = {
     if (!objectUtils.isPlainObject(connection)) {
       throw new TypeError('First parameter should be a connection object')
     }
-    return catchAsync(async (req, res, next) => {
+    return (req, res, next) => {
       res.render('./bookstore/create.ejs')
-    })
+    }
   },
 
   renderShowPage(connection) {
+    if (!objectUtils.isPlainObject(connection)) {
+      throw new TypeError('First parameter should be a connection object')
+    }
     return catchAsync(async (req, res, next) => {
       const { id } = req.params
 
@@ -60,6 +63,9 @@ const bookstoreCtrl = {
     })
   },
   createBookstore(connection) {
+    if (!objectUtils.isPlainObject(connection)) {
+      throw new TypeError('First parameter should be a connection object')
+    }
     const Bookstore = connection.model('Bookstore', models.Bookstore.schema)
     return catchAsync(async (req, res, next) => {
       const newBookstore = await Bookstore.create(req.body.bookstore)

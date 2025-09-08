@@ -3,6 +3,7 @@ import bookstoreCtrl from '../../../controllers/bookstores.js'
 import dbUtils from '../../../utils/dbUtils.js'
 import models from '../../../models/index.js'
 import mongoose from 'mongoose'
+import ExpressError from '../../../utils/ExpressError.js'
 
 const ObjectId = mongoose.Types.ObjectId
 
@@ -177,15 +178,23 @@ describe('bookstoreCtrl', () => {
       })
     })
 
-    it('the return function should throw an error if id param is not valid ObjectId', async () => {
+    it('if req.params.id is NOT valid ObjectId, the return function should call next() with correct ExpressError object instance', async () => {
       req.params.id = 'invalidId'
       const renderShowPage = bookstoreCtrl.renderShowPage(connection)
+      const expressError = new ExpressError('Invalid ID in URL', 404)
 
-      const fn = async () => {
-        await renderShowPage(req, res, next)
+      await renderShowPage(req, res, next)
+
+      expect(next).toBeCalledWith(expressError)
+    })
+    it('if you pass a non object, it should throw an error', () => {
+      const connection = 3
+
+      const fn = () => {
+        bookstoreCtrl.renderShowPage(connection)
       }
 
-      await expect(fn).rejects.toThrow('Invalid ID in URL')
+      expect(fn).toThrow('First parameter should be a connection object')
     })
   })
 
@@ -218,6 +227,16 @@ describe('bookstoreCtrl', () => {
       await returnFn(req, res, next)
 
       expect(res.redirect).toBeCalledWith(`/bookstores/${newBookstore._id}`)
+    })
+
+    it('if you pass a non plain obj, it should throw an error', () => {
+      const connection = 3
+
+      const fn = () => {
+        bookstoreCtrl.createBookstore(connection)
+      }
+
+      expect(fn).toThrow('First parameter should be a connection object')
     })
   })
 })
