@@ -20,7 +20,10 @@ const ObjectId = mongoose.Types.ObjectId
 const bookstoreCtrl = {
   renderIndexPage(connection) {
     if (!objectUtils.isPlainObject(connection)) {
-      throw new TypeError('First parameter should be a connection object')
+      throw new ExpressError(
+        'First parameter should be a connection object',
+        500
+      )
     }
     const Bookstore = connection.model('Bookstore', models.Bookstore.schema)
 
@@ -37,7 +40,10 @@ const bookstoreCtrl = {
 
   renderCreatePage(connection) {
     if (!objectUtils.isPlainObject(connection)) {
-      throw new TypeError('First parameter should be a connection object')
+      throw new ExpressError(
+        'First parameter should be a connection object',
+        500
+      )
     }
     return (req, res, next) => {
       res.render('./bookstore/create.ejs')
@@ -46,7 +52,10 @@ const bookstoreCtrl = {
 
   renderShowPage(connection) {
     if (!objectUtils.isPlainObject(connection)) {
-      throw new TypeError('First parameter should be a connection object')
+      throw new ExpressError(
+        'First parameter should be a connection object',
+        500
+      )
     }
     return catchAsync(async (req, res, next) => {
       const { id } = req.params
@@ -59,12 +68,19 @@ const bookstoreCtrl = {
 
       const bookstore = await Bookstore.findById(id)
 
+      if (bookstore === null) {
+        throw new ExpressError('Cannot find document with that ID', 404)
+      }
+
       res.render('./bookstore/show.ejs', { bookstore })
     })
   },
   createBookstore(connection) {
     if (!objectUtils.isPlainObject(connection)) {
-      throw new TypeError('First parameter should be a connection object')
+      throw new ExpressError(
+        'First parameter should be a connection object',
+        500
+      )
     }
     const Bookstore = connection.model('Bookstore', models.Bookstore.schema)
     return catchAsync(async (req, res, next) => {

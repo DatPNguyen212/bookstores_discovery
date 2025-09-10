@@ -134,6 +134,28 @@ describe('bookstoreCtrl', () => {
 
       expect(fn).toThrow('First parameter should be a connection object')
     })
+
+    it('given Bookstore.find({}) throws an error, the return function should call next(error)', async () => {
+      const error = new ExpressError('error', 500)
+      Bookstore.find = vi.fn(async () => {
+        return Promise.reject(error)
+      })
+
+      const resultFn = bookstoreCtrl.renderIndexPage(connection)
+      await resultFn(req, res, next)
+
+      expect(next).toBeCalledWith(error)
+    })
+    it('given Bookstore.find({}) returns an empty array, the return function should call next() with correct error object', async () => {
+      Bookstore.find = vi.fn(() => {
+        return []
+      })
+
+      const resultFn = bookstoreCtrl.renderIndexPage(connection)
+      await resultFn(req, res, next)
+
+      expect(next).toBeCalledWith(new ExpressError('No bookstores found', 404))
+    })
   })
 
   describe('bookstoreCtrl.renderCreatePage()', () => {
@@ -196,6 +218,29 @@ describe('bookstoreCtrl', () => {
 
       expect(fn).toThrow('First parameter should be a connection object')
     })
+    it('given Bookstore.findById(id) throws an error, the return function should call next(error)', async () => {
+      const error = new ExpressError('test', 500)
+      Bookstore.findById = vi.fn(async () => {
+        return Promise.reject(error)
+      })
+
+      const resultFn = bookstoreCtrl.renderShowPage(connection)
+      await resultFn(req, res, next)
+
+      expect(next).toBeCalledWith(error)
+    })
+
+    it('given Bookstore.findById(id) does not find the document, the return function should call next() with correct error object', async () => {
+      const error = new ExpressError('Cannot find document with that ID', 404)
+      Bookstore.findById = vi.fn(async () => {
+        return null
+      })
+
+      const resultFn = bookstoreCtrl.renderShowPage(connection)
+      await resultFn(req, res, next)
+
+      expect(next).toBeCalledWith(error)
+    })
   })
 
   describe('bookstoreCtrl.createBookstore()', () => {
@@ -237,6 +282,18 @@ describe('bookstoreCtrl', () => {
       }
 
       expect(fn).toThrow('First parameter should be a connection object')
+    })
+
+    it('given Bookstore.create() throws an error, the return function should call next(error)', async () => {
+      const error = new ExpressError('test', 500)
+      Bookstore.create = vi.fn(async () => {
+        return Promise.reject(error)
+      })
+
+      const resultFn = bookstoreCtrl.createBookstore(connection)
+      await resultFn(req, res, next)
+
+      expect(next).toBeCalledWith(error)
     })
   })
 })
