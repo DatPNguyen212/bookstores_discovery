@@ -1,15 +1,23 @@
 import mongoose from 'mongoose'
 
 const bookstoreSchema = new mongoose.Schema({
-  name: String,
-  address: String,
+  name: {
+    type: String,
+    required: true,
+  },
+  address: {
+    type: String,
+    required: true,
+  },
   description: {
     type: String,
     maxLength: 500,
+    required: true,
   },
   genres: [
     {
       type: String,
+      required: true,
       enum: [
         'fantasy',
         'science',
@@ -23,10 +31,14 @@ const bookstoreSchema = new mongoose.Schema({
       ],
     },
   ],
-  images: String,
+  images: {
+    type: String,
+    required: true,
+  },
   openDays: [
     {
       type: String,
+      required: true,
       enum: [
         'Monday',
         'Tuesday',
