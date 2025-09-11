@@ -137,6 +137,24 @@ describe('Integration tests for routes', () => {
       expect(response.text).toContain('No bookstores found')
       expect(response.text).toContain('404')
     })
+    it('given Bookstore.find({}) throws an error, when you send GET /bookstores, response.text should contain correct error message and status', async () => {
+      const error = new ExpressError('error', 500)
+      const BookstoreModelMock = {
+        find: vi.fn(async () => {
+          return Promise.reject(error)
+        }),
+      }
+      const connectionModelSpy = vi
+        .spyOn(connection, 'model')
+        .mockReturnValue(BookstoreModelMock)
+
+      app = createApp(connection)
+
+      const response = await request(app).get('/bookstores')
+
+      expect(response.text).toContain(error.message)
+      expect(response.text).toContain(error.status)
+    })
   })
 
   describe('GET /bookstores/new', () => {
@@ -220,6 +238,35 @@ describe('Integration tests for routes', () => {
         expect(matchResult).toBeDefined()
       })
     })
+
+    it('given Bookstore.findById(id) throws an error, when you send GET /bookstores/:id, response.text should contain correct error message and status', async () => {
+      const error = new ExpressError('error', 500)
+      const BookstoreModelMock = {
+        findById: vi.fn(async () => {
+          return Promise.reject(error)
+        }),
+      }
+      const connectionModelSpy = vi
+        .spyOn(connection, 'model')
+        .mockReturnValue(BookstoreModelMock)
+      app = createApp(connection)
+
+      const response = await request(app).get(`/bookstores/${bookstore._id}`)
+
+      expect(response.text).toContain(error.message)
+      expect(response.text).toContain(error.status)
+    })
+
+    it('when you GET /bookstores/validId where there is no document of that id in db, response.text should contain correct error message and status', async () => {
+      const error = new ExpressError('Cannot find document with that ID', 404)
+      const _id = new ObjectId()
+      const route = `/bookstores/${_id}`
+
+      const response = await request(app).get(route)
+
+      expect(response.text).toContain(error.message)
+      expect(response.text).toContain(error.status)
+    })
   })
 
   describe('POST /bookstores', () => {
@@ -259,6 +306,33 @@ describe('Integration tests for routes', () => {
       expect(response.headers.location).toBe(
         `/bookstores/${data.bookstore._id}`
       )
+    })
+    it('when Bookstore.create() throws an error, when you send POST /bookstores with valid bookstore data, response.text should contain correct error message and status', async () => {
+      const data = {
+        bookstore: {
+          name: 'bookstoreName',
+          address: '3, Ba Thang Hai Street, 3 District, Ho Chi Minh City',
+          description: 'test',
+          genres: ['fantasy', 'science'],
+          images: 'url',
+          openDays: ['Monday', 'Tuesday'],
+        },
+      }
+      const error = new ExpressError('error', 500)
+      const BookstoreModelMock = {
+        create: vi.fn(async () => {
+          return Promise.reject(error)
+        }),
+      }
+      const connectionModelSpy = vi
+        .spyOn(connection, 'model')
+        .mockReturnValue(BookstoreModelMock)
+      app = createApp(connection)
+
+      const response = await request(app).post('/bookstores').send(data)
+
+      expect(response.text).toContain(error.message)
+      expect(response.text).toContain(error.status)
     })
   })
 })

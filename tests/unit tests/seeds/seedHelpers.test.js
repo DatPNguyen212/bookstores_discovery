@@ -586,7 +586,7 @@ describe('seedHelpers.genBookstoreDoc()', () => {
     genObjForBookstoreClassSpy = vi
       .spyOn(seedHelpers, 'genObjForBookstoreClass')
       .mockImplementation(vi.fn(() => {}))
-    modelsBookstoreSpy = vi.spyOn(models, 'bookstore', 'get').mockReturnValue({
+    modelsBookstoreSpy = vi.spyOn(models, 'Bookstore', 'get').mockReturnValue({
       getModelClass: vi.fn((connection) => {
         return connection.model()
       }),
