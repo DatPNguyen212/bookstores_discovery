@@ -1,6 +1,7 @@
 import express from 'express'
 // import * as bookstoresCtrl from '../controllers/bookstores.js'
 import bookstoreCtrl from '../controllers/bookstores.js'
+import middlewares from '../middlewares/middlewares.js'
 
 function createBookstoreRouter(connection) {
   const router = express.Router()
@@ -10,11 +11,13 @@ function createBookstoreRouter(connection) {
   const renderIndexPage = bookstoreCtrl.renderIndexPage(connection)
   const createBookstore = bookstoreCtrl.createBookstore(connection)
 
+  const isValidStore = middlewares.isValidStore
+
   router.get('/new', renderCreatePage)
   router.get('/:id', renderShowPage)
   router.get('/', renderIndexPage)
 
-  router.post('/', createBookstore)
+  router.post('/', isValidStore, createBookstore)
 
   return router
 }

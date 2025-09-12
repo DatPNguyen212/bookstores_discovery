@@ -1,20 +1,11 @@
 import Joi from 'joi'
+import customMsgs from './customMsgs.js'
 
 const bookstoreJoiSchema = Joi.object({
   bookstore: Joi.object({
-    name: Joi.string().required().messages({
-      'string.base': '{{#label}} must be of string data type',
-      'any.required': '{{#label}} is required',
-    }),
-    address: Joi.string().required().messages({
-      'string.base': '{{#label}} must be of string data type',
-      'any.required': '{{#label}} is required',
-    }),
-    description: Joi.string().max(500).required().messages({
-      'string.base': '{{#label}} must be of string data type',
-      'string.max': '{{#label}} must not be more than 500 characters',
-      'any.required': '{{#label}} is required',
-    }),
+    name: Joi.string().required().messages(customMsgs),
+    address: Joi.string().required().messages(customMsgs),
+    description: Joi.string().max(500).required().messages(customMsgs),
     genres: Joi.array()
       .items(
         Joi.string()
@@ -31,22 +22,11 @@ const bookstoreJoiSchema = Joi.object({
             'non-fiction'
           )
           .required()
-          .messages({
-            'string.base': '{{#label}} must be of string data type',
-            'any.required': '{{#label}} is required',
-            'any.only':
-              '{{#label}} can only have one of these values: {{#valids}}',
-          })
+          .messages(customMsgs)
       )
       .required()
-      .messages({
-        'array.base': '{{#label}} must be of array data type',
-        'any.required': '{{#label}} is required',
-      }),
-    images: Joi.string().required().messages({
-      'string.base': '{{#label}} must be of string data type',
-      'any.required': '{{#label}} is required',
-    }),
+      .messages(customMsgs),
+    images: Joi.string().required().messages(customMsgs),
     openDays: Joi.array()
       .items(
         Joi.string()
@@ -61,18 +41,10 @@ const bookstoreJoiSchema = Joi.object({
             'Sunday'
           )
           .required()
-          .messages({
-            'string.base': '{{#label}} must be of string data type',
-            'any.required': '{{#label}} is required',
-            'any.only':
-              '{{#label}} can only have one of these values: {{#valids}}',
-          })
+          .messages(customMsgs)
       )
       .required()
-      .messages({
-        'array.base': '{{#label}} must be of array data type',
-        'any.required': '{{#label}} is required',
-      }),
+      .messages(customMsgs),
   }),
 })
 
