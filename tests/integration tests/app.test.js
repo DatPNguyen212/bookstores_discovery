@@ -290,7 +290,6 @@ describe('Integration tests for routes', () => {
     it('when you send POST /bookstores with mocked bookstore data, it should redirect you to the show page of the created bookstore', async () => {
       const data = {
         bookstore: {
-          _id: new ObjectId(),
           name: 'bookstoreName',
           address: '3, Ba Thang Hai Street, 3 District, Ho Chi Minh City',
           description: 'test',
@@ -302,10 +301,10 @@ describe('Integration tests for routes', () => {
 
       const response = await request(app).post('/bookstores').send(data)
 
+      const bookstore = await Bookstore.findOne(data.bookstore)
+
       expect(response.status).toBe(302)
-      expect(response.headers.location).toBe(
-        `/bookstores/${data.bookstore._id}`
-      )
+      expect(response.headers.location).toBe(`/bookstores/${bookstore._id}`)
     })
     it('when Bookstore.create() throws an error, when you send POST /bookstores with valid bookstore data, response.text should contain correct error message and status', async () => {
       const data = {
