@@ -47,7 +47,7 @@ function createApp(connection) {
   app.use((err, req, res, next) => {
     const { status = 500, message = 'Something went wrong' } = err
 
-    res.render('error.ejs', { status, message })
+    res.status(status).render('error.ejs', { status, message })
   })
 
   return app

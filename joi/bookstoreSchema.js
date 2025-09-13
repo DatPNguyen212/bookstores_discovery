@@ -21,9 +21,9 @@ const bookstoreJoiSchema = Joi.object({
             'horror',
             'non-fiction'
           )
-          .required()
           .messages(customMsgs)
       )
+      .min(1)
       .required()
       .messages(customMsgs),
     images: Joi.string().required().messages(customMsgs),
@@ -40,9 +40,9 @@ const bookstoreJoiSchema = Joi.object({
             'Saturday',
             'Sunday'
           )
-          .required()
           .messages(customMsgs)
       )
+      .min(1)
       .required()
       .messages(customMsgs),
   }),
