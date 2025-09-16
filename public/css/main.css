@@ -278,6 +278,30 @@ button {
   font-family: "Roboto", sans-serif;
 }
 
+.error-card {
+  aspect-ratio: 1;
+  width: 40rem;
+  background: #003973;
+  border-radius: 50%;
+  color: white;
+}
+.error-card .error-card__header {
+  margin-top: 5rem;
+}
+.error-card .error-card__title {
+  font-size: 5rem;
+}
+.error-card .error-card__body {
+  margin-top: 5rem;
+}
+.error-card .error-card__status {
+  font-size: 4rem;
+}
+.error-card .error-card__message {
+  font-size: 1.3rem;
+  word-break: break-all;
+}
+
 .site-body {
   display: flex;
   flex-direction: column;
@@ -307,7 +331,16 @@ button {
 
 .form-create-wrapper {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-grow: 1;
+}
+
+.error-card-wrapper {
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;

@@ -111,3 +111,15 @@ $form-create-text-area-padding: $form-create-input-padding;
 $form-create-text-area-border: $form-create-input-border;
 $form-create-text-area-border-radius: $form-create-input-border-radius;
 $form-create-text-area-font-size: $form-create-input-font-size;
+
+// error-card
+$error-card-width: 40rem;
+$error-card-background-color: #003973;
+$error-card-text-color: white;
+
+$error-card-header-margin-top: 5rem;
+$error-card-title-font-size: 5rem;
+
+$error-card-body-margin-top: 5rem;
+$error-card-status-font-size: 4rem;
+$error-card-message-font-size: 1.3rem;

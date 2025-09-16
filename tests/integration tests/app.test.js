@@ -58,12 +58,17 @@ describe('Integration tests for routes', () => {
   })
 
   describe('GET to routes that are NOT DEFINED/fallback route', () => {
-    it('response.text should contain <h1>Error</h1>', async () => {
+    it.only('response.text should contain correct error message and status', async () => {
       const route = '/abc'
+      const error = new ExpressError(
+        'The URL is not recognized by the server',
+        404
+      )
 
       const response = await request(app).get(route)
 
-      expect(response.text).toContain('<h1>Error</h1>')
+      expect(response.text).toContain(error.message)
+      expect(response.text).toContain(error.status)
     })
   })
 

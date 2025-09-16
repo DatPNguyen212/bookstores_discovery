@@ -23,7 +23,7 @@
   }
 
   #{&}__logo {
-    @include mixins.flexCenter();
+    @include mixins.flexCenter(row);
     color: variables.$nav-primary-text-color;
     cursor: pointer;
     font-family: variables.$nav-logo-font-family;
@@ -40,14 +40,14 @@
 
   #{&}__link-logo {
     text-decoration: none;
-    @include mixins.flexCenter();
+    @include mixins.flexCenter(row);
   }
 
   #{&}__link {
     text-decoration: none;
     position: relative;
     min-width: variables.$nav-link-min-width;
-    @include mixins.flexCenter();
+    @include mixins.flexCenter(row);
   }
 
   #{&}__link::before {
@@ -72,7 +72,7 @@
     height: variables.$nav-height;
     text-decoration: none;
     list-style-type: none;
-    @include mixins.flexCenter();
+    @include mixins.flexCenter(row);
     font-family: variables.$nav-item-font-family;
   }
 }

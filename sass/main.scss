@@ -15,6 +15,7 @@
 @use './components/btn-flex';
 @use './components/_store-detail.scss';
 @use './components/_form-create.scss';
+@use './components/_error-card.scss';
 
 // Layouts
 @use './layouts/_body.scss';
@@ -22,5 +23,6 @@
 
 // Pages
 @use './pages/_create.scss';
+@use './pages/_error.scss';
 
 // Themes

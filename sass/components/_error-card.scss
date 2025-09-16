@@ -1,0 +1,31 @@
+@use '../abstracts/_mixins.scss';
+@use '../abstracts/_variables.scss';
+
+.error-card {
+  aspect-ratio: 1;
+  width: variables.$error-card-width;
+  background: variables.$error-card-background-color;
+  border-radius: 50%;
+  color: variables.$error-card-text-color;
+
+  #{&}__header {
+    margin-top: variables.$error-card-header-margin-top;
+  }
+
+  #{&}__title {
+    font-size: variables.$error-card-title-font-size;
+  }
+
+  #{&}__body {
+    margin-top: variables.$error-card-body-margin-top;
+  }
+
+  #{&}__status {
+    font-size: variables.$error-card-status-font-size;
+  }
+
+  #{&}__message {
+    font-size: variables.$error-card-message-font-size;
+    word-break: break-all;
+  }
+}

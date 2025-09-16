@@ -16,6 +16,8 @@ import setupDB from './config/setupDB.js'
 import createBookstoreRouter from './routes/bookstores.js'
 import bookstoreCtrl from './controllers/bookstores.js'
 
+import ExpressError from './utils/ExpressError.js'
+
 let connection
 
 function createApp(connection) {
@@ -41,7 +43,12 @@ function createApp(connection) {
 
   // GET fallback
   app.get(/(.)*/, (req, res, next) => {
-    res.render('error.ejs')
+    const error = new ExpressError(
+      'The URL is not recognized by the server',
+      404
+    )
+
+    return next(error)
   })
 
   app.use((err, req, res, next) => {

@@ -1,5 +1,5 @@
 @use '../abstracts/_mixins.scss';
 .form-create-wrapper {
-  @include mixins.flexCenter();
+  @include mixins.flexCenter(column);
   flex-grow: 1;
 }
