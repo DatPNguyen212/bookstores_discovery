@@ -58,7 +58,7 @@ describe('Integration tests for routes', () => {
   })
 
   describe('GET to routes that are NOT DEFINED/fallback route', () => {
-    it.only('response.text should contain correct error message and status', async () => {
+    it('response.text should contain correct error message and status', async () => {
       const route = '/abc'
       const error = new ExpressError(
         'The URL is not recognized by the server',
@@ -391,6 +391,18 @@ describe('Integration tests for routes', () => {
         )
         expect(response.status).toBe(400)
       })
+      it('when you send POST /bookstores with req.body.bookstore.name that is more than 100 characters, response.text should contain correct error msg and status; response.status should be correct', async () => {
+        data.bookstore.name = randomString.generate(101)
+        const route = '/bookstores'
+
+        const response = await request(app).post(route).send(data)
+
+        expect(response.text).toContain('400')
+        expect(response.text).toContain(
+          customMsgs['string.max'].slice(sliceOfJoiLabelIndex)
+        )
+        expect(response.status).toBe(400)
+      })
       it('when you send POST /bookstores with req.body.bookstore.address that is not string data type, response.text should contain correct error msg and status; response.status should be correct', async () => {
         data.bookstore.address = 3
         const route = '/bookstores'
@@ -413,6 +425,19 @@ describe('Integration tests for routes', () => {
         expect(response.text).toContain(400)
         expect(response.text).toContain(
           customMsgs['any.required'].slice(sliceOfJoiLabelIndex)
+        )
+        expect(response.status).toBe(400)
+      })
+
+      it('when you send POST /bookstores with req.body.bookstore.address that is more than 255 characters, response.text should contain correct error msg and status; response.status should be correct', async () => {
+        data.bookstore.address = randomString.generate(256)
+        const route = '/bookstores'
+
+        const response = await request(app).post(route).send(data)
+
+        expect(response.text).toContain('400')
+        expect(response.text).toContain(
+          customMsgs['string.max'].slice(sliceOfJoiLabelIndex)
         )
         expect(response.status).toBe(400)
       })

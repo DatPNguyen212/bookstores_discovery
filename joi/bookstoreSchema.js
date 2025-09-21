@@ -3,8 +3,8 @@ import customMsgs from './customMsgs.js'
 
 const bookstoreJoiSchema = Joi.object({
   bookstore: Joi.object({
-    name: Joi.string().required().messages(customMsgs),
-    address: Joi.string().required().messages(customMsgs),
+    name: Joi.string().required().max(100).messages(customMsgs),
+    address: Joi.string().max(255).required().messages(customMsgs),
     description: Joi.string().max(500).required().messages(customMsgs),
     genres: Joi.array()
       .items(
