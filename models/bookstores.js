@@ -4,10 +4,12 @@ const bookstoreSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
+    maxLength: 100,
   },
   address: {
     type: String,
     required: true,
+    maxLength: 255,
   },
   description: {
     type: String,
