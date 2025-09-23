@@ -27,12 +27,14 @@ describe('Integration tests for routes', () => {
   let testConnection
   let Bookstore
   let app
+  let connection
 
   beforeEach(async () => {
     testConnection = await testDBUtils.connect()
     Bookstore = testConnection.model('Bookstore', models.Bookstore.schema)
 
-    vi.stubGlobal('connection', testConnection)
+    // vi.stubGlobal('connection', testConnection)
+    connection = testConnection
 
     app = createApp(connection)
   })
