@@ -1,3 +1,4 @@
+// @vitest-environment happy-dom
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import domUtils from '../../../../../public/js/utils/domUtils.js'
 import { Window } from 'happy-dom'

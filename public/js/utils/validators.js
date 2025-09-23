@@ -63,6 +63,22 @@ const validators = {
       }
     }
   },
+
+  isCheckedOnce(inputs) {
+    for (let input of inputs) {
+      if (input.checked) {
+        return {
+          result: true,
+          errorMsg: null,
+        }
+      }
+    }
+
+    return {
+      result: false,
+      errorMsg: 'You must select atleast one checkbox',
+    }
+  },
 }
 
 export default validators
