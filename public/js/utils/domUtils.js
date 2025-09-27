@@ -1,4 +1,4 @@
-import objectUtils from '../../../utils/objectUtils.js'
+import objectUtils from './objectUtils.js'
 
 const domUtils = {
   createElement(tagName, styleObj) {
