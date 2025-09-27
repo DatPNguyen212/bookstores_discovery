@@ -1,6 +1,6 @@
 import domUtils from '../utils/domUtils.js'
 import validators from '../utils/validators.js'
-import FormValidator from '../components/formValidator.js'
+import FormValidator from '../components/FormValidator.js'
 
 const submitBtn = document.querySelector('.btn.btn-submit')
 const form = document.querySelector('.form-create')

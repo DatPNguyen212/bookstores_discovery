@@ -2,11 +2,11 @@ class FormValidator {
   constructor(form, validators, domUtils) {
     const controllers = form.elements
 
-    this['bookstore[genres]'] = []
-    this['bookstore[openDays]'] = []
-
     for (let controller of controllers) {
       if (controller.type === 'checkbox') {
+        if (!this[controller.name]) {
+          this[controller.name] = []
+        }
         this[controller.name].push(controller)
       } else {
         this[controller.name] = controller
@@ -60,6 +60,10 @@ class FormValidator {
     }
     const newErrorElement = this.domUtils.createElement('div', {
       color: 'red',
+      fontWeight: '800',
+      fontSize: '1.2rem',
+      textAlign: 'left',
+      marginTop: '1rem',
     })
     newErrorElement.classList.add('error')
     newErrorElement.textContent = message
