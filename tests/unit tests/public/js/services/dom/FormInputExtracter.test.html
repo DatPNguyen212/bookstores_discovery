@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FormInputExtracter</title>
+  </head>
+  <body>
+    <div class="form-create-wrapper">
+      <form action="/bookstores" method="POST" class="form-create">
+        <header class="form-create__header">
+          <h1 class="form-create__title">Create bookstore</h1>
+        </header>
+
+        <div class="form-create__body">
+          <fieldset class="form-create__input-wrapper">
+            <label for="name" class="form-create__label">Name</label>
+            <input
+              id="name"
+              type="text"
+              name="bookstore[name]"
+              class="form-create__input"
+            />
+          </fieldset>
+
+          <fieldset class="form-create__input-wrapper">
+            <label for="description" class="form-create__label"
+              >Description</label
+            >
+
+            <textarea
+              name="bookstore[description]"
+              id="description"
+              class="form-create__text-area"
+            ></textarea>
+          </fieldset>
+
+          <fieldset class="form-create__fieldset">
+            <legend class="form-create__legend">Genres</legend>
+
+            <div class="form-create__checkbox-grid">
+              <div class="form-create__input-wrapper--checkbox">
+                <input
+                  type="checkbox"
+                  name="bookstore[genres]"
+                  class="form-create__input--checkbox"
+                  id="fantasy"
+                  value="fantasy"
+                />
+                <label for="fantasy" class="form-create__label--inline"
+                  >fantasy</label
+                >
+              </div>
+
+              <div class="form-create__input-wrapper--checkbox">
+                <input
+                  type="checkbox"
+                  name="bookstore[genres]"
+                  class="form-create__input--checkbox"
+                  id="science"
+                  value="science"
+                />
+                <label for="science" class="form-create__label--inline"
+                  >science</label
+                >
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="form-create__fieldset">
+            <legend class="form-create__legend">Can Borrow?</legend>
+
+            <div class="form-create__checkbox-grid">
+              <div class="form-create__input-wrapper--radio">
+                <input
+                  type="radio"
+                  name="bookstore[borrow]"
+                  class="form-create__input--radio"
+                  id="trueBorrow"
+                  value="true"
+                />
+                <label for="trueBorrow" class="form-create__label--inline"
+                  >Can Borrow</label
+                >
+              </div>
+
+              <div class="form-create__input-wrapper--radio">
+                <input
+                  type="radio"
+                  name="bookstore[borrow]"
+                  class="form-create__input--radio"
+                  id="falseBorrow"
+                  value="false"
+                />
+                <label for="falseBorrow" class="form-create__label--inline"
+                  >Can't Borrow</label
+                >
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="form-create__fieldset">
+            <legend class="form-create__legend">Is Online?</legend>
+
+            <div class="form-create__checkbox-grid">
+              <select class="form-create__input--select" name="online">
+                <option value="true" class="form-create__option">True</option>
+                <option value="false" class="form-create__option">False</option>
+              </select>
+            </div>
+          </fieldset>
+        </div>
+
+        <footer class="form-create__footer">
+          <button type="submit" class="btn btn-submit">Submit</button>
+        </footer>
+      </form>
+    </div>
+  </body>
+</html>
