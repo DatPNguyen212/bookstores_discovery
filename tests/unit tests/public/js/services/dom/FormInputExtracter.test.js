@@ -112,5 +112,14 @@ describe('FormInputExtracter(form)', () => {
 
       expect(result.length).toBe(0)
     })
+    it('when you pass a non form obj to class constructor, it should throw an error', () => {
+      const form = 1
+
+      const fn = () => {
+        new FormInputExtracter(form)
+      }
+
+      expect(fn).toThrow('You need to pass a form element as an argument')
+    })
   })
 })

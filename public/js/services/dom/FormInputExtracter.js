@@ -2,6 +2,10 @@ import lodash from 'lodash'
 
 class FormInputExtracter {
   constructor(form) {
+    if (form.tagName !== 'FORM') {
+      throw new TypeError('You need to pass a form element as an argument')
+    }
+
     this.form = form
   }
 
@@ -24,22 +28,11 @@ class FormInputExtracter {
           const selectionElements = []
 
           if (!lodash.isArray(itemInResult)) {
-            // if (
-            //   element.name === itemInResult.name &&
-            //   element.value === itemInResult.value
-            // ) {
-            //   isUnique = false
-            //   selectionElements.push(element)
-            //   // result.splice(j, 1)
-            //   // result.push(selectionElements)
-            //   result[j] = selectionElements
-            // }
             if (element.name === itemInResult.name) {
               isUnique = false
-              // selectionElements.push(result[j])
+
               selectionElements.push(result[j], element)
-              // result.splice(j, 1)
-              // result.push(selectionElements)
+
               result[j] = selectionElements
             }
           } else {
