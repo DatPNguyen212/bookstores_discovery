@@ -1,4 +1,4 @@
-import ElementRendererBase from '../../abstracts/services/dom/ElementRendererBase.js'
+import ElementRendererBase from '../abstracts/utils/ElementRendererBase.js'
 class ElementRenderer extends ElementRendererBase {
   constructor() {
     super()

@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
-import ElementRenderer from '../../../../../../public/js/services/dom/ElementRenderer.js'
+import ElementRenderer from '../../../../../public/js/utils/ElementRenderer.js'
 import { Window } from 'happy-dom'
 
 const window = new Window()

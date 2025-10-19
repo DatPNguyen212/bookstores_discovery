@@ -1,8 +1,8 @@
 // vitest-environment happy-dom
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
-import FormInputExtracter from '../../../../../../public/js/services/dom/FormInputExtracter.js'
+import FormInputExtracter from '../../../../../public/js/utils/FormInputExtracter.js'
 import { Window } from 'happy-dom'
-import pathUtils from '../../../../../../utils/pathUtils.js'
+import pathUtils from '../../../../../utils/pathUtils.js'
 import fs from 'fs'
 import path from 'path'
 
