@@ -3,6 +3,7 @@ import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import Validator from '../../../../../public/js/validators/Validator.js'
 import { Window } from 'happy-dom'
 import objectUtils from '../../../../../utils/objectUtils.js'
+import FormInputExtracter from '../../../../../public/js/utils/FormInputExtracter.js'
 const window = new Window()
 const document = window.document
 
@@ -66,11 +67,11 @@ describe('Validator()', () => {
         'You need to pass single input element to the function'
       )
     })
-    it('if you pass select input, it should throw an error', () => {
+    it('if you pass select input, it should NOT throw an error', () => {
       document.body.innerHTML = `<select name="" id="">
-     <option value="test1">test1</option>
-     <option value="test2">test2</option>
-   </select>`
+       <option value="test1">test1</option>
+       <option value="test2">test2</option>
+     </select>`
 
       const input = document.querySelector('select')
 
@@ -78,8 +79,8 @@ describe('Validator()', () => {
         validator.required(input)
       }
 
-      expect(fn).toThrow(
-        'validator.required() does not support select input, only other single input type elements'
+      expect(fn).not.toThrow(
+        'You need to pass single input type element to the function, NOT group input type element'
       )
     })
   })
@@ -158,6 +159,79 @@ describe('Validator()', () => {
 
       expect(fn).not.toThrow(
         'First parameter needs to be a single input type element, NOT group input type element'
+      )
+    })
+  })
+
+  describe('validator.groupInputRequired()', () => {
+    it('when you pass an array of non checked checkboxes, it should return an obj which contains the array of inputs and the correct error', () => {
+      document.body.innerHTML = `<form action="">
+  <fieldset>
+    <legend>Genres</legend>
+    <input type="checkbox" value = "fantasy" name = "bookstore[genres]" id = "fantasy">
+    <label for="fantasy">fantasy</label>
+    <input type="checkbox" value = "science" name = "bookstore[genres]" id = "science">
+    <label for="science">science</label>
+  </fieldset>
+</form>`
+      const form = document.querySelector('form')
+      const formInputExtracter = new FormInputExtracter(form)
+      const inputs = formInputExtracter.getFormInputs().flat(1)
+
+      const result = validator.groupInputRequired(inputs)
+
+      expect(objectUtils.isPlainObject(result)).toBe(true)
+      expect(result.inputs).toEqual(inputs)
+      expect(result.error).toBe('This field is required')
+    })
+
+    it('when you pass an array of checkboxes where one is checked, it should return an object which contains inputs array and error is null', () => {
+      document.body.innerHTML = `<form action="">
+  <fieldset>
+    <legend>Genres</legend>
+    <input type="checkbox" value = "fantasy" name = "bookstore[genres]" id = "fantasy">
+    <label for="fantasy">fantasy</label>
+    <input type="checkbox" value = "science" name = "bookstore[genres]" id = "science" checked>
+    <label for="science">science</label>
+  </fieldset>
+</form>`
+      const form = document.querySelector('form')
+      const formInputExtracter = new FormInputExtracter(form)
+      const inputs = formInputExtracter.getFormInputs()
+
+      const result = validator.groupInputRequired(inputs[0])
+
+      expect(objectUtils.isPlainObject(result)).toBe(true)
+      expect(result.inputs).toEqual(inputs[0])
+      expect(result.error).toBe(null)
+    })
+
+    it('when you pass an array of inputs where atleast one item is single input type, it should throw an error', () => {
+      document.body.innerHTML = `<form action="">
+      <fieldset>
+        <legend>Genres</legend>
+        <input type="checkbox" value = "fantasy" name = "bookstore[genres]" id = "fantasy">
+        <label for="fantasy">fantasy</label>
+        <input type="checkbox" value = "science" name = "bookstore[genres]" id = "science" checked>
+        <label for="science">science</label>
+      </fieldset>
+
+      <fieldset>
+        <input type = "text" name = "bookstore[title]">
+      </fieldset>
+    </form>`
+      const form = document.querySelector('form')
+      const formInputExtracter = new FormInputExtracter(form)
+      const inputs = formInputExtracter.getFormInputs()
+
+      console.log(inputs[2])
+
+      const fn = () => {
+        validator.groupInputRequired(inputs)
+      }
+
+      expect(fn).toThrow(
+        'First parameter should be an array of group type inputs'
       )
     })
   })

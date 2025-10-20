@@ -11,6 +11,10 @@ class ValidatorBase {
   maxLength() {
     throw new Error('maxLength() needs to be implemented in subclass')
   }
+
+  groupInputRequired() {
+    throw new Error('groupInputRequired() needs to be implemented in subclass')
+  }
 }
 
 export default ValidatorBase

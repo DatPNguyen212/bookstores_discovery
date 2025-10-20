@@ -1,6 +1,12 @@
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import arrayUtils from '../../../utils/arrayUtils'
 import lodash from 'lodash'
+import { Window } from 'happy-dom'
+import FormInputExtracter from '../../../public/js/utils/FormInputExtracter.js'
+const window = new Window()
+const document = window.document
+
+vi.stubGlobal('document', document)
 
 describe('arrayUtils.getRandItem()', () => {
   let mathRandomSpy
@@ -183,5 +189,102 @@ describe('arrayUtils.generateArray()', () => {
     expect(fn).toThrow(
       "numberItems should be smaller than or equal to enum array's length"
     )
+  })
+})
+
+describe('arrayUtils.areAllGroupInputs()', () => {
+  beforeEach(() => {
+    document.body.innerHTML = ''
+  })
+  it('when you pass an array that contains atleast an input text, it should return false', () => {
+    document.body.innerHTML = `<form action="">
+  <fieldset>
+    <legend>Genres</legend>
+    <input type="checkbox" value = "fantasy" name = "bookstore[genres]" id = "fantasy">
+    <label for="fantasy">fantasy</label>
+    <input type="checkbox" value = "science" name = "bookstore[genres]" id = "science" checked>
+    <label for="science">science</label>
+  </fieldset>
+
+  <fieldset>
+    <input type = "text" name = "title" id = "title" >
+    <label for = "title"></label>
+  </fieldset>
+</form>`
+    const form = document.querySelector('form')
+    const formInputExtracter = new FormInputExtracter(form)
+    const inputs = formInputExtracter.getFormInputs().flat(1)
+
+    const result = arrayUtils.areAllGroupInputs(inputs)
+
+    expect(result).toBe(false)
+  })
+  it('when you pass an array that only contains checkboxes and radios, it should return true', () => {
+    document.body.innerHTML = `<form action="">
+  <fieldset>
+    <legend>Genres</legend>
+    <input type="checkbox" value = "fantasy" name = "bookstore[genres]" id = "fantasy">
+    <label for="fantasy">fantasy</label>
+    <input type="checkbox" value = "science" name = "bookstore[genres]" id = "science" checked>
+    <label for="science">science</label>
+  </fieldset>;
+
+  <fieldset>
+    <input type = "radio" name = "bookstore[test]">
+    <input type = "radio" name = "bookstore[test]">
+  </fieldset>
+</form>`
+    const form = document.querySelector('form')
+    const formInputExtracter = new FormInputExtracter(form)
+    const inputs = formInputExtracter.getFormInputs().flat(1)
+
+    const result = arrayUtils.areAllGroupInputs(inputs)
+
+    expect(result).toBe(true)
+  })
+
+  it('when you pass an array of only checkboxes, it should return true', () => {
+    document.body.innerHTML = `<form action="">
+  <fieldset>
+    <legend>Genres</legend>
+    <input type="checkbox" value = "fantasy" name = "bookstore[genres]" id = "fantasy">
+    <label for="fantasy">fantasy</label>
+    <input type="checkbox" value = "science" name = "bookstore[genres]" id = "science" checked>
+    <label for="science">science</label>
+  </fieldset>;
+</form>`
+    const form = document.querySelector('form')
+    const formInputExtracter = new FormInputExtracter(form)
+    const inputs = formInputExtracter.getFormInputs().flat(1)
+
+    const result = arrayUtils.areAllGroupInputs(inputs)
+
+    expect(result).toBe(true)
+  })
+
+  it('when you pass an array of only radios, it should true', () => {
+    document.body.innerHTML = `<form action="">
+  <fieldset>
+   <legend>Test</legend>
+   <input type = "radio" name = "test">
+   <input type = "radio" name = "test">
+  </fieldset>;
+</form>`
+    const form = document.querySelector('form')
+    const formInputExtracter = new FormInputExtracter(form)
+    const inputs = formInputExtracter.getFormInputs().flat(1)
+
+    const result = arrayUtils.areAllGroupInputs(inputs)
+
+    expect(result).toBe(true)
+  })
+  it('when you pass a non array data type, it should throw an error', () => {
+    const inputs = 3
+
+    const fn = () => {
+      arrayUtils.areAllGroupInputs(inputs)
+    }
+
+    expect(fn).toThrow('First parameter should be an array')
   })
 })

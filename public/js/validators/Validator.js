@@ -1,19 +1,16 @@
 import ValidatorBase from '../abstracts/validators/ValidatorBase.js'
+import arrayUtils from '../utils/arrayUtils.js'
 
 class Validator extends ValidatorBase {
   constructor() {
     super()
   }
   required(input) {
-    if (input instanceof HTMLSelectElement) {
-      throw new TypeError(
-        'validator.required() does not support select input, only other single input type elements'
-      )
-    }
     if (
       !(
         input instanceof HTMLInputElement ||
-        input instanceof HTMLTextAreaElement
+        input instanceof HTMLTextAreaElement ||
+        input instanceof HTMLSelectElement
       )
     ) {
       throw new TypeError(
@@ -64,6 +61,27 @@ class Validator extends ValidatorBase {
         input: input,
         error: null,
       }
+    }
+  }
+
+  groupInputRequired(inputs) {
+    if (!arrayUtils.areAllGroupInputs(inputs)) {
+      throw new TypeError(
+        'First parameter should be an array of group type inputs'
+      )
+    }
+    for (let input of inputs) {
+      if (input.checked === true) {
+        return {
+          inputs: inputs,
+          error: null,
+        }
+      }
+    }
+
+    return {
+      inputs: inputs,
+      error: 'This field is required',
     }
   }
 }
