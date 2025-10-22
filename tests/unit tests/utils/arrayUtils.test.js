@@ -2,7 +2,7 @@ import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import arrayUtils from '../../../utils/arrayUtils'
 import lodash from 'lodash'
 import { Window } from 'happy-dom'
-import FormInputExtracter from '../../../public/js/utils/FormInputExtracter.js'
+import FormInputExtracter from '../../../public/js/validation/extracters/FormInputExtracter.js'
 const window = new Window()
 const document = window.document
 

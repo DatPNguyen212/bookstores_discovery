@@ -1,9 +1,9 @@
 // vitest-environment happy-dom
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
-import Validator from '../../../../../public/js/validators/Validator.js'
+import Validator from '../../../../../public/js/validation/Validator.js'
 import { Window } from 'happy-dom'
 import objectUtils from '../../../../../utils/objectUtils.js'
-import FormInputExtracter from '../../../../../public/js/utils/FormInputExtracter.js'
+import FormInputExtracter from '../../../../../public/js/validation/extracters/FormInputExtracter.js'
 const window = new Window()
 const document = window.document
 
@@ -236,3 +236,12 @@ describe('Validator()', () => {
     })
   })
 })
+// FormValidator depends InputExtracter, ValidateAttrbExtracter, FormErrorRenderer
+// FormValidator.validate()
+// loop trhough inputs, validateAttributeExtracter.extract(input)
+// Then you get obj with input and validation attributes and their values
+// then you fieldValidator.validate(obj); to get obj that contian input and error
+// Push each of these obj into arrayOfInputsAndErrors
+// FormErrorRenderer depends on ElementRenderer
+// formErrorRenderer.hideAllErrors("querySelectorOfError")
+// formErrorRenderer.renderErrors(arrayOfInputsAndErrors, configureClassAndIfObj)

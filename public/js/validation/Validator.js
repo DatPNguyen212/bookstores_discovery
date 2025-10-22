@@ -1,4 +1,4 @@
-import ValidatorBase from '../abstracts/validators/ValidatorBase.js'
+import ValidatorBase from '../abstracts/validation/ValidatorBase.js'
 import arrayUtils from '../utils/arrayUtils.js'
 
 class Validator extends ValidatorBase {
