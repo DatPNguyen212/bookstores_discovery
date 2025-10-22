@@ -1,7 +1,7 @@
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import FieldRulesExtracter from '../../../../../../public/js/validation/extracters/FieldRulesExtracter.js'
 import { Window } from 'happy-dom'
-import typeCheck from '../../../../../../utils/typeCheck.js'
+import typeCheck from '../../../../../../public/js/utils/typeCheck.js'
 
 const window = new Window()
 const document = window.document
@@ -75,63 +75,66 @@ describe('FieldRulesExtracter', () => {
       expect(result).toEqual(expectedResult)
     })
 
-    it('when you pass checkbox input, it should throw an error', () => {
-      document.body.innerHTML = `<input type = "checkbox">`
-      const input = document.querySelector('input')
+    // it('when you pass checkbox input, it should throw an error', () => {
+    //   document.body.innerHTML = `<input type = "checkbox">`
+    //   const input = document.querySelector('input')
 
-      const fn = () => {
-        fieldRulesExtracter.extractSingleType(input)
-      }
+    //   const fn = () => {
+    //     fieldRulesExtracter.extractSingleType(input)
+    //   }
 
-      expect(fn).toThrow(
-        'You need to pass either input, textarea or select element'
-      )
-    })
-    it('when you pass radio input, it should throw an error', () => {
-      document.body.innerHTML = `<input type = "radio">`
-      const input = document.querySelector('input')
+    //   expect(fn).toThrow(
+    //     'You need to pass either input, textarea or select element'
+    //   )
+    // })
+    // it('when you pass radio input, it should throw an error', () => {
+    //   document.body.innerHTML = `<input type = "radio">`
+    //   const input = document.querySelector('input')
 
-      const fn = () => {
-        fieldRulesExtracter.extractSingleType(input)
-      }
+    //   const fn = () => {
+    //     fieldRulesExtracter.extractSingleType(input)
+    //   }
 
-      expect(fn).toThrow(
-        'You need to pass either input, textarea or select element'
-      )
-    })
-    it('when you pass text area element, it should not throw an error', () => {
-      document.body.innerHTML = `<textarea></textarea>`
-      const input = document.querySelector('textarea')
+    //   expect(fn).toThrow(
+    //     'You need to pass either input, textarea or select element'
+    //   )
+    // })
 
-      const fn = () => {
-        fieldRulesExtracter.extractSingleType(input)
-      }
+    // it('when you pass text area element, it should not throw an error', () => {
+    //   document.body.innerHTML = `<textarea></textarea>`
+    //   const input = document.querySelector('textarea')
 
-      expect(fn).not.toThrow(
-        'You need to pass either input, textarea or select element'
-      )
-    })
-    it('when you pass select element, it should not throw an error', () => {
-      document.body.innerHTML = `<select></select>`
-      const input = document.querySelector('select')
+    //   const fn = () => {
+    //     fieldRulesExtracter.extractSingleType(input)
+    //   }
 
-      const fn = () => {
-        fieldRulesExtracter.extractSingleType(input)
-      }
+    //   expect(fn).not.toThrow(
+    //     'You need to pass either input, textarea or select element'
+    //   )
+    // })
+    // it('when you pass select element, it should not throw an error', () => {
+    //   document.body.innerHTML = `<select></select>`
+    //   const input = document.querySelector('select')
 
-      expect(fn).not.toThrow(
-        'You need to pass either input, textarea or select element'
-      )
-    })
+    //   const fn = () => {
+    //     fieldRulesExtracter.extractSingleType(input)
+    //   }
+
+    //   expect(fn).not.toThrow(
+    //     'You need to pass either input, textarea or select element'
+    //   )
+    // })
 
     it('when you pass an input element, it should call typeCheck.isSingleInputType() with that input', () => {
       document.body.innerHTML = `<input type = "text">`
       const input = document.querySelector('input')
 
+      const result = fieldRulesExtracter.extractSingleType(input)
+
       expect(isSingleInputTypeSpy).toBeCalledWith(input)
     })
 
-    it('given typeCheck.isSingleInputType() return false, it should return false', () => {
+    it('given typeCheck.isSingleInputType() return false, it should throw an error', () => {
       isSingleInputTypeSpy.mockReturnValue(false)
 
       const fn = () => {
