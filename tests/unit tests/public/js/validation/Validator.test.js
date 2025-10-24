@@ -1,4 +1,4 @@
-// vitest-environment happy-dom
+// @vitest-environment happy-dom
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import Validator from '../../../../../public/js/validation/Validator.js'
 import { Window } from 'happy-dom'

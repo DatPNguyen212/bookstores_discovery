@@ -1,4 +1,4 @@
-import ElementRendererBase from '../abstracts/utils/ElementRendererBase.js'
+import ElementRendererBase from '../abstracts/validation/ElementRendererBase.js'
 class ElementRenderer extends ElementRendererBase {
   constructor() {
     super()

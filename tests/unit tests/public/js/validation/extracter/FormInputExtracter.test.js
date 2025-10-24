@@ -1,4 +1,4 @@
-// vitest-environment happy-dom
+// @vitest-environment happy-dom
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import FormInputExtracter from '../../../../../../public/js/validation/extracters/FormInputExtracter.js'
 import { Window } from 'happy-dom'

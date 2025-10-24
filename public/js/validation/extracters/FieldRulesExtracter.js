@@ -1,6 +1,22 @@
 import typeCheck from '../../utils/typeCheck.js'
+
 class FieldRulesExtracter {
-  constructor() {}
+  constructor(extractMethods) {
+    if (Array.isArray(extractMethods)) {
+      for (let method of extractMethods) {
+        if (typeof method !== 'function') {
+          throw new TypeError(
+            'You need to pass an array of functions to first parameter'
+          )
+        }
+      }
+    } else {
+      throw new TypeError(
+        'You need to pass an array of functions to first parameter'
+      )
+    }
+    this.extractMethods = extractMethods
+  }
 
   extractSingleType(input) {
     if (!typeCheck.isSingleInputType(input)) {
@@ -8,19 +24,19 @@ class FieldRulesExtracter {
         'You need to pass either input, textarea or select element'
       )
     }
-    const result = {
+
+    let inputErrorObj = {
       input: input,
       rules: {},
     }
-    if (input.required === true) {
-      result.rules.required = true
+
+    let modifiedInputError
+
+    for (let extractMethod of this.extractMethods) {
+      modifiedInputError = extractMethod(inputErrorObj)
     }
 
-    if (input.maxLength !== -1 && !Number.isNaN(input.maxLength)) {
-      result.rules.maxLength = input.maxLength
-    }
-
-    return result
+    return modifiedInputError
   }
 }
 
