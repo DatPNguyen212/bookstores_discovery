@@ -19,7 +19,7 @@ class FieldRulesExtracter {
     }
 
     if (objectUtils.isPlainObject(inputRules)) {
-      if (!inputRules[IS_INPUT_RULES_BASE_INSTANCE] === true) {
+      if (inputRules[IS_INPUT_RULES_BASE_INSTANCE] !== true) {
         throw new TypeError(
           'You need to pass an instance of InputRulesBase to 2nd parameter'
         )
@@ -32,20 +32,33 @@ class FieldRulesExtracter {
 
     this.extractMethods = extractMethods
     this.inputRules = inputRules
+
+    for (let extractMethod of this.extractMethods) {
+      const result = extractMethod(this.inputRules)
+
+      if (objectUtils.isPlainObject(result)) {
+        if (result[IS_INPUT_RULES_BASE_INSTANCE] !== true) {
+          throw new TypeError(
+            'Every function in extractMethods need to return an instanceof InputRulesBase'
+          )
+        }
+      } else {
+        throw new TypeError(
+          'Every function in extractMethods need to return an instanceof InputRulesBase'
+        )
+      }
+    }
     this.input = inputRules.input
   }
 
   extractSingleType() {
-    let inputRules = {
-      input: this.input,
-      rules: {},
-    }
+    let result = this.inputRules
 
     for (let extractMethod of this.extractMethods) {
-      inputRules = extractMethod(inputRules)
+      result = extractMethod(result)
     }
 
-    return inputRules
+    return result
   }
 }
 

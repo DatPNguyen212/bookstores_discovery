@@ -5,6 +5,7 @@ import { Window } from 'happy-dom'
 import typeCheck from '../../../../../../public/js/utils/typeCheck.js'
 import { IS_INPUT_RULES_BASE_INSTANCE } from '../../../../../../public/js/abstracts/validation/InputRulesBase.js'
 import InputRules from '../../../../../../public/js/validation/InputRules.js'
+import InputRulesBase from '../../../../../../public/js/abstracts/validation/InputRulesBase.js'
 
 const window = new Window()
 const document = window.document
@@ -21,6 +22,28 @@ describe('FieldRulesExtracter', () => {
 
   afterEach(() => {
     vi.restoreAllMocks()
+  })
+
+  it("if you pass extractMethods that contain atleast one function that doesn't return InputRulesBase instance, it should throw an error", () => {
+    document.body.innerHTML = `<input type = "text">`
+    const input = document.querySelector('input')
+    const extractMethods = [
+      () => {
+        return new InputRules(input)
+      },
+      () => {
+        return 3
+      },
+    ]
+    const inputRules = new InputRules(input)
+
+    const fn = () => {
+      new FieldRulesExtracter(extractMethods, inputRules)
+    }
+
+    expect(fn).toThrow(
+      'Every function in extractMethods need to return an instanceof InputRulesBase'
+    )
   })
   it('if you pass an array where atleast 1 item is not a function, it should throw an error', () => {
     const extractMethods = [1, () => {}]
@@ -77,15 +100,15 @@ describe('FieldRulesExtracter', () => {
       vi.restoreAllMocks()
     })
 
-    it('given each mocked extract method in extractMethodsMock adds a different property to the inputRules.rules, .extractSingleType(singleTypeInput) should return the updated inputRules', () => {
+    it('given each mocked extract method in extractMethodsMock adds a different property to the inputRules.rules, .extractSingleType(singleTypeInput) should return the updated inputRules which is instance of InputRulesBase', () => {
       document.body.innerHTML = `<input type = "text" required>`
       const input = document.querySelector('input')
       const required = vi.fn((inputRules) => {
-        inputRules.rules.required = true
+        inputRules.addRule('required', true)
         return inputRules
       })
       const maxLength = vi.fn((inputRules) => {
-        inputRules.rules.maxLength = 3
+        inputRules.addRule('maxLength', 3)
         return inputRules
       })
       const extractMethodsMock = [required, maxLength]
@@ -97,13 +120,11 @@ describe('FieldRulesExtracter', () => {
       )
       const result = extracter.extractSingleType()
 
-      const expectedResult = {
-        input: input,
-        rules: {
-          required: true,
-          maxLength: 3,
-        },
-      }
+      const expectedResult = new InputRules(input)
+      expectedResult.addRule('required', true)
+      expectedResult.addRule('maxLength', 3)
+
+      expect(result).instanceOf(InputRulesBase)
       expect(result).toEqual(expectedResult)
     })
   })
