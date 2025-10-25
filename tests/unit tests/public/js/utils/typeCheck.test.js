@@ -1,5 +1,5 @@
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
-import typeCheck from '../../../utils/typeCheck.js'
+import typeCheck from '../../../../../public/js/utils/typeCheck.js'
 import { Window } from 'happy-dom'
 const window = new Window()
 const document = window.document
