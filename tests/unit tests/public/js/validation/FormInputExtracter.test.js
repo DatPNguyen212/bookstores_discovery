@@ -1,8 +1,9 @@
 // @vitest-environment happy-dom
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
-import FormInputExtracter from '../../../../../../public/js/validation/extracters/FormInputExtracter.js'
+import FormInputExtracter from '../../../../../public/js/validation/FormInputExtracter.js'
+import { IS_INPUT_EXTRACTER_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/InputExtracterBase.js'
 import { Window } from 'happy-dom'
-import pathUtils from '../../../../../../utils/pathUtils.js'
+import pathUtils from '../../../../../utils/pathUtils.js'
 import fs from 'fs'
 import path from 'path'
 
@@ -17,18 +18,24 @@ document.write(htmlDocContent)
 
 vi.stubGlobal('document', document)
 
-describe('FormInputExtracter(form)', () => {
+describe('FormInputExtracter()', () => {
   let formInputExtracter
   let form
   beforeEach(() => {
     document.innerHTML = ''
     document.write(htmlDocContent)
     form = document.querySelector('form')
-    formInputExtracter = new FormInputExtracter(form)
+    formInputExtracter = new FormInputExtracter()
+  })
+
+  it('when you instantiate constructor, it should have the property that checks if instance is instanceof InputExtracterBase', () => {
+    const formInputExtracter = new FormInputExtracter()
+
+    expect(formInputExtracter[IS_INPUT_EXTRACTER_BASE_INSTANCE]).toBe(true)
   })
 
   describe('formInputExtracter.getFormInputs()', () => {
-    it('should return an array of input elements in the form that has singular input types and group type inputs ', () => {
+    it('when you pass a form that contains single and group type inputs, it should return an array of of those single and group type inputs ', () => {
       const input1 = document.querySelector('[name="bookstore[name]"]')
       const input2 = document.querySelector('[name = "bookstore[description]"]')
       const checkbox1 = document.querySelector('[value="fantasy"]')
@@ -41,7 +48,7 @@ describe('FormInputExtracter(form)', () => {
 
       const expectedResult = [input1, input2, checkboxes, radios, select]
 
-      const result = formInputExtracter.getFormInputs()
+      const result = formInputExtracter.getFormInputs(form)
 
       // console.log(checkboxes)
       console.log(result[0].name)
@@ -63,14 +70,13 @@ describe('FormInputExtracter(form)', () => {
       document.write(htmlDocContent)
       document.close()
       const form = document.querySelector('form')
-      const formInputExtracter = new FormInputExtracter(form)
 
       const input1 = document.querySelector('[name="bookstore[name]"]')
       const input2 = document.querySelector('[name = "bookstore[description]"]')
       const input3 = document.querySelector('.form-create__input--select')
       const expectedResult = [input1, input2, input3]
 
-      const result = formInputExtracter.getFormInputs()
+      const result = formInputExtracter.getFormInputs(form)
 
       console.log(input1.name)
       console.log(input2.name)
@@ -85,7 +91,6 @@ describe('FormInputExtracter(form)', () => {
       document.write(htmlDocContent)
       document.close()
       const form = document.querySelector('form')
-      const formInputExtracter = new FormInputExtracter(form)
 
       const checkbox1 = document.querySelector('[value="fantasy"]')
       const checkbox2 = document.querySelector('[value="science"]')
@@ -95,7 +100,7 @@ describe('FormInputExtracter(form)', () => {
       const radios = [radio1, radio2]
       const expectedResult = [checkboxes, radios]
 
-      const result = formInputExtracter.getFormInputs()
+      const result = formInputExtracter.getFormInputs(form)
 
       expect(result).toEqual(expectedResult)
     })
@@ -106,17 +111,16 @@ describe('FormInputExtracter(form)', () => {
       document.write(htmlDocContent)
       document.close()
       const form = document.querySelector('form')
-      const formInputExtracter = new FormInputExtracter(form)
 
-      const result = formInputExtracter.getFormInputs()
+      const result = formInputExtracter.getFormInputs(form)
 
       expect(result.length).toBe(0)
     })
-    it('when you pass a non form obj to class constructor, it should throw an error', () => {
+    it('when you pass a non form obj, it should throw an error', () => {
       const form = 1
 
       const fn = () => {
-        new FormInputExtracter(form)
+        formInputExtracter.getFormInputs(form)
       }
 
       expect(fn).toThrow('You need to pass a form element as an argument')

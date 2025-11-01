@@ -1,16 +1,16 @@
 import lodash from 'lodash'
+import InputExtracterBase from '../abstracts/validation/InputExtracterBase.js'
 
-class FormInputExtracter {
-  constructor(form) {
+class FormInputExtracter extends InputExtracterBase {
+  constructor() {
+    super()
+  }
+
+  getFormInputs(form) {
     if (form.tagName !== 'FORM') {
       throw new TypeError('You need to pass a form element as an argument')
     }
-
-    this.form = form
-  }
-
-  getFormInputs() {
-    const elements = this.form.elements
+    const elements = form.elements
     let result = []
 
     for (let i = 0; i < elements.length; i++) {
@@ -51,8 +51,6 @@ class FormInputExtracter {
 
     return result
   }
-
-  getFormInputWrapper() {}
 }
 
 export default FormInputExtracter

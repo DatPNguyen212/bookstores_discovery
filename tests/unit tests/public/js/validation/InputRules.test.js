@@ -4,12 +4,13 @@ import InputRules from '../../../../../public/js/validation/InputRules.js'
 import typeCheck from '../../../../../public/js/utils/typeCheck.js'
 import { Window } from 'happy-dom'
 import objectUtils from '../../../../../utils/objectUtils.js'
+import { IS_INPUT_RULES_INSTANCE } from '../../../../../public/js/validation/InputRules.js'
 
 describe('InputRules', () => {
-  let isInputElement
+  let isInputElementSpy
   beforeEach(() => {
     document.body.innerHTML = ''
-    isInputElement = vi
+    isInputElementSpy = vi
       .spyOn(typeCheck, 'isInputElement')
       .mockReturnValue('true')
   })
@@ -17,26 +18,27 @@ describe('InputRules', () => {
   afterEach(() => {
     vi.restoreAllMocks()
   })
-  it('when you pass an input element, it should call typeCheck.isInputElement() with that input', () => {
+  it('when you pass an input element, it should call isInputElementSpy with that input', () => {
     document.body.innerHTML = `<input type = "text">`
     const input = document.querySelector('input')
 
     const inputRules = new InputRules(input)
 
-    expect(isInputElement).toBeCalledWith(input)
+    expect(isInputElementSpy).toBeCalledWith(input)
   })
 
-  it('given typeCheck.isInputElement returns true, when you pass valid input elemenet, inputRules.input is said input, and inputRules.rules is a plain obj', () => {
+  it('given isInputElementSpy returns true, when you pass valid input elemenet, inputRules.input is said input, inputRules.rules is an empty plain obj, and property that checks instanceof is true ', () => {
     document.body.innerHTML = `<input type = "text">`
     const input = document.querySelector('input')
 
     const inputRules = new InputRules(input)
 
     expect(inputRules.input).toEqual(input)
-    expect(objectUtils.isPlainObject(inputRules.rules)).toBe(true)
+    expect(inputRules.rules).toEqual({})
+    expect(inputRules[IS_INPUT_RULES_INSTANCE]).toBe(true)
   })
-  it('given typeCheck.isInputElement returns false, when you pass a non input value, it should throw an error', () => {
-    isInputElement.mockReturnValue(false)
+  it('given isInputElementSpy returns false, when you pass a non input value, it should throw an error', () => {
+    isInputElementSpy.mockReturnValue(false)
     const input = 3
 
     const fn = () => {

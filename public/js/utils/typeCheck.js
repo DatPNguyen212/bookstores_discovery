@@ -10,8 +10,8 @@ const typeCheck = {
     }
 
     if (
-      !input instanceof HTMLSelectElement ||
-      !input instanceof HTMLTextAreaElement
+      !(input instanceof HTMLSelectElement) ||
+      !(input instanceof HTMLTextAreaElement)
     ) {
       return false
     }

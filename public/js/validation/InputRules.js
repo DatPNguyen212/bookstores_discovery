@@ -1,9 +1,17 @@
 import typeCheck from '../utils/typeCheck.js'
-import InputRulesBase from '../abstracts/validation/InputRulesBase.js'
 
-class InputRules extends InputRulesBase {
+const IS_INPUT_RULES_INSTANCE = Symbol('InputRules/is-instance')
+
+class InputRules {
   constructor(input) {
-    super(input)
+    if (!typeCheck.isInputElement(input)) {
+      throw new TypeError(
+        'You need to pass either an input element, select element or textarea element'
+      )
+    }
+    this.input = input
+    this.rules = {}
+    this[IS_INPUT_RULES_INSTANCE] = true
   }
 
   addRule(name, value) {
@@ -21,3 +29,4 @@ class InputRules extends InputRulesBase {
 }
 
 export default InputRules
+export { IS_INPUT_RULES_INSTANCE }

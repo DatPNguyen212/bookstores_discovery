@@ -3,7 +3,7 @@ import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import Validator from '../../../../../public/js/validation/Validator.js'
 import { Window } from 'happy-dom'
 import objectUtils from '../../../../../utils/objectUtils.js'
-import FormInputExtracter from '../../../../../public/js/validation/extracters/FormInputExtracter.js'
+import FormInputExtracter from '../../../../../public/js/validation/FormInputExtracter.js'
 const window = new Window()
 const document = window.document
 
