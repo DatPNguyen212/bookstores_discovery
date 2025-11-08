@@ -26,6 +26,26 @@ class InputRules {
     }
     this.rules[name] = value
   }
+
+  getGroupInputs() {
+    const form = this.input.form
+    const name = this.input.name
+
+    let inputs
+    if (name) {
+      inputs = Array.from(form.elements[name])
+    } else {
+      throw new TypeError(
+        'The input in your inputRules instance needs to have name attribute value'
+      )
+    }
+
+    const groupInputs = inputs.filter((input) => {
+      return input.type === 'checkbox' || input.type === 'radio'
+    })
+
+    return groupInputs
+  }
 }
 
 export default InputRules

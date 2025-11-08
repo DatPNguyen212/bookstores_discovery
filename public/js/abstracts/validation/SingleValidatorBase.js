@@ -1,8 +1,12 @@
-class ValidatorBase {
+const IS_SINGLE_VALIDATOR_BASE_INSTANCE = Symbol(
+  'SingleValidatorBase/is-instance'
+)
+class SingleValidatorBase {
   constructor() {
-    if (new.target === ValidatorBase) {
+    if (new.target === SingleValidatorBase) {
       throw new Error('ValidatorBase cannot be instantiated directly')
     }
+    this[IS_SINGLE_VALIDATOR_BASE_INSTANCE] = true
   }
 
   required() {
@@ -17,4 +21,5 @@ class ValidatorBase {
   }
 }
 
-export default ValidatorBase
+export default SingleValidatorBase
+export { IS_SINGLE_VALIDATOR_BASE_INSTANCE }
