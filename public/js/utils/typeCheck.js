@@ -6,17 +6,21 @@ const typeCheck = {
     if (input instanceof HTMLInputElement) {
       if (input.type === 'checkbox' || input.type === 'radio') {
         return false
+      } else {
+        return true
       }
     }
 
     if (
-      !(input instanceof HTMLSelectElement) ||
-      !(input instanceof HTMLTextAreaElement)
+      !(
+        input instanceof HTMLSelectElement ||
+        input instanceof HTMLTextAreaElement
+      )
     ) {
       return false
+    } else {
+      return true
     }
-
-    return true
   },
   isInputElement(input) {
     if (

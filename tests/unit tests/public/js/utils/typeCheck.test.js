@@ -61,6 +61,24 @@ describe('typeCheck', () => {
       expect(result).toBe(true)
     })
 
+    it('given typeCheck.isInputElement() returns true, when you pass input type text element, it should return true', () => {
+      document.body.innerHTML = `<input type = "text">`
+      const input = document.querySelector('input')
+
+      const result = typeCheck.isSingleInputType(input)
+
+      expect(result).toBe(true)
+    })
+
+    it('given typeCheck.isInputElement() returns true, when you pass input type email element, it should return true', () => {
+      document.body.innerHTML = `<input type = "email">`
+      const input = document.querySelector('input')
+
+      const result = typeCheck.isSingleInputType(input)
+
+      expect(result).toBe(true)
+    })
+
     it('when you pass a value in the 1st param, it should call typeCheck.isInputElement() with that value', () => {
       const value = 3
 

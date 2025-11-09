@@ -1,8 +1,10 @@
 import { IS_INPUT_ERROR_FACTORY_BASE_INSTANCE } from '../abstracts/validation/InputErrorFactoryBase.js'
 import { IS_INPUT_RULES_INSTANCE } from './InputRules.js'
 import objectUtils from '../utils/objectUtils.js'
-class GroupValidator {
+import GroupValidatorBase from '../abstracts/validation/GroupValidatorBase.js'
+class GroupValidator extends GroupValidatorBase {
   constructor(inputErrorFactory) {
+    super()
     if (!inputErrorFactory) {
       throw new TypeError(
         'You need to pass an instanceof InputErrorFactoryBase to first parameter'
@@ -16,31 +18,28 @@ class GroupValidator {
     this.inputErrorFactory = inputErrorFactory
   }
 
-  required(inputRules) {
-    if (inputRules[IS_INPUT_RULES_INSTANCE] !== true) {
+  required(input) {
+    if (!input) {
       throw new TypeError(
-        'You need to pass an instance of InputRules as an argument'
+        'You need to pass group input element to first parameter'
+      )
+    }
+    if (!(input.type === 'checkbox' || input.type === 'radio')) {
+      throw new TypeError(
+        'You need to pass group input element to first parameter'
       )
     }
 
-    if (
-      inputRules.input.type !== 'checkbox' &&
-      inputRules.input.type !== 'radio'
-    ) {
-      throw new TypeError(
-        'inputRules.input needs to be a group element (either checkbox or radio)'
-      )
-    }
+    const form = input.form
+    const name = input.name
 
-    const firstInput = inputRules.input
-
-    const groupInputs = inputRules.getGroupInputs()
+    const groupInputs = Array.from(form.elements[name])
 
     const checkedGroupInputs = groupInputs.filter((groupInput) => {
       return groupInput.checked
     })
 
-    const inputError = this.inputErrorFactory.create(firstInput)
+    const inputError = this.inputErrorFactory.create(input)
 
     if (checkedGroupInputs.length > 0) {
       inputError.error = null
