@@ -212,8 +212,8 @@ describe('arrayUtils.areAllGroupInputs()', () => {
   </fieldset>
 </form>`
     const form = document.querySelector('form')
-    const formInputExtracter = new FormInputExtracter(form)
-    const inputs = formInputExtracter.getFormInputs().flat(1)
+    const formInputExtracter = new FormInputExtracter()
+    const inputs = formInputExtracter.getFormInputs(form).flat(1)
 
     const result = arrayUtils.areAllGroupInputs(inputs)
 
@@ -235,8 +235,8 @@ describe('arrayUtils.areAllGroupInputs()', () => {
   </fieldset>
 </form>`
     const form = document.querySelector('form')
-    const formInputExtracter = new FormInputExtracter(form)
-    const inputs = formInputExtracter.getFormInputs().flat(1)
+    const formInputExtracter = new FormInputExtracter()
+    const inputs = formInputExtracter.getFormInputs(form).flat(1)
 
     const result = arrayUtils.areAllGroupInputs(inputs)
 
@@ -254,8 +254,8 @@ describe('arrayUtils.areAllGroupInputs()', () => {
   </fieldset>;
 </form>`
     const form = document.querySelector('form')
-    const formInputExtracter = new FormInputExtracter(form)
-    const inputs = formInputExtracter.getFormInputs().flat(1)
+    const formInputExtracter = new FormInputExtracter()
+    const inputs = formInputExtracter.getFormInputs(form).flat(1)
 
     const result = arrayUtils.areAllGroupInputs(inputs)
 
@@ -271,8 +271,8 @@ describe('arrayUtils.areAllGroupInputs()', () => {
   </fieldset>;
 </form>`
     const form = document.querySelector('form')
-    const formInputExtracter = new FormInputExtracter(form)
-    const inputs = formInputExtracter.getFormInputs().flat(1)
+    const formInputExtracter = new FormInputExtracter()
+    const inputs = formInputExtracter.getFormInputs(form).flat(1)
 
     const result = arrayUtils.areAllGroupInputs(inputs)
 

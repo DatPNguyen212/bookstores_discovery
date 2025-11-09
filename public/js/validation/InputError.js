@@ -8,15 +8,15 @@ class InputError {
       )
     }
     this.input = input
-    this.error = null
+    this.errors = []
     this[IS_INPUT_ERROR_INSTANCE] = true
   }
 
-  setError(error) {
+  addError(error) {
     if (typeof error !== 'string') {
       throw new TypeError('You need to pass a string to first parameter')
     }
-    this.error = error
+    this.errors.push(error)
   }
 }
 

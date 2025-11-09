@@ -20,14 +20,14 @@ describe('InputError', () => {
   afterEach(() => {
     vi.restoreAllMocks()
   })
-  it('when you pass input to constructor when instantiating, inputErrror should contain input property with value of that input, an error property with value of null, and a symbol property to check instanceof', () => {
+  it('when you pass input to constructor when instantiating, inputErrror should contain input property with value of that input, an errors property with empty array, and a symbol property to check instanceof', () => {
     document.body.innerHTML = `<input type = "text">`
     const input = document.querySelector('input')
 
     const inputError = new InputError(input)
 
     expect(inputError.input).toEqual(input)
-    expect(inputError.error).toBe(null)
+    expect(inputError.errors).toHaveLength(0)
     expect(inputError[IS_INPUT_ERROR_INSTANCE]).toBe(true)
   })
   it('when you pass input element to constructor, it should call typeCheck.isInputElement() with that input', () => {
@@ -50,16 +50,16 @@ describe('InputError', () => {
     expect(fn).toThrow('You need to pass an input element to first parameter')
   })
 
-  describe('inputError.setError()', () => {
-    it('when you pass a string, inputError.error value should be that string', () => {
+  describe('inputError.addError()', () => {
+    it('when you pass a string, inputError.error should contain that string', () => {
       document.body.innerHTML = `<input type = "text">`
       const input = document.querySelector('input')
       const inputError = new InputError(input)
       const error = 'test'
 
-      inputError.setError(error)
+      inputError.addError(error)
 
-      expect(inputError.error).toBe(error)
+      expect(inputError.errors).toContain(error)
     })
 
     it("if you don't pass a non stirng data type, it should throw an error", () => {
@@ -69,7 +69,7 @@ describe('InputError', () => {
       const error = 3
 
       const fn = () => {
-        inputError.setError(error)
+        inputError.addError(error)
       }
 
       expect(fn).toThrow('You need to pass a string to first parameter')
