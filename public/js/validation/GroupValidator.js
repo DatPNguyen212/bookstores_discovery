@@ -3,19 +3,8 @@ import { IS_INPUT_RULES_INSTANCE } from './InputRules.js'
 import objectUtils from '../utils/objectUtils.js'
 import GroupValidatorBase from '../abstracts/validation/GroupValidatorBase.js'
 class GroupValidator extends GroupValidatorBase {
-  constructor(inputErrorsFactory) {
+  constructor() {
     super()
-    if (!inputErrorsFactory) {
-      throw new TypeError(
-        'You need to pass an instanceof InputErrorsFactoryBase to first parameter'
-      )
-    }
-    if (!inputErrorsFactory[IS_INPUT_ERRORS_FACTORY_BASE_INSTANCE]) {
-      throw new TypeError(
-        'You need to pass an instanceof InputErrorsFactoryBase to first parameter'
-      )
-    }
-    this.inputErrorsFactory = inputErrorsFactory
   }
 
   required(input) {
@@ -39,15 +28,15 @@ class GroupValidator extends GroupValidatorBase {
       return groupInput.checked
     })
 
-    const inputErrors = this.inputErrorsFactory.create(input)
+    let errorMsg
 
     if (checkedGroupInputs.length > 0) {
-      inputErrors.errors = null
+      errorMsg = null
     } else {
-      inputErrors.errors = `Atleast 1 input needs to be checked`
+      errorMsg = `Atleast 1 input needs to be checked`
     }
 
-    return inputErrors
+    return errorMsg
   }
 }
 
