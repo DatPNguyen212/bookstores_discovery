@@ -1,25 +1,11 @@
 import SingleValidatorBase from '../abstracts/validation/SingleValidatorBase.js'
 import arrayUtils from '../utils/arrayUtils.js'
-import InputErrorFactory from './InputErrorFactory.js'
-import { IS_INPUT_ERROR_FACTORY_BASE_INSTANCE } from '../abstracts/validation/InputErrorFactoryBase.js'
+import InputErrorsFactory from './InputErrorsFactory.js'
+import { IS_INPUT_ERRORS_FACTORY_BASE_INSTANCE } from '../abstracts/validation/InputErrorsFactoryBase.js'
 
 class SingleValidator extends SingleValidatorBase {
-  constructor(inputErrorFactory) {
+  constructor() {
     super()
-
-    if (!inputErrorFactory) {
-      throw new TypeError(
-        'You need to pass an instance of InputErrorFactoryBase'
-      )
-    }
-
-    if (!inputErrorFactory[IS_INPUT_ERROR_FACTORY_BASE_INSTANCE]) {
-      throw new TypeError(
-        'You need to pass an instance of InputErrorFactoryBase'
-      )
-    }
-
-    this.inputErrorFactory = inputErrorFactory
   }
   required(input) {
     if (
@@ -35,15 +21,15 @@ class SingleValidator extends SingleValidatorBase {
     }
 
     const value = input.value
-    const inputError = this.inputErrorFactory.create(input)
+    let errorMsg
 
     if (!value) {
-      inputError.error = 'This field is required'
-      return inputError
+      errorMsg = 'This field is required'
     } else {
-      inputError.error = null
-      return inputError
+      errorMsg = null
     }
+
+    return errorMsg
   }
 
   maxLength(input, maxLength) {
@@ -63,17 +49,17 @@ class SingleValidator extends SingleValidatorBase {
     }
 
     const value = input.value
-    const inputError = this.inputErrorFactory.create(input)
+    let errorMsg
 
     if (value.length > maxLength) {
-      inputError.error = `This field needs to be less or equal to ${maxLength}`
+      errorMsg = `This field needs to be less or equal to ${maxLength}`
 
-      return inputError
+      return errorMsg
     } else {
-      inputError.error = null
-
-      return inputError
+      errorMsg = null
     }
+
+    return errorMsg
   }
 
   // groupInputRequired(inputs) {

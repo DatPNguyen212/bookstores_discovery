@@ -1,21 +1,21 @@
-import { IS_INPUT_ERROR_FACTORY_BASE_INSTANCE } from '../abstracts/validation/InputErrorFactoryBase.js'
+import { IS_INPUT_ERRORS_FACTORY_BASE_INSTANCE } from '../abstracts/validation/InputErrorsFactoryBase.js'
 import { IS_INPUT_RULES_INSTANCE } from './InputRules.js'
 import objectUtils from '../utils/objectUtils.js'
 import GroupValidatorBase from '../abstracts/validation/GroupValidatorBase.js'
 class GroupValidator extends GroupValidatorBase {
-  constructor(inputErrorFactory) {
+  constructor(inputErrorsFactory) {
     super()
-    if (!inputErrorFactory) {
+    if (!inputErrorsFactory) {
       throw new TypeError(
-        'You need to pass an instanceof InputErrorFactoryBase to first parameter'
+        'You need to pass an instanceof InputErrorsFactoryBase to first parameter'
       )
     }
-    if (!inputErrorFactory[IS_INPUT_ERROR_FACTORY_BASE_INSTANCE]) {
+    if (!inputErrorsFactory[IS_INPUT_ERRORS_FACTORY_BASE_INSTANCE]) {
       throw new TypeError(
-        'You need to pass an instanceof InputErrorFactoryBase to first parameter'
+        'You need to pass an instanceof InputErrorsFactoryBase to first parameter'
       )
     }
-    this.inputErrorFactory = inputErrorFactory
+    this.inputErrorsFactory = inputErrorsFactory
   }
 
   required(input) {
@@ -39,15 +39,15 @@ class GroupValidator extends GroupValidatorBase {
       return groupInput.checked
     })
 
-    const inputError = this.inputErrorFactory.create(input)
+    const inputErrors = this.inputErrorsFactory.create(input)
 
     if (checkedGroupInputs.length > 0) {
-      inputError.error = null
+      inputErrors.errors = null
     } else {
-      inputError.error = `Atleast 1 input needs to be checked`
+      inputErrors.errors = `Atleast 1 input needs to be checked`
     }
 
-    return inputError
+    return inputErrors
   }
 }
 

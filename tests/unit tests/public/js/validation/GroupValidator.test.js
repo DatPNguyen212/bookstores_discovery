@@ -1,9 +1,9 @@
 // @vitest-environment happy-dom
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import GroupValidator from '../../../../../public/js/validation/GroupValidator.js'
-import { IS_INPUT_ERROR_FACTORY_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/InputErrorFactoryBase.js'
-import InputErrorFactory from '../../../../../public/js/validation/InputErrorFactory.js'
-import { IS_INPUT_ERROR_INSTANCE } from '../../../../../public/js/validation/InputError.js'
+import { IS_INPUT_ERRORS_FACTORY_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/InputErrorsFactoryBase.js'
+import InputErrorsFactory from '../../../../../public/js/validation/InputErrorsFactory.js'
+import { IS_INPUT_ERRORS_INSTANCE } from '../../../../../public/js/validation/InputErrors.js'
 import InputRules, {
   IS_INPUT_RULES_INSTANCE,
 } from '../../../../../public/js/validation/InputRules.js'
@@ -15,15 +15,15 @@ const document = window.document
 vi.stubGlobal('document', document)
 
 describe('GroupValidator', () => {
-  it('when you pass a non instance of InputErrorFactoryBase to constructor, it should throw an error', () => {
-    const inputErrorFactory = 3
+  it('when you pass a non instance of InputErrorsFactoryBase to constructor, it should throw an error', () => {
+    const inputErrorsFactory = 3
 
     const fn = () => {
       new GroupValidator(undefined)
     }
 
     expect(fn).toThrow(
-      'You need to pass an instanceof InputErrorFactoryBase to first parameter'
+      'You need to pass an instanceof InputErrorsFactoryBase to first parameter'
     )
   })
   it("when you don't pass any argument to constructor, it should throw an error", () => {
@@ -32,25 +32,25 @@ describe('GroupValidator', () => {
     }
 
     expect(fn).toThrow(
-      'You need to pass an instanceof InputErrorFactoryBase to first parameter'
+      'You need to pass an instanceof InputErrorsFactoryBase to first parameter'
     )
   })
 
-  it('when you pass valid inputErrorFactory, groupValidator.inputErrorFactory should be that argument', () => {
-    const inputErrorFactory = new InputErrorFactory()
+  it('when you pass valid inputErrorsFactory, groupValidator.inputErrorsFactory should be that argument', () => {
+    const inputErrorsFactory = new InputErrorsFactory()
 
-    const groupValidator = new GroupValidator(inputErrorFactory)
+    const groupValidator = new GroupValidator(inputErrorsFactory)
 
-    expect(groupValidator.inputErrorFactory).toEqual(inputErrorFactory)
+    expect(groupValidator.inputErrorsFactory).toEqual(inputErrorsFactory)
   })
 
   describe('groupValidator.required()', () => {
     let groupValidator
-    let inputErrorFactory
+    let inputErrorsFactory
     beforeEach(() => {
       document.body.innerHTML = ''
-      inputErrorFactory = new InputErrorFactory()
-      groupValidator = new GroupValidator(inputErrorFactory)
+      inputErrorsFactory = new InputErrorsFactory()
+      groupValidator = new GroupValidator(inputErrorsFactory)
     })
 
     afterEach(() => {
@@ -165,7 +165,7 @@ describe('GroupValidator', () => {
     //   )
     // })
 
-    it('given a form of a group of checkboxes of same name and they are ALL not checked, when you pass a  single checkbox element from them, it should return an instanceof InputError that contains that checkbox and correct error ', () => {
+    it('given a form of a group of checkboxes of same name and they are ALL not checked, when you pass a  single checkbox element from them, it should return an instanceof InputErrors that contains that checkbox and correct error ', () => {
       document.body.innerHTML = `
       <form>
         <input type = "checkbox" name = "genres" value = "fantasy" required>
@@ -174,14 +174,14 @@ describe('GroupValidator', () => {
       `
       const checkbox = document.querySelector(`[value="fantasy"]`)
 
-      const inputError = groupValidator.required(checkbox)
+      const inputErrors = groupValidator.required(checkbox)
 
-      expect(inputError[IS_INPUT_ERROR_INSTANCE]).toBe(true)
-      expect(inputError.input).toEqual(checkbox)
-      expect(inputError.error).toBe(`Atleast 1 input needs to be checked`)
+      expect(inputErrors[IS_INPUT_ERRORS_INSTANCE]).toBe(true)
+      expect(inputErrors.input).toEqual(checkbox)
+      expect(inputErrors.errors).toBe(`Atleast 1 input needs to be checked`)
     })
 
-    it('given a form of a group of radios of same name and they are ALL not checked, when you pass a single radio element from them, it should return an instanceof InputError that contains that checkbox and correct error ', () => {
+    it('given a form of a group of radios of same name and they are ALL not checked, when you pass a single radio element from them, it should return an instanceof InputErrors that contains that checkbox and correct error ', () => {
       document.body.innerHTML = `
       <form>
         <input type = "radio" name = "genre" value = "fantasy" required>
@@ -190,14 +190,14 @@ describe('GroupValidator', () => {
       `
       const radio = document.querySelector(`[value="fantasy"]`)
 
-      const inputError = groupValidator.required(radio)
+      const inputErrors = groupValidator.required(radio)
 
-      expect(inputError[IS_INPUT_ERROR_INSTANCE]).toBe(true)
-      expect(inputError.input).toEqual(radio)
-      expect(inputError.error).toBe(`Atleast 1 input needs to be checked`)
+      expect(inputErrors[IS_INPUT_ERRORS_INSTANCE]).toBe(true)
+      expect(inputErrors.input).toEqual(radio)
+      expect(inputErrors.errors).toBe(`Atleast 1 input needs to be checked`)
     })
 
-    // it('given inputRules.getGroupInputs() return an array of radio inputs in a single group in a form where none of those radio inputs are checked, when you pass that inputRules instance, it should return an instanceof InputError that contains the first radio input and correct error ', () => {
+    // it('given inputRules.getGroupInputs() return an array of radio inputs in a single group in a form where none of those radio inputs are checked, when you pass that inputRules instance, it should return an instanceof InputErrors that contains the first radio input and correct error ', () => {
     //   document.body.innerHTML = `
     //   <form>
     //     <input type = "radio" name = "genre" value = "fantasy" required>
@@ -215,11 +215,11 @@ describe('GroupValidator', () => {
     //     }),
     //   }
 
-    //   const inputError = groupValidator.required(inputRules)
+    //   const inputErrors = groupValidator.required(inputRules)
 
-    //   expect(inputError[IS_INPUT_ERROR_INSTANCE]).toBe(true)
+    //   expect(inputErrors[IS_INPUT_ERRORS_INSTANCE]).toBe(true)
     //   expect(inputError.input).toEqual(radio1)
-    //   expect(inputError.error).toBe(`Atleast 1 input needs to be checked`)
+    //   expect(inputErrors.errors).toBe(`Atleast 1 input needs to be checked`)
     // })
   })
 })

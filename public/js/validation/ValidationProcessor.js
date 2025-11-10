@@ -39,7 +39,7 @@ class ValidationProcessor {
       )
     }
 
-    let inputErrorArray = []
+    let inputErrorsArray = []
 
     for (let inputRules of inputRulesArray) {
       const input = inputRules.input
@@ -47,25 +47,25 @@ class ValidationProcessor {
 
       if (typeCheck.isSingleInputType(input)) {
         for (let rule of rules) {
-          const inputError = this.singleValidator[rule](
+          const inputErrors = this.singleValidator[rule](
             input,
             inputRules.rules[rule]
           )
 
-          inputErrorArray.push(inputError)
+          inputErrorsArray.push(inputErrors)
         }
       }
 
       if (input.type === 'checkbox' || input.type === 'radio') {
         for (let rule of rules) {
-          const inputError = this.groupValidator[rule](input)
+          const inputErrors = this.groupValidator[rule](input)
 
-          inputErrorArray.push(inputError)
+          inputErrorsArray.push(inputErrors)
         }
       }
     }
 
-    return inputErrorArray
+    return inputErrorsArray
   }
 }
 

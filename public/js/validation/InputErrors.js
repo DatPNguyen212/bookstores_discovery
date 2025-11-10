@@ -1,6 +1,6 @@
 import typeCheck from '../utils/typeCheck.js'
-const IS_INPUT_ERROR_INSTANCE = Symbol('InputError/is-instance')
-class InputError {
+const IS_INPUT_ERRORS_INSTANCE = Symbol('InputErrors/is-instance')
+class InputErrors {
   constructor(input) {
     if (!typeCheck.isInputElement(input)) {
       throw new TypeError(
@@ -9,7 +9,7 @@ class InputError {
     }
     this.input = input
     this.errors = []
-    this[IS_INPUT_ERROR_INSTANCE] = true
+    this[IS_INPUT_ERRORS_INSTANCE] = true
   }
 
   addError(error) {
@@ -20,5 +20,5 @@ class InputError {
   }
 }
 
-export default InputError
-export { IS_INPUT_ERROR_INSTANCE }
+export default InputErrors
+export { IS_INPUT_ERRORS_INSTANCE }

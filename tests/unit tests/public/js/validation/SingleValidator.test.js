@@ -4,8 +4,8 @@ import SingleValidator from '../../../../../public/js/validation/SingleValidator
 import { Window } from 'happy-dom'
 import objectUtils from '../../../../../utils/objectUtils.js'
 import FormInputExtracter from '../../../../../public/js/validation/FormInputExtracter.js'
-import InputErrorFactory from '../../../../../public/js/validation/InputErrorFactory.js'
-import { IS_INPUT_ERROR_FACTORY_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/InputErrorFactoryBase.js'
+import InputErrorsFactory from '../../../../../public/js/validation/InputErrorsFactory.js'
+import { IS_INPUT_ERRORS_FACTORY_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/InputErrorsFactoryBase.js'
 import { IS_SINGLE_VALIDATOR_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/SingleValidatorBase.js'
 
 const window = new Window()
@@ -18,73 +18,33 @@ vi.stubGlobal('HTMLSelectElement', window.HTMLSelectElement)
 
 describe('SingleValidator()', () => {
   let singleValidator
-  let inputErrorFactoryMock
 
   beforeEach(() => {
     document.body.innerHTML = ''
-    inputErrorFactoryMock = {
-      [IS_INPUT_ERROR_FACTORY_BASE_INSTANCE]: true,
-      create(input) {
-        return {
-          input: input,
-          error: null,
-        }
-      },
-    }
-    singleValidator = new SingleValidator(inputErrorFactoryMock)
+
+    singleValidator = new SingleValidator()
   })
   afterEach(() => {
     vi.restoreAllMocks()
   })
-  it('when you pass a non instance of InputErrorFactory to constructor, it should throw an error', () => {
-    const inputErrorFactory = 3
-
-    const fn = () => {
-      new SingleValidator(inputErrorFactory)
-    }
-
-    expect(fn).toThrow('You need to pass an instance of InputErrorFactoryBase')
-  })
-
-  it("when you don't pass any arugment to constructor, it should throw an error", () => {
-    const fn = () => {
-      new SingleValidator()
-    }
-
-    expect(fn).toThrow('You need to pass an instance of InputErrorFactoryBase')
-  })
-  it('when you pass an instance of InputErrorFactory to constructor, singleValidator.inputErrorFactory is equal to that instance', () => {
-    const singleValidator = new SingleValidator(inputErrorFactoryMock)
-
-    expect(singleValidator.inputErrorFactory).toEqual(inputErrorFactoryMock)
-  })
-  it('when you pass valid inputErrorFactory to constructor, the instance should have property that checks instance of SingleValidatorBase', () => {
-    const singleValidator = new SingleValidator(inputErrorFactoryMock)
-
-    expect(singleValidator[IS_SINGLE_VALIDATOR_BASE_INSTANCE]).toBe(true)
-  })
 
   describe('singleValidator.required()', () => {
-    it('given input has no value, when you pass it to singleValidator.required(), it should return an obj which contains the input and correct error', () => {
+    it('given input has no value, when you pass it to singleValidator.required(), it should return correct error string', () => {
       document.body.innerHTML = `<input type = "text" required>`
       const input = document.querySelector('input')
 
       const result = singleValidator.required(input)
 
-      expect(objectUtils.isPlainObject(result)).toBe(true)
-      expect(result.input).toEqual(input)
-      expect(result.error).toBe('This field is required')
+      expect(result).toBe('This field is required')
     })
 
-    it('given input has value, when you pass it to singleValidator.required(), it should return an obj which contains the input and error is null', () => {
+    it('given input has value, when you pass it to singleValidator.required(), it should return null', () => {
       document.body.innerHTML = `<input type = "text" required value = "testValue">`
       const input = document.querySelector('input')
 
       const result = singleValidator.required(input)
 
-      expect(objectUtils.isPlainObject(result)).toBe(true)
-      expect(result.input).toEqual(input)
-      expect(result.error).toBe(null)
+      expect(result).toBeNull()
     })
 
     it('if you pass a non input obj, it should throw an error', () => {
@@ -129,40 +89,34 @@ describe('SingleValidator()', () => {
   })
 
   describe('singleValidator.maxLength()', () => {
-    it('given input.value of 4 characters, you pass input and 3 to .maxLength(), it should return an obj which contain the input and correct error', () => {
+    it('given input.value of 4 characters, you pass input and 3 to .maxLength(), it should return correct error string', () => {
       document.body.innerHTML = `<input type = "text" value = "1234" maxLength = 3>`
       const input = document.querySelector('input')
       const maxLength = 3
 
       const result = singleValidator.maxLength(input, maxLength)
 
-      expect(objectUtils.isPlainObject(result)).toBe(true)
-      expect(result.input).toEqual(input)
-      expect(result.error).toBe(
+      expect(result).toBe(
         `This field needs to be less or equal to ${maxLength}`
       )
     })
-    it('given input.value of 3 characters, you pass input and 3 to .maxLength(), it should return an obj which contain the input and error is null', () => {
+    it('given input.value of 3 characters, you pass input and 3 to .maxLength(), it should return null', () => {
       document.body.innerHTML = `<input type = "text" value = "123" maxLength = 3>`
       const input = document.querySelector('input')
       const maxLength = 3
 
       const result = singleValidator.maxLength(input, maxLength)
 
-      expect(objectUtils.isPlainObject(result)).toBe(true)
-      expect(result.input).toEqual(input)
-      expect(result.error).toBe(null)
+      expect(result).toBeNull()
     })
-    it('given input.value of 2 characters, you pass input and 3 to .maxLength(), it should return an obj which contain the input and error is null', () => {
+    it('given input.value of 2 characters, you pass input and 3 to .maxLength(), it should return null', () => {
       document.body.innerHTML = `<input type = "text" value = "12" maxLength = 3>`
       const input = document.querySelector('input')
       const maxLength = 3
 
       const result = singleValidator.maxLength(input, maxLength)
 
-      expect(objectUtils.isPlainObject(result)).toBe(true)
-      expect(result.input).toEqual(input)
-      expect(result.error).toBe(null)
+      expect(result).toBeNull()
     })
 
     it('if you pass a non input obj in first param, it should throw an error', () => {
@@ -225,7 +179,7 @@ describe('SingleValidator()', () => {
 
   //       expect(objectUtils.isPlainObject(result)).toBe(true)
   //       expect(result.inputs).toEqual(inputs)
-  //       expect(result.error).toBe('This field is required')
+  //       expect(result.errors).toBe('This field is required')
   //     })
 
   //     it('when you pass an array of checkboxes where one is checked, it should return an object which contains inputs array and error is null', () => {
@@ -246,7 +200,7 @@ describe('SingleValidator()', () => {
 
   //       expect(objectUtils.isPlainObject(result)).toBe(true)
   //       expect(result.inputs).toEqual(inputs[0])
-  //       expect(result.error).toBe(null)
+  //       expect(result.errors).toBe(null)
   //     })
 
   //     it('when you pass an array of inputs where atleast one item is single input type, it should throw an error', () => {

@@ -3,7 +3,7 @@ import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import ValidationProcessor from '../../../../../public/js/validation/ValidationProcessor.js'
 import { Window } from 'happy-dom'
 import SingleValidator from '../../../../../public/js/validation/SingleValidator'
-import InputErrorFactory from '../../../../../public/js/validation/InputErrorFactory'
+import InputErrorsFactory from '../../../../../public/js/validation/InputErrorsFactory'
 import GroupValidator from '../../../../../public/js/validation/GroupValidator'
 import InputRules from '../../../../../public/js/validation/InputRules'
 const window = new Window()
@@ -15,13 +15,13 @@ describe('ValidationProcessor', () => {
   let validationProcessor
   let singleValidator
   let groupValidator
-  let inputErrorFactory
+  let inputErrorsFactory
 
   beforeEach(() => {
     document.body.innerHTML = ''
-    inputErrorFactory = new InputErrorFactory()
-    singleValidator = new SingleValidator(inputErrorFactory)
-    groupValidator = new GroupValidator(inputErrorFactory)
+    inputErrorsFactory = new InputErrorsFactory()
+    singleValidator = new SingleValidator(inputErrorsFactory)
+    groupValidator = new GroupValidator(inputErrorsFactory)
     validationProcessor = new ValidationProcessor(
       singleValidator,
       groupValidator
@@ -33,7 +33,7 @@ describe('ValidationProcessor', () => {
   })
 
   describe('validationProcessor.validate()', () => {
-    it('when you pass inputRulesArray which only contains InputRules instances for single input elements with required rule but failed to meet it, it should return correct inputErrorArray', () => {
+    it('when you pass inputRulesArray which only contains InputRules instances for single input elements with required rule but failed to meet it, it should return correct inputErrorsArray', () => {
       document.body.innerHTML = `
         <form>
           <input type = "text" name = "title" required>
@@ -48,15 +48,15 @@ describe('ValidationProcessor', () => {
       inputRules2.rules.required = true
       const inputRulesArray = [inputRules1, inputRules2]
 
-      const inputErrorArray = validationProcessor.validate(inputRulesArray)
+      const inputErrorsArray = validationProcessor.validate(inputRulesArray)
 
-      expect(inputErrorArray[0].input).toEqual(input)
-      expect(inputErrorArray[0].error).toBeTruthy()
-      expect(inputErrorArray[1].input).toEqual(textarea)
-      expect(inputErrorArray[1].error).toBeTruthy()
+      expect(inputErrorsArray[0].input).toEqual(input)
+      expect(inputErrorsArray[0].errors).toBeTruthy()
+      expect(inputErrorsArray[1].input).toEqual(textarea)
+      expect(inputErrorsArray[1].errors).toBeTruthy()
     })
 
-    it('when you pass inputRulesArray which only contains InputRules instances for single input elements with required rule and successfully meet it, it should return correct inputErrorArray', () => {
+    it('when you pass inputRulesArray which only contains InputRules instances for single input elements with required rule and successfully meet it, it should return correct inputErrorsArray', () => {
       document.body.innerHTML = `
         <form>
           <input type = "text" name = "title" value = "test" required>
@@ -71,15 +71,15 @@ describe('ValidationProcessor', () => {
       inputRules2.rules.required = true
       const inputRulesArray = [inputRules1, inputRules2]
 
-      const inputErrorArray = validationProcessor.validate(inputRulesArray)
+      const inputErrorsArray = validationProcessor.validate(inputRulesArray)
 
-      expect(inputErrorArray[0].input).toEqual(input)
-      expect(inputErrorArray[0].error).toBeNull()
-      expect(inputErrorArray[1].input).toEqual(textarea)
-      expect(inputErrorArray[1].error).toBeNull()
+      expect(inputErrorsArray[0].input).toEqual(input)
+      expect(inputErrorsArray[0].errors).toBeNull()
+      expect(inputErrorsArray[1].input).toEqual(textarea)
+      expect(inputErrorsArray[1].errors).toBeNull()
     })
 
-    it('when you pass inputRulesArray it sould contain InputRules instances for group inputs with required rule but they fail to meet it, it should return correct inputErrorArray', () => {
+    it('when you pass inputRulesArray it sould contain InputRules instances for group inputs with required rule but they fail to meet it, it should return correct inputErrorsArray', () => {
       document.body.innerHTML = `
         <form>
           <input type = "checkbox" name = "genres" value = "fantasy" required>
@@ -99,15 +99,15 @@ describe('ValidationProcessor', () => {
 
       const inputRulesArray = [inputRules1, inputRules2]
 
-      const inputErrorArray = validationProcessor.validate(inputRulesArray)
+      const inputErrorsArray = validationProcessor.validate(inputRulesArray)
 
-      expect(inputErrorArray[0].input).toEqual(firstCheckbox)
-      expect(inputErrorArray[0].error).toBeTruthy()
-      expect(inputErrorArray[1].input).toEqual(firstRadio)
-      expect(inputErrorArray[1].error).toBeTruthy()
+      expect(inputErrorsArray[0].input).toEqual(firstCheckbox)
+      expect(inputErrorsArray[0].errors).toBeTruthy()
+      expect(inputErrorsArray[1].input).toEqual(firstRadio)
+      expect(inputErrorsArray[1].errors).toBeTruthy()
     })
 
-    it('when you pass inputRulesArray it sould contain InputRules instances for group inputs with required rule and successfully meet it, it should return correct inputErrorArray', () => {
+    it('when you pass inputRulesArray it sould contain InputRules instances for group inputs with required rule and successfully meet it, it should return correct inputErrorsArray', () => {
       document.body.innerHTML = `
         <form>
           <input type = "checkbox" name = "genres" value = "fantasy" required checked>
@@ -127,12 +127,12 @@ describe('ValidationProcessor', () => {
 
       const inputRulesArray = [inputRules1, inputRules2]
 
-      const inputErrorArray = validationProcessor.validate(inputRulesArray)
+      const inputErrorsArray = validationProcessor.validate(inputRulesArray)
 
-      expect(inputErrorArray[0].input).toEqual(firstCheckbox)
-      expect(inputErrorArray[0].error).toBeNull()
-      expect(inputErrorArray[1].input).toEqual(firstRadio)
-      expect(inputErrorArray[1].error).toBeNull()
+      expect(inputErrorsArray[0].input).toEqual(firstCheckbox)
+      expect(inputErrorsArray[0].errors).toBeNull()
+      expect(inputErrorsArray[1].input).toEqual(firstRadio)
+      expect(inputErrorsArray[1].errors).toBeNull()
     })
   })
 })

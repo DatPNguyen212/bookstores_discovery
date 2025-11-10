@@ -3,9 +3,9 @@ import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import ValidationProcessor from '../../../../../public/js/validation/ValidationProcessor.js'
 import { IS_SINGLE_VALIDATOR_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/SingleValidatorBase.js'
 import SingleValidator from '../../../../../public/js/validation/SingleValidator.js'
-import InputErrorFactory from '../../../../../public/js/validation/InputErrorFactory.js'
+import InputErrorsFactory from '../../../../../public/js/validation/InputErrorsFactory.js'
 import { Window } from 'happy-dom'
-import InputError from '../../../../../public/js/validation/InputError.js'
+import InputErrors from '../../../../../public/js/validation/InputErrors.js'
 import GroupValidator from '../../../../../public/js/validation/GroupValidator.js'
 import InputRules from '../../../../../public/js/validation/InputRules.js'
 import SchemaParser from '../../../../../public/js/validation/SchemaParser.js'
@@ -21,14 +21,14 @@ vi.stubGlobal('HTMLFormElement', window.HTMLFormElement)
 
 describe('ValidationProcessor', () => {
   let singleValidator
-  let inputErrorFactory
+  let inputErrorsFactory
   let groupValidator
   let validationProcessor
   beforeEach(() => {
     document.body.innerHTML = ''
-    inputErrorFactory = new InputErrorFactory()
-    singleValidator = new SingleValidator(inputErrorFactory)
-    groupValidator = new GroupValidator(inputErrorFactory)
+    inputErrorsFactory = new InputErrorsFactory()
+    singleValidator = new SingleValidator(inputErrorsFactory)
+    groupValidator = new GroupValidator(inputErrorsFactory)
     validationProcessor = new ValidationProcessor(
       singleValidator,
       groupValidator
@@ -138,13 +138,13 @@ describe('ValidationProcessor', () => {
         groupValidator
       )
 
-      const inputErrorArray = validationProcessor.validate(inputRulesArray)
+      const inputErrorsArray = validationProcessor.validate(inputRulesArray)
 
       expect(singleValidatorMock.required).toBeCalledWith(input1, true)
       expect(singleValidatorMock.maxLength).toBeCalledWith(input2, 3)
     })
 
-    it('given each singleValidator methods is mocked to return InputError instance and singleValidator is passed to constructor, when you pass inputRulesArray of singe inputs inputRules only with either required and maxLength rules, validationProcessor.validate() should return an array of those InputError instances', () => {
+    it('given each singleValidator methods is mocked to return InputErrors instance and singleValidator is passed to constructor, when you pass inputRulesArray of singe inputs inputRules only with either required and maxLength rules, validationProcessor.validate() should return an array of those InputErrors instances', () => {
       document.body.innerHTML = `
         <form>
           <input type = "text" name = "title" required>
@@ -158,15 +158,15 @@ describe('ValidationProcessor', () => {
       const inputRules2 = new InputRules(input2)
       inputRules2.rules.maxLength = 3
       const inputRulesArray = [inputRules1, inputRules2]
-      const inputErrorMock = new InputError(input1)
-      inputErrorMock.error = 'msg'
+      const inputErrorsMock = new InputErrors(input1)
+      inputErrorsMock.errors = 'msg'
       const singleValidatorMock = {
         [IS_SINGLE_VALIDATOR_BASE_INSTANCE]: true,
         required: vi.fn(() => {
-          return inputErrorMock
+          return inputErrorsMock
         }),
         maxLength: vi.fn(() => {
-          return inputErrorMock
+          return inputErrorsMock
         }),
       }
       const validationProcessor = new ValidationProcessor(
@@ -174,10 +174,10 @@ describe('ValidationProcessor', () => {
         groupValidator
       )
 
-      const inputErrorArray = validationProcessor.validate(inputRulesArray)
+      const inputErrorsArray = validationProcessor.validate(inputRulesArray)
 
-      const expectedResult = [inputErrorMock, inputErrorMock]
-      expect(inputErrorArray).toEqual(expectedResult)
+      const expectedResult = [inputErrorsMock, inputErrorsMock]
+      expect(inputErrorsArray).toEqual(expectedResult)
     })
 
     it('given groupValidator is mocked and passed to constructor, when you pass inputRulesArray of a checkbox inputRules with required rule, validationProcessor.validate() should call groupValidator.required() with that checkbox element', () => {
@@ -205,12 +205,12 @@ describe('ValidationProcessor', () => {
         groupValidatorMock
       )
 
-      const inputErrorArray = validationProcessor.validate(inputRulesArray)
+      const inputErrorsArray = validationProcessor.validate(inputRulesArray)
 
       expect(groupValidatorMock.required).toBeCalledWith(checkbox)
     })
 
-    it('given each of groupValidator methods is mocked to return an InputError instance and groupValidator is passed to constructor, when you pass inputRulesArray of a checkbox inputRules with required rule, validationProcessor.validate() should return an array of the InputError instances returned by the mocked methods', () => {
+    it('given each of groupValidator methods is mocked to return an InputErrors instance and groupValidator is passed to constructor, when you pass inputRulesArray of a checkbox inputRules with required rule, validationProcessor.validate() should return an array of the InputErrors instances returned by the mocked methods', () => {
       document.body.innerHTML = `
         <form>
           <input type = "checkbox" name = "genres" value = "fantasy" required>
@@ -226,12 +226,12 @@ describe('ValidationProcessor', () => {
         required: vi.fn(),
         maxLength: vi.fn(),
       }
-      const inputErrorMock = new InputError(checkbox)
+      const inputErrorsMock = new InputErrors(checkbox)
 
       const groupValidatorMock = {
         [IS_GROUP_VALIDATOR_BASE_INSTANCE]: true,
         required: vi.fn(() => {
-          return inputErrorMock
+          return inputErrorsMock
         }),
       }
       const validationProcessor = new ValidationProcessor(
@@ -239,10 +239,10 @@ describe('ValidationProcessor', () => {
         groupValidatorMock
       )
 
-      const inputErrorArray = validationProcessor.validate(inputRulesArray)
+      const inputErrorsArray = validationProcessor.validate(inputRulesArray)
 
-      const expectedResult = [inputErrorMock]
-      expect(inputErrorArray).toEqual(expectedResult)
+      const expectedResult = [inputErrorsMock]
+      expect(inputErrorsArray).toEqual(expectedResult)
     })
 
     it('given groupValidator is mocked and passed to constructor, when you pass inputRulesArray of a radio inputRules with required rule, validationProcessor.validate() should call groupValidator.required() with that radio element', () => {
@@ -270,7 +270,7 @@ describe('ValidationProcessor', () => {
         groupValidatorMock
       )
 
-      const inputErrorArray = validationProcessor.validate(inputRulesArray)
+      const inputErrorsArray = validationProcessor.validate(inputRulesArray)
 
       expect(groupValidatorMock.required).toBeCalledWith(radio)
     })
@@ -291,11 +291,11 @@ describe('ValidationProcessor', () => {
         required: vi.fn(),
         maxLength: vi.fn(),
       }
-      const inputErrorMock = new InputError(radio)
+      const inputErrorsMock = new InputErrors(radio)
       const groupValidatorMock = {
         [IS_GROUP_VALIDATOR_BASE_INSTANCE]: true,
         required: vi.fn(() => {
-          return inputErrorMock
+          return inputErrorsMock
         }),
       }
       const validationProcessor = new ValidationProcessor(
@@ -303,10 +303,10 @@ describe('ValidationProcessor', () => {
         groupValidatorMock
       )
 
-      const inputErrorArray = validationProcessor.validate(inputRulesArray)
+      const inputErrorsArray = validationProcessor.validate(inputRulesArray)
 
-      const expectedResult = [inputErrorMock]
-      expect(inputErrorArray).toEqual(expectedResult)
+      const expectedResult = [inputErrorsMock]
+      expect(inputErrorsArray).toEqual(expectedResult)
     })
   })
 })

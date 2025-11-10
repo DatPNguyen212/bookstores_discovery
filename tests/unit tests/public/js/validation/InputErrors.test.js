@@ -1,14 +1,14 @@
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
-import InputError from '../../../../../public/js/validation/InputError.js'
+import InputErrors from '../../../../../public/js/validation/InputErrors.js'
 import typeCheck from '../../../../../public/js/utils/typeCheck.js'
-import { IS_INPUT_ERROR_INSTANCE } from '../../../../../public/js/validation/InputError.js'
+import { IS_INPUT_ERRORS_INSTANCE } from '../../../../../public/js/validation/InputErrors.js'
 import { Window } from 'happy-dom'
 const window = new Window()
 const document = window.document
 
 vi.stubGlobal('document', document)
 
-describe('InputError', () => {
+describe('InputErrors', () => {
   let isInputElementMock
   beforeEach(() => {
     document.body.innerHTML = ''
@@ -24,17 +24,17 @@ describe('InputError', () => {
     document.body.innerHTML = `<input type = "text">`
     const input = document.querySelector('input')
 
-    const inputError = new InputError(input)
+    const inputErrors = new InputErrors(input)
 
-    expect(inputError.input).toEqual(input)
-    expect(inputError.errors).toHaveLength(0)
-    expect(inputError[IS_INPUT_ERROR_INSTANCE]).toBe(true)
+    expect(inputErrors.input).toEqual(input)
+    expect(inputErrors.errors).toHaveLength(0)
+    expect(inputErrors[IS_INPUT_ERRORS_INSTANCE]).toBe(true)
   })
   it('when you pass input element to constructor, it should call typeCheck.isInputElement() with that input', () => {
     document.body.innerHTML = `<input type = "text">`
     const input = document.querySelector('input')
 
-    const inputError = new InputError(input)
+    const inputErrors = new InputErrors(input)
 
     expect(isInputElementMock).toBeCalledWith(input)
   })
@@ -44,32 +44,32 @@ describe('InputError', () => {
     const input = 3
 
     const fn = () => {
-      new InputError(input)
+      new InputErrors(input)
     }
 
     expect(fn).toThrow('You need to pass an input element to first parameter')
   })
 
-  describe('inputError.addError()', () => {
-    it('when you pass a string, inputError.error should contain that string', () => {
+  describe('inputErrors.addError()', () => {
+    it('when you pass a string, inputErrors.errors should contain that string', () => {
       document.body.innerHTML = `<input type = "text">`
       const input = document.querySelector('input')
-      const inputError = new InputError(input)
+      const inputErrors = new InputErrors(input)
       const error = 'test'
 
-      inputError.addError(error)
+      inputErrors.addError(error)
 
-      expect(inputError.errors).toContain(error)
+      expect(inputErrors.errors).toContain(error)
     })
 
     it("if you don't pass a non stirng data type, it should throw an error", () => {
       document.body.innerHTML = `<input type = "text">`
       const input = document.querySelector('input')
-      const inputError = new InputError(input)
+      const inputErrors = new InputErrors(input)
       const error = 3
 
       const fn = () => {
-        inputError.addError(error)
+        inputErrors.addError(error)
       }
 
       expect(fn).toThrow('You need to pass a string to first parameter')
