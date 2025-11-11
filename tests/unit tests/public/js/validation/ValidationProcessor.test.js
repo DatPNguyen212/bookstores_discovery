@@ -27,11 +27,12 @@ describe('ValidationProcessor', () => {
   beforeEach(() => {
     document.body.innerHTML = ''
     inputErrorsFactory = new InputErrorsFactory()
-    singleValidator = new SingleValidator(inputErrorsFactory)
-    groupValidator = new GroupValidator(inputErrorsFactory)
+    singleValidator = new SingleValidator()
+    groupValidator = new GroupValidator()
     validationProcessor = new ValidationProcessor(
       singleValidator,
-      groupValidator
+      groupValidator,
+      inputErrorsFactory
     )
   })
 
@@ -42,7 +43,11 @@ describe('ValidationProcessor', () => {
     const singleValidator = 3
 
     const fn = () => {
-      new ValidationProcessor(singleValidator, groupValidator)
+      new ValidationProcessor(
+        singleValidator,
+        groupValidator,
+        inputErrorsFactory
+      )
     }
 
     expect(fn).toThrow(
@@ -64,7 +69,11 @@ describe('ValidationProcessor', () => {
     const groupValidator = 3
 
     const fn = () => {
-      new ValidationProcessor(singleValidator, groupValidator)
+      new ValidationProcessor(
+        singleValidator,
+        groupValidator,
+        inputErrorsFactory
+      )
     }
 
     expect(fn).toThrow(
@@ -72,14 +81,32 @@ describe('ValidationProcessor', () => {
     )
   })
 
-  it('when you pass valid singleValidator and groupValidator to constructor, the instance must store those arguments as properties', () => {
+  it('when you pass valid singleValidator, groupValidator, inputErrorsFactory to constructor, the instance must store those arguments as properties', () => {
     const validationProcessor = new ValidationProcessor(
       singleValidator,
-      groupValidator
+      groupValidator,
+      inputErrorsFactory
     )
 
     expect(validationProcessor.singleValidator).toEqual(singleValidator)
     expect(validationProcessor.groupValidator).toEqual(groupValidator)
+    expect(validationProcessor.inputErrorsFactory).toEqual(inputErrorsFactory)
+  })
+
+  it('when you pass a non instanceof InputErrorsFactoryBase to 3rd param, it should throw an error', () => {
+    const inputErrorsFactory = 3
+
+    const fn = () => {
+      new ValidationProcessor(
+        singleValidator,
+        groupValidator,
+        inputErrorsFactory
+      )
+    }
+
+    expect(fn).toThrow(
+      'You need to pass an instance of InputErrorsFactoryBase to 3rd parameter'
+    )
   })
 
   describe('validationProcessor.validate()', () => {

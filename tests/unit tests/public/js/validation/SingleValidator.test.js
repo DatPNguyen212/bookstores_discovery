@@ -29,133 +29,109 @@ describe('SingleValidator()', () => {
   })
 
   describe('singleValidator.required()', () => {
-    it('given input has no value, when you pass it to singleValidator.required(), it should return correct error string', () => {
-      document.body.innerHTML = `<input type = "text" required>`
-      const input = document.querySelector('input')
+    it('when you pass a non string value to 1st param, it should throw an error', () => {
+      const inputValue = 3
 
-      const result = singleValidator.required(input)
+      const fn = () => {
+        singleValidator.required(inputValue)
+      }
+
+      expect(fn).toThrow('You need to pass string data type to first parameter')
+    })
+
+    it('when you pass an empty string, it should return correct error string', () => {
+      const inputValue = ''
+
+      const result = singleValidator.required(inputValue)
 
       expect(result).toBe('This field is required')
     })
 
-    it('given input has value, when you pass it to singleValidator.required(), it should return null', () => {
-      document.body.innerHTML = `<input type = "text" required value = "testValue">`
-      const input = document.querySelector('input')
+    it('when you pass a string that is not empty, it should return null', () => {
+      const inputValue = 'test'
 
-      const result = singleValidator.required(input)
+      const result = singleValidator.required(inputValue)
 
       expect(result).toBeNull()
-    })
-
-    it('if you pass a non input obj, it should throw an error', () => {
-      const input = 3
-
-      const fn = () => {
-        singleValidator.required(input)
-      }
-
-      expect(fn).toThrow(
-        'You need to pass single input type element to the function, NOT group input type element'
-      )
-    })
-    it('if you pass textarea input, it should NOT throw an error', () => {
-      document.body.innerHTML = ` <textarea value = "test"></textarea>`
-      const input = document.querySelector('textarea')
-
-      const fn = () => {
-        singleValidator.required(input)
-      }
-
-      expect(fn).not.toThrow(
-        'You need to pass single input element to the function'
-      )
-    })
-    it('if you pass select input, it should NOT throw an error', () => {
-      document.body.innerHTML = `<select name="" id="">
-       <option value="test1">test1</option>
-       <option value="test2">test2</option>
-     </select>`
-
-      const input = document.querySelector('select')
-
-      const fn = () => {
-        singleValidator.required(input)
-      }
-
-      expect(fn).not.toThrow(
-        'You need to pass single input type element to the function, NOT group input type element'
-      )
     })
   })
 
   describe('singleValidator.maxLength()', () => {
-    it('given input.value of 4 characters, you pass input and 3 to .maxLength(), it should return correct error string', () => {
-      document.body.innerHTML = `<input type = "text" value = "1234" maxLength = 3>`
-      const input = document.querySelector('input')
-      const maxLength = 3
-
-      const result = singleValidator.maxLength(input, maxLength)
-
-      expect(result).toBe(
-        `This field needs to be less or equal to ${maxLength}`
-      )
-    })
-    it('given input.value of 3 characters, you pass input and 3 to .maxLength(), it should return null', () => {
-      document.body.innerHTML = `<input type = "text" value = "123" maxLength = 3>`
-      const input = document.querySelector('input')
-      const maxLength = 3
-
-      const result = singleValidator.maxLength(input, maxLength)
-
-      expect(result).toBeNull()
-    })
-    it('given input.value of 2 characters, you pass input and 3 to .maxLength(), it should return null', () => {
-      document.body.innerHTML = `<input type = "text" value = "12" maxLength = 3>`
-      const input = document.querySelector('input')
-      const maxLength = 3
-
-      const result = singleValidator.maxLength(input, maxLength)
-
-      expect(result).toBeNull()
-    })
-
-    it('if you pass a non input obj in first param, it should throw an error', () => {
-      document.body.innerHTML = `<input type = "text" value = "12" maxLength = 3>`
-      const input = 3
-      const maxLength = 3
-
-      const fn = () => {
-        singleValidator.maxLength(input, maxLength)
-      }
-
-      expect(fn).toThrow(
-        'First parameter needs to be a single input type element, NOT group input type element'
-      )
-    })
-
-    it('if you pass a non number data type to 2nd param, it should throw an error', () => {
-      document.body.innerHTML = `<input type = "text" value = "12" maxLength = 3>`
-      const input = document.querySelector('input')
-      const maxLength = 'test'
-
-      const fn = () => {
-        singleValidator.maxLength(input, maxLength)
-      }
-
-      expect(fn).toThrow('Second parameter needs to be of number data type')
-    })
-
-    it('if you pass text area element to 1st param, it should NOT throw an error', () => {
-      document.body.innerHTML = '<textarea value = "123"></textarea>'
-      const input = document.querySelector('textarea')
+    it('if you pass a non string value to 1st param, it should throw an error', () => {
+      const inputValue = 3
       const maxLength = 4
 
       const fn = () => {
-        singleValidator.maxLength(input, maxLength)
+        singleValidator.maxLength(inputValue, maxLength)
       }
 
-      expect(fn).not.toThrow(
-        'First parameter needs to be a single input type element, NOT group input type element'
+      expect(fn).toThrow('You need to pass string data type to first parameter')
+    })
+
+    it('if you pass a non number value to 2nd param, it should throw an error', () => {
+      const inputValue = 'test'
+      const maxLength = 'test'
+
+      const fn = () => {
+        singleValidator.maxLength(inputValue, maxLength)
+      }
+
+      expect(fn).toThrow(
+        'You need to pass number that is larger than 0 in 2nd paramer'
+      )
+    })
+
+    it('when you pass a negative value to 2nd param, it should throw an error', () => {
+      const inputValue = 'test'
+      const maxLength = -3
+
+      const fn = () => {
+        singleValidator.maxLength(inputValue, maxLength)
+      }
+
+      expect(fn).toThrow(
+        'You need to pass number that is larger than 0 in 2nd paramer'
+      )
+    })
+
+    it('when you pass 0 to 2nd parameter, it should throw an error', () => {
+      const inputValue = 'test'
+      const maxLength = 0
+
+      const fn = () => {
+        singleValidator.maxLength(inputValue, maxLength)
+      }
+
+      expect(fn).toThrow(
+        'You need to pass number that is larger than 0 in 2nd paramer'
+      )
+    })
+
+    it('if you pass a string in 1st param whose length is < maxLength in 2nd param, it should return null', () => {
+      const inputValue = 'test'
+      const maxLength = 5
+
+      const result = singleValidator.maxLength(inputValue, maxLength)
+
+      expect(result).toBeNull()
+    })
+    it('if you pass a string in 1st param whose length is === maxLength in 2nd param, it should return null', () => {
+      const inputValue = 'test'
+      const maxLength = 4
+
+      const result = singleValidator.maxLength(inputValue, maxLength)
+
+      expect(result).toBeNull()
+    })
+
+    it('if you pass a string in 1st param whose length is > maxLength in 2nd param, it should return correct error string', () => {
+      const inputValue = 'test'
+      const maxLength = 2
+
+      const result = singleValidator.maxLength(inputValue, maxLength)
+
+      expect(result).toBe(
+        `This field must have atleast ${maxLength} characters`
       )
     })
   })

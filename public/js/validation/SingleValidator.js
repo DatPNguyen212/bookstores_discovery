@@ -7,56 +7,46 @@ class SingleValidator extends SingleValidatorBase {
   constructor() {
     super()
   }
-  required(input) {
-    if (
-      !(
-        input instanceof HTMLInputElement ||
-        input instanceof HTMLTextAreaElement ||
-        input instanceof HTMLSelectElement
-      )
-    ) {
+  required(inputValue) {
+    if (typeof inputValue !== 'string') {
       throw new TypeError(
-        'You need to pass single input type element to the function, NOT group input type element'
+        'You need to pass string data type to first parameter'
       )
     }
 
-    const value = input.value
     let errorMsg
 
-    if (!value) {
+    if (inputValue.length === 0) {
       errorMsg = 'This field is required'
-    } else {
+    }
+
+    if (inputValue.length > 0) {
       errorMsg = null
     }
 
     return errorMsg
   }
 
-  maxLength(input, maxLength) {
-    if (
-      !(
-        input instanceof HTMLInputElement ||
-        input instanceof HTMLTextAreaElement
-      )
-    ) {
+  maxLength(inputValue, maxLength) {
+    if (typeof inputValue !== 'string') {
       throw new TypeError(
-        'First parameter needs to be a single input type element, NOT group input type element'
+        'You need to pass string data type to first parameter'
       )
     }
 
-    if (typeof maxLength !== 'number') {
-      throw new TypeError('Second parameter needs to be of number data type')
+    if (typeof maxLength !== 'number' || maxLength <= 0) {
+      throw new TypeError(
+        'You need to pass number that is larger than 0 in 2nd paramer'
+      )
     }
 
-    const value = input.value
+    const inputValueLength = inputValue.length
     let errorMsg
 
-    if (value.length > maxLength) {
-      errorMsg = `This field needs to be less or equal to ${maxLength}`
-
-      return errorMsg
-    } else {
+    if (inputValueLength <= maxLength) {
       errorMsg = null
+    } else {
+      errorMsg = `This field must have atleast ${maxLength} characters`
     }
 
     return errorMsg
