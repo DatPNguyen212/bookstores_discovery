@@ -2,10 +2,9 @@ import { IS_SINGLE_VALIDATOR_BASE_INSTANCE } from '../abstracts/validation/Singl
 import { IS_GROUP_VALIDATOR_BASE_INSTANCE } from '../abstracts/validation/GroupValidatorBase.js'
 import { IS_INPUT_RULES_INSTANCE } from './InputRules.js'
 import typeCheck from '../utils/typeCheck.js'
-import { IS_INPUT_ERRORS_FACTORY_BASE_INSTANCE } from '../abstracts/validation/InputErrorsFactoryBase.js'
 
 class ValidationProcessor {
-  constructor(singleValidator, groupValidator, inputErrorsFactory) {
+  constructor(singleValidator, groupValidator) {
     if (
       !singleValidator ||
       !singleValidator[IS_SINGLE_VALIDATOR_BASE_INSTANCE]
@@ -21,18 +20,8 @@ class ValidationProcessor {
       )
     }
 
-    if (
-      !inputErrorsFactory ||
-      !inputErrorsFactory[IS_INPUT_ERRORS_FACTORY_BASE_INSTANCE]
-    ) {
-      throw new TypeError(
-        'You need to pass an instance of InputErrorsFactoryBase to 3rd parameter'
-      )
-    }
-
     this.singleValidator = singleValidator
     this.groupValidator = groupValidator
-    this.inputErrorsFactory = inputErrorsFactory
   }
 
   validate(inputRulesArray) {
