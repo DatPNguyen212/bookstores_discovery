@@ -7,27 +7,33 @@ class GroupValidator extends GroupValidatorBase {
     super()
   }
 
-  required(areInputsChecked) {
-    if (!Array.isArray(areInputsChecked)) {
-      throw new TypeError('You need to pass an array of boolean values')
-    } else {
-      for (let inputChecked of areInputsChecked) {
-        if (typeof inputChecked !== 'boolean') {
-          throw new TypeError('You need to pass an array of boolean values')
-        }
-      }
+  required(input) {
+    if (!input) {
+      throw new TypeError(
+        'You need to pass group input element to first parameter'
+      )
+    }
+    if (!(input.type === 'checkbox' || input.type === 'radio')) {
+      throw new TypeError(
+        'You need to pass group input element to first parameter'
+      )
     }
 
-    const inputsNotChecked = areInputsChecked.filter((item) => {
-      return item === false
+    const form = input.form
+    const name = input.name
+
+    const groupInputs = Array.from(form.elements[name])
+
+    const checkedGroupInputs = groupInputs.filter((groupInput) => {
+      return groupInput.checked
     })
 
     let errorMsg
 
-    if (inputsNotChecked.length > 0) {
-      errorMsg = 'Atleast one item must be checked'
-    } else {
+    if (checkedGroupInputs.length > 0) {
       errorMsg = null
+    } else {
+      errorMsg = `Atleast 1 input needs to be checked`
     }
 
     return errorMsg
