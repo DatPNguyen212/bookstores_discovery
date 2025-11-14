@@ -2,19 +2,14 @@ import SingleValidatorBase from '../abstracts/validation/SingleValidatorBase.js'
 import arrayUtils from '../utils/arrayUtils.js'
 import InputErrorsFactory from './InputErrorsFactory.js'
 import { IS_INPUT_ERRORS_FACTORY_BASE_INSTANCE } from '../abstracts/validation/InputErrorsFactoryBase.js'
+import typeCheck from '../utils/typeCheck.js'
 
 class SingleValidator extends SingleValidatorBase {
   constructor() {
     super()
   }
   required(input) {
-    if (
-      !(
-        input instanceof HTMLInputElement ||
-        input instanceof HTMLTextAreaElement ||
-        input instanceof HTMLSelectElement
-      )
-    ) {
+    if (!typeCheck.isSingleInputType(input)) {
       throw new TypeError(
         'You need to pass single input type element to the function, NOT group input type element'
       )
@@ -23,9 +18,11 @@ class SingleValidator extends SingleValidatorBase {
     const value = input.value
     let errorMsg
 
-    if (!value) {
+    if (value.length === 0) {
       errorMsg = 'This field is required'
-    } else {
+    }
+
+    if (value.length > 0) {
       errorMsg = null
     }
 
@@ -33,19 +30,14 @@ class SingleValidator extends SingleValidatorBase {
   }
 
   maxLength(input, maxLength) {
-    if (
-      !(
-        input instanceof HTMLInputElement ||
-        input instanceof HTMLTextAreaElement
-      )
-    ) {
+    if (!typeCheck.isSingleInputType(input)) {
       throw new TypeError(
         'First parameter needs to be a single input type element, NOT group input type element'
       )
     }
 
-    if (typeof maxLength !== 'number') {
-      throw new TypeError('Second parameter needs to be of number data type')
+    if (typeof maxLength !== 'number' || maxLength <= 0) {
+      throw new TypeError('Second parameter needs to be a positive number')
     }
 
     const value = input.value
@@ -62,26 +54,30 @@ class SingleValidator extends SingleValidatorBase {
     return errorMsg
   }
 
-  // groupInputRequired(inputs) {
-  //   if (!arrayUtils.areAllGroupInputs(inputs)) {
-  //     throw new TypeError(
-  //       'First parameter should be an array of group type inputs'
-  //     )
-  //   }
-  //   for (let input of inputs) {
-  //     if (input.checked === true) {
-  //       return {
-  //         inputs: inputs,
-  //         error: null,
-  //       }
-  //     }
-  //   }
+  minLength(input, minLength) {
+    if (!typeCheck.isSingleInputType(input)) {
+      throw new TypeError(
+        'You need to pass a single input element to first parameter'
+      )
+    }
 
-  //   return {
-  //     inputs: inputs,
-  //     error: 'This field is required',
-  //   }
-  // }
+    if (typeof minLength !== 'number' || minLength <= 0) {
+      throw new TypeError(
+        'You need to pass a positive number to second parameter'
+      )
+    }
+
+    const inputValue = input.value
+    let errorMsg
+
+    if (inputValue.length < minLength) {
+      errorMsg = `The field requires a minimum of ${minLength} characters`
+    } else {
+      errorMsg = null
+    }
+
+    return errorMsg
+  }
 }
 
 export default SingleValidator

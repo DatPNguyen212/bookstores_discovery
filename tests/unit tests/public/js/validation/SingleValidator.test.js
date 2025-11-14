@@ -142,7 +142,19 @@ describe('SingleValidator()', () => {
         singleValidator.maxLength(input, maxLength)
       }
 
-      expect(fn).toThrow('Second parameter needs to be of number data type')
+      expect(fn).toThrow('Second parameter needs to be a positive number')
+    })
+
+    it('if you pass a negative number to 2nd param, it should throw an error', () => {
+      document.body.innerHTML = `<input type = "text" value = "12" maxLength = 3>`
+      const input = document.querySelector('input')
+      const maxLength = -3
+
+      const fn = () => {
+        singleValidator.maxLength(input, maxLength)
+      }
+
+      expect(fn).toThrow('Second parameter needs to be a positive number')
     })
 
     it('if you pass text area element to 1st param, it should NOT throw an error', () => {
@@ -158,80 +170,129 @@ describe('SingleValidator()', () => {
         'First parameter needs to be a single input type element, NOT group input type element'
       )
     })
+
+    it('when you pass 0 to 2nd param, it should throw an error', () => {
+      document.body.innerHTML = `<input type = "text" value = "12" maxLength = 3>`
+      const input = document.querySelector('input')
+      const maxLength = 0
+
+      const fn = () => {
+        singleValidator.maxLength(input, maxLength)
+      }
+
+      expect(fn).toThrow('Second parameter needs to be a positive number')
+    })
   })
 
-  //   describe('singleValidator.groupInputRequired()', () => {
-  //     it('when you pass an array of non checked checkboxes, it should return an obj which contains the array of inputs and the correct error', () => {
-  //       document.body.innerHTML = `<form action="">
-  //   <fieldset>
-  //     <legend>Genres</legend>
-  //     <input type="checkbox" value = "fantasy" name = "bookstore[genres]" id = "fantasy">
-  //     <label for="fantasy">fantasy</label>
-  //     <input type="checkbox" value = "science" name = "bookstore[genres]" id = "science">
-  //     <label for="science">science</label>
-  //   </fieldset>
-  // </form>`
-  //       const form = document.querySelector('form')
-  //       const formInputExtracter = new FormInputExtracter()
-  //       const inputs = formInputExtracter.getFormInputs(form).flat(1)
+  describe('singleValidator.minLength()', () => {
+    it('when you pass a non single input element to 1st param, it should throw an error', () => {
+      const input = 3
+      const minLength = 3
 
-  //       const result = singleValidator.groupInputRequired(inputs)
+      const fn = () => {
+        singleValidator.minLength(input, minLength)
+      }
 
-  //       expect(objectUtils.isPlainObject(result)).toBe(true)
-  //       expect(result.inputs).toEqual(inputs)
-  //       expect(result.errors).toBe('This field is required')
-  //     })
+      expect(fn).toThrow(
+        'You need to pass a single input element to first parameter'
+      )
+    })
 
-  //     it('when you pass an array of checkboxes where one is checked, it should return an object which contains inputs array and error is null', () => {
-  //       document.body.innerHTML = `<form action="">
-  //   <fieldset>
-  //     <legend>Genres</legend>
-  //     <input type="checkbox" value = "fantasy" name = "bookstore[genres]" id = "fantasy">
-  //     <label for="fantasy">fantasy</label>
-  //     <input type="checkbox" value = "science" name = "bookstore[genres]" id = "science" checked>
-  //     <label for="science">science</label>
-  //   </fieldset>
-  // </form>`
-  //       const form = document.querySelector('form')
-  //       const formInputExtracter = new FormInputExtracter()
-  //       const inputs = formInputExtracter.getFormInputs(form)
+    it('when you pass a non number to 2nd param, it should throw an error', () => {
+      document.body.innerHTML = `
+        <form>
+          <input type = "text">
+        </form>
+      `
 
-  //       const result = singleValidator.groupInputRequired(inputs[0])
+      const input = document.querySelector('input')
+      const minLength = 'test'
 
-  //       expect(objectUtils.isPlainObject(result)).toBe(true)
-  //       expect(result.inputs).toEqual(inputs[0])
-  //       expect(result.errors).toBe(null)
-  //     })
+      const fn = () => {
+        singleValidator.minLength(input, minLength)
+      }
 
-  //     it('when you pass an array of inputs where atleast one item is single input type, it should throw an error', () => {
-  //       document.body.innerHTML = `<form action="">
-  //       <fieldset>
-  //         <legend>Genres</legend>
-  //         <input type="checkbox" value = "fantasy" name = "bookstore[genres]" id = "fantasy">
-  //         <label for="fantasy">fantasy</label>
-  //         <input type="checkbox" value = "science" name = "bookstore[genres]" id = "science" checked>
-  //         <label for="science">science</label>
-  //       </fieldset>
+      expect(fn).toThrow(
+        'You need to pass a positive number to second parameter'
+      )
+    })
 
-  //       <fieldset>
-  //         <input type = "text" name = "bookstore[title]">
-  //       </fieldset>
-  //     </form>`
-  //       const form = document.querySelector('form')
-  //       const formInputExtracter = new FormInputExtracter()
-  //       const inputs = formInputExtracter.getFormInputs(form)
+    it('when you pass a negative number to 2nd param, it should throw an error', () => {
+      document.body.innerHTML = `
+        <form>
+          <input type = "text">
+        </form>
+      `
 
-  //       console.log(inputs[2])
+      const input = document.querySelector('input')
+      const minLength = -3
 
-  //       const fn = () => {
-  //         singleValidator.groupInputRequired(inputs)
-  //       }
+      const fn = () => {
+        singleValidator.minLength(input, minLength)
+      }
 
-  //       expect(fn).toThrow(
-  //         'First parameter should be an array of group type inputs'
-  //       )
-  //     })
-  //   })
+      expect(fn).toThrow(
+        'You need to pass a positive number to second parameter'
+      )
+    })
+
+    it('when you pass 0 to 2nd param, it should throw an error', () => {
+      document.body.innerHTML = `
+        <form>
+          <input type = "text">
+        </form>
+      `
+
+      const input = document.querySelector('input')
+      const minLength = 0
+
+      const fn = () => {
+        singleValidator.minLength(input, minLength)
+      }
+
+      expect(fn).toThrow(
+        'You need to pass a positive number to second parameter'
+      )
+    })
+
+    it("when you pass single input whose value's length is less than minLength , it should return an error string", () => {
+      document.body.innerHTML = `
+        <textarea>test</textarea>
+      `
+      const input = document.querySelector('textarea')
+      const minLength = 5
+
+      const result = singleValidator.minLength(input, minLength)
+
+      expect(result).toBe(
+        `The field requires a minimum of ${minLength} characters`
+      )
+    })
+
+    it("when you pass single input whose value's length is equal to minLength, it should return null", () => {
+      document.body.innerHTML = `
+        <textarea>tests</textarea>
+      `
+      const input = document.querySelector('textarea')
+      const minLength = 5
+
+      const result = singleValidator.minLength(input, minLength)
+
+      expect(result).toBeNull()
+    })
+
+    it("when you pass single input whose value's length is > minLength, it should return null", () => {
+      document.body.innerHTML = `
+        <textarea>testing</textarea>
+      `
+      const input = document.querySelector('textarea')
+      const minLength = 5
+
+      const result = singleValidator.minLength(input, minLength)
+
+      expect(result).toBeNull()
+    })
+  })
 })
 // FormValidator depends InputExtracter, ValidateAttrbExtracter, FormErrorRenderer
 // FormValidator.validate()
