@@ -2,9 +2,10 @@ import { IS_SINGLE_VALIDATOR_BASE_INSTANCE } from '../abstracts/validation/Singl
 import { IS_GROUP_VALIDATOR_BASE_INSTANCE } from '../abstracts/validation/GroupValidatorBase.js'
 import { IS_INPUT_RULES_INSTANCE } from './InputRules.js'
 import typeCheck from '../utils/typeCheck.js'
+import { IS_INPUT_ERRORS_FACTORY_BASE_INSTANCE } from '../abstracts/validation/InputErrorsFactoryBase.js'
 
 class ValidationProcessor {
-  constructor(singleValidator, groupValidator) {
+  constructor(singleValidator, groupValidator, inputErrorsFactory) {
     if (
       !singleValidator ||
       !singleValidator[IS_SINGLE_VALIDATOR_BASE_INSTANCE]
@@ -20,8 +21,18 @@ class ValidationProcessor {
       )
     }
 
+    if (
+      !inputErrorsFactory ||
+      !inputErrorsFactory[IS_INPUT_ERRORS_FACTORY_BASE_INSTANCE]
+    ) {
+      throw new TypeError(
+        'You need to pass instance of InputErrorsFactoryBase in 3rd parameter'
+      )
+    }
+
     this.singleValidator = singleValidator
     this.groupValidator = groupValidator
+    this.inputErrorsFactory = inputErrorsFactory
   }
 
   validate(inputRulesArray) {
@@ -45,24 +56,28 @@ class ValidationProcessor {
       const input = inputRules.input
       const rules = Object.keys(inputRules.rules)
 
+      const inputErrors = this.inputErrorsFactory.create(input)
+
       if (typeCheck.isSingleInputType(input)) {
         for (let rule of rules) {
-          const inputErrors = this.singleValidator[rule](
+          const errorMsg = this.singleValidator[rule](
             input,
             inputRules.rules[rule]
           )
 
-          inputErrorsArray.push(inputErrors)
+          inputErrors.errors.push(errorMsg)
         }
       }
 
       if (input.type === 'checkbox' || input.type === 'radio') {
         for (let rule of rules) {
-          const inputErrors = this.groupValidator[rule](input)
+          const errorMsg = this.groupValidator[rule](input)
 
-          inputErrorsArray.push(inputErrors)
+          inputErrors.errors.push(errorMsg)
         }
       }
+
+      inputErrorsArray.push(inputErrors)
     }
 
     return inputErrorsArray

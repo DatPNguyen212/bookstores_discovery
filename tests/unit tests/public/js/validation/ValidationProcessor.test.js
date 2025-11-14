@@ -27,11 +27,12 @@ describe('ValidationProcessor', () => {
   beforeEach(() => {
     document.body.innerHTML = ''
     inputErrorsFactory = new InputErrorsFactory()
-    singleValidator = new SingleValidator(inputErrorsFactory)
-    groupValidator = new GroupValidator(inputErrorsFactory)
+    singleValidator = new SingleValidator()
+    groupValidator = new GroupValidator()
     validationProcessor = new ValidationProcessor(
       singleValidator,
-      groupValidator
+      groupValidator,
+      inputErrorsFactory
     )
   })
 
@@ -42,7 +43,11 @@ describe('ValidationProcessor', () => {
     const singleValidator = 3
 
     const fn = () => {
-      new ValidationProcessor(singleValidator, groupValidator)
+      new ValidationProcessor(
+        singleValidator,
+        groupValidator,
+        inputErrorsFactory
+      )
     }
 
     expect(fn).toThrow(
@@ -64,7 +69,11 @@ describe('ValidationProcessor', () => {
     const groupValidator = 3
 
     const fn = () => {
-      new ValidationProcessor(singleValidator, groupValidator)
+      new ValidationProcessor(
+        singleValidator,
+        groupValidator,
+        inputErrorsFactory
+      )
     }
 
     expect(fn).toThrow(
@@ -72,14 +81,32 @@ describe('ValidationProcessor', () => {
     )
   })
 
-  it('when you pass valid singleValidator and groupValidator to constructor, the instance must store those arguments as properties', () => {
+  it('when you pass valid singleValidator, groupValidator, and inputErrorsFactory to constructor, the instance must store those arguments as properties', () => {
     const validationProcessor = new ValidationProcessor(
       singleValidator,
-      groupValidator
+      groupValidator,
+      inputErrorsFactory
     )
 
     expect(validationProcessor.singleValidator).toEqual(singleValidator)
     expect(validationProcessor.groupValidator).toEqual(groupValidator)
+    expect(validationProcessor.inputErrorsFactory).toEqual(inputErrorsFactory)
+  })
+
+  it('when you pass a non instance of InputErrorsFactoryBase to 3rd param, it should throw an error', () => {
+    const inputErrorsFactory = 3
+
+    const fn = () => {
+      new ValidationProcessor(
+        singleValidator,
+        groupValidator,
+        inputErrorsFactory
+      )
+    }
+
+    expect(fn).toThrow(
+      'You need to pass instance of InputErrorsFactoryBase in 3rd parameter'
+    )
   })
 
   describe('validationProcessor.validate()', () => {
@@ -114,7 +141,7 @@ describe('ValidationProcessor', () => {
       )
     })
 
-    it('given singleValidator is mocked and passed to constructor, when you pass inputRulesArray of single inputs inputRules only with either required and maxLength rules, validationProcessor.validate() should call singleValidatorMock.required(true) and singleValidatorMock.maxLength(maxLengthValue)', () => {
+    it('given singleValidator is mocked and passed to constructor, when you pass inputRulesArray of single inputs inputRules only with either required and maxLength rules, validationProcessor.validate() should call singleValidatorMock.required() and singleValidatorMock.maxLength() with correct input and correct rule values for that input passed to them', () => {
       document.body.innerHTML = `
         <form>
           <input type = "text" name = "title" required>
@@ -135,20 +162,22 @@ describe('ValidationProcessor', () => {
       }
       const validationProcessor = new ValidationProcessor(
         singleValidatorMock,
-        groupValidator
+        groupValidator,
+        inputErrorsFactory
       )
 
+      // act
       const inputErrorsArray = validationProcessor.validate(inputRulesArray)
 
       expect(singleValidatorMock.required).toBeCalledWith(input1, true)
       expect(singleValidatorMock.maxLength).toBeCalledWith(input2, 3)
     })
 
-    it('given each singleValidator methods is mocked to return InputErrors instance and singleValidator is passed to constructor, when you pass inputRulesArray of singe inputs inputRules only with either required and maxLength rules, validationProcessor.validate() should return an array of those InputErrors instances', () => {
+    it('given each singleValidator methods is mocked to return an error msg and singleValidator is passed to constructor, when you pass inputRulesArray of singe inputs inputRules only with either required and maxLength rules, validationProcessor.validate() should return an array of those InputErrors instances where inputErrors.errors is an array of error msg', () => {
       document.body.innerHTML = `
         <form>
           <input type = "text" name = "title" required>
-          <input type = "text" name = "description" maxLength = "3">
+          <input type = "text" name = "description" required maxLength = "3">
         </form>
       `
       const input1 = document.querySelector(`[name="title"]`)
@@ -157,40 +186,59 @@ describe('ValidationProcessor', () => {
       inputRules1.rules.required = true
       const inputRules2 = new InputRules(input2)
       inputRules2.rules.maxLength = 3
+      inputRules2.rules.required = true
       const inputRulesArray = [inputRules1, inputRules2]
-      const inputErrorsMock = new InputErrors(input1)
-      inputErrorsMock.errors = 'msg'
+
+      const requiredError = 'requiredError'
+      const maxLengthError = 'maxLengthError'
+
       const singleValidatorMock = {
         [IS_SINGLE_VALIDATOR_BASE_INSTANCE]: true,
         required: vi.fn(() => {
-          return inputErrorsMock
+          return requiredError
         }),
         maxLength: vi.fn(() => {
-          return inputErrorsMock
+          return maxLengthError
         }),
       }
+
+      const inputErrorsMock1 = new InputErrors(input1)
+      inputErrorsMock1.errors.push(requiredError)
+
+      const inputErrorsMock2 = new InputErrors(input2)
+      inputErrorsMock2.errors.push(maxLengthError)
+      inputErrorsMock2.errors.push(requiredError)
+
       const validationProcessor = new ValidationProcessor(
         singleValidatorMock,
-        groupValidator
+        groupValidator,
+        inputErrorsFactory
       )
 
+      // act
       const inputErrorsArray = validationProcessor.validate(inputRulesArray)
 
-      const expectedResult = [inputErrorsMock, inputErrorsMock]
+      const expectedResult = [inputErrorsMock1, inputErrorsMock2]
+
       expect(inputErrorsArray).toEqual(expectedResult)
     })
 
-    it('given groupValidator is mocked and passed to constructor, when you pass inputRulesArray of a checkbox inputRules with required rule, validationProcessor.validate() should call groupValidator.required() with that checkbox element', () => {
+    it('given groupValidator is mocked and passed to constructor, when you pass inputRulesArray of 2 checkbox inputRules with required rule, validationProcessor.validate() should call groupValidator.required() correct number of times with correct checkbox element', () => {
       document.body.innerHTML = `
         <form>
           <input type = "checkbox" name = "genres" value = "fantasy" required>
+          <input type = "checkbox" name = "openDays" value = "monday" required>
         </form>
       `
-      const checkbox = document.querySelector(`[value="fantasy"]`)
-      const inputRules = new InputRules(checkbox)
-      inputRules.rules.required = true
+      const checkbox1 = document.querySelector(`[value="fantasy"]`)
+      const inputRules1 = new InputRules(checkbox1)
+      inputRules1.rules.required = true
 
-      const inputRulesArray = [inputRules]
+      const checkbox2 = document.querySelector(`[name="openDays"]`)
+      const inputRules2 = new InputRules(checkbox2)
+      inputRules2.rules.required = true
+
+      const inputRulesArray = [inputRules1, inputRules2]
       const singleValidatorMock = {
         [IS_SINGLE_VALIDATOR_BASE_INSTANCE]: true,
         required: vi.fn(),
@@ -202,110 +250,138 @@ describe('ValidationProcessor', () => {
       }
       const validationProcessor = new ValidationProcessor(
         singleValidatorMock,
-        groupValidatorMock
+        groupValidatorMock,
+        inputErrorsFactory
       )
 
+      // act
       const inputErrorsArray = validationProcessor.validate(inputRulesArray)
 
-      expect(groupValidatorMock.required).toBeCalledWith(checkbox)
+      expect(groupValidatorMock.required).toBeCalledWith(checkbox1)
+      expect(groupValidatorMock.required).toBeCalledWith(checkbox2)
     })
 
-    it('given each of groupValidator methods is mocked to return an InputErrors instance and groupValidator is passed to constructor, when you pass inputRulesArray of a checkbox inputRules with required rule, validationProcessor.validate() should return an array of the InputErrors instances returned by the mocked methods', () => {
+    it('given each of groupValidator methods is mocked to return an error msg and groupValidator is passed to constructor, when you pass inputRulesArray of 2 checkbox inputRules with required rule, validationProcessor.validate() should return correct array of InputRules instances with correct input and errors', () => {
       document.body.innerHTML = `
         <form>
           <input type = "checkbox" name = "genres" value = "fantasy" required>
+           <input type = "checkbox" name = "openDays" value = "monday" required>
         </form>
       `
-      const checkbox = document.querySelector(`[value="fantasy"]`)
-      const inputRules = new InputRules(checkbox)
-      inputRules.rules.required = true
+      const checkbox1 = document.querySelector(`[value="fantasy"]`)
+      const inputRules1 = new InputRules(checkbox1)
+      inputRules1.rules.required = true
 
-      const inputRulesArray = [inputRules]
-      const singleValidatorMock = {
-        [IS_SINGLE_VALIDATOR_BASE_INSTANCE]: true,
-        required: vi.fn(),
-        maxLength: vi.fn(),
-      }
-      const inputErrorsMock = new InputErrors(checkbox)
+      const checkbox2 = document.querySelector(`[name="openDays"]`)
+      const inputRules2 = new InputRules(checkbox2)
+      inputRules2.rules.required = true
+
+      const inputRulesArray = [inputRules1, inputRules2]
+
+      const errorMsg = 'requiredError'
 
       const groupValidatorMock = {
         [IS_GROUP_VALIDATOR_BASE_INSTANCE]: true,
         required: vi.fn(() => {
-          return inputErrorsMock
+          return errorMsg
         }),
       }
+
+      const inputErrorsMock1 = new InputErrors(checkbox1)
+      inputErrorsMock1.errors.push(errorMsg)
+
+      const inputErrorsMock2 = new InputErrors(checkbox2)
+      inputErrorsMock2.errors.push(errorMsg)
+
       const validationProcessor = new ValidationProcessor(
-        singleValidatorMock,
-        groupValidatorMock
+        singleValidator,
+        groupValidatorMock,
+        inputErrorsFactory
       )
 
+      // act
       const inputErrorsArray = validationProcessor.validate(inputRulesArray)
 
-      const expectedResult = [inputErrorsMock]
+      const expectedResult = [inputErrorsMock1, inputErrorsMock2]
+
       expect(inputErrorsArray).toEqual(expectedResult)
     })
 
-    it('given groupValidator is mocked and passed to constructor, when you pass inputRulesArray of a radio inputRules with required rule, validationProcessor.validate() should call groupValidator.required() with that radio element', () => {
+    it('given groupValidator is mocked and passed to constructor, when you pass inputRulesArray of 2 radio inputRules with required rule, validationProcessor.validate() should call groupValidator.required() correct number of items with correct radio input element', () => {
       document.body.innerHTML = `
         <form>
           <input type = "radio" name = "genres" value = "fantasy" required>
+          <input type = "radio" name = "isOnline" value = "true" required>
         </form>
       `
-      const radio = document.querySelector(`[value="fantasy"]`)
-      const inputRules = new InputRules(radio)
-      inputRules.rules.required = true
+      const radio1 = document.querySelector(`[value="fantasy"]`)
+      const inputRules1 = new InputRules(radio1)
+      inputRules1.rules.required = true
 
-      const inputRulesArray = [inputRules]
-      const singleValidatorMock = {
-        [IS_SINGLE_VALIDATOR_BASE_INSTANCE]: true,
-        required: vi.fn(),
-        maxLength: vi.fn(),
-      }
+      const radio2 = document.querySelector(`[name = "isOnline"]`)
+      const inputRules2 = new InputRules(radio2)
+      inputRules2.rules.required = true
+
+      const inputRulesArray = [inputRules1, inputRules2]
+
       const groupValidatorMock = {
         [IS_GROUP_VALIDATOR_BASE_INSTANCE]: true,
         required: vi.fn(),
       }
       const validationProcessor = new ValidationProcessor(
-        singleValidatorMock,
-        groupValidatorMock
+        singleValidator,
+        groupValidatorMock,
+        inputErrorsFactory
       )
 
+      // act
       const inputErrorsArray = validationProcessor.validate(inputRulesArray)
 
-      expect(groupValidatorMock.required).toBeCalledWith(radio)
+      expect(groupValidatorMock.required).toBeCalledWith(radio1)
+      expect(groupValidatorMock.required).toBeCalledWith(radio2)
     })
 
-    it('given groupValidator is mocked and passed to constructor, when you pass inputRulesArray of a radio inputRules with required rule, validationProcessor.validate() should call groupValidator.required() with that radio element', () => {
+    it('given groupValidator is mocked to return an error msg and groupValidator is  passed to constructor, when you pass inputRulesArray of 2 radio inputRules with required rule, validationProcessor.validate() should return an array of instances of InputErrors with correct input and error msg', () => {
       document.body.innerHTML = `
         <form>
           <input type = "radio" name = "genres" value = "fantasy" required>
+          <input type = "radio" name = "isOnline" value = "true" required>
         </form>
       `
-      const radio = document.querySelector(`[value="fantasy"]`)
-      const inputRules = new InputRules(radio)
-      inputRules.rules.required = true
+      const radio1 = document.querySelector(`[value="fantasy"]`)
+      const inputRules1 = new InputRules(radio1)
+      inputRules1.rules.required = true
 
-      const inputRulesArray = [inputRules]
-      const singleValidatorMock = {
-        [IS_SINGLE_VALIDATOR_BASE_INSTANCE]: true,
-        required: vi.fn(),
-        maxLength: vi.fn(),
-      }
-      const inputErrorsMock = new InputErrors(radio)
+      const radio2 = document.querySelector(`[name="isOnline"]`)
+      const inputRules2 = new InputRules(radio2)
+      inputRules2.rules.required = true
+
+      const inputRulesArray = [inputRules1, inputRules2]
+
+      const errorMsg = 'requiredError'
+
       const groupValidatorMock = {
         [IS_GROUP_VALIDATOR_BASE_INSTANCE]: true,
         required: vi.fn(() => {
-          return inputErrorsMock
+          return errorMsg
         }),
       }
+
+      const inputErrors1 = new InputErrors(radio1)
+      inputErrors1.errors.push(errorMsg)
+      const inputErrors2 = new InputErrors(radio2)
+      inputErrors2.errors.push(errorMsg)
+
       const validationProcessor = new ValidationProcessor(
-        singleValidatorMock,
-        groupValidatorMock
+        singleValidator,
+        groupValidatorMock,
+        inputErrorsFactory
       )
 
+      // act
       const inputErrorsArray = validationProcessor.validate(inputRulesArray)
 
-      const expectedResult = [inputErrorsMock]
+      const expectedResult = [inputErrors1, inputErrors2]
       expect(inputErrorsArray).toEqual(expectedResult)
     })
   })
