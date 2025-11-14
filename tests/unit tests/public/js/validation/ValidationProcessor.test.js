@@ -223,6 +223,41 @@ describe('ValidationProcessor', () => {
       expect(inputErrorsArray).toEqual(expectedResult)
     })
 
+    it("given singleValidator has mocked validation methods, when you pass inputRulesArray of single input InputRules instances where there's a rule in inputRules.rules that corresponds to no validation methods, it should throw an error", () => {
+      document.body.innerHTML = `
+        <form>
+          <input type = "text">
+        </form>
+      `
+
+      const input = document.querySelector('input')
+      const inputRules = new InputRules(input)
+      const wrongRuleKey = 'wrongRule'
+      inputRules.rules[wrongRuleKey] = 'test'
+      const inputRulesArray = [inputRules]
+
+      const singleValidatorMock = {
+        [IS_SINGLE_VALIDATOR_BASE_INSTANCE]: true,
+        required: vi.fn(),
+        minLength: vi.fn(),
+      }
+
+      const validationProcessor = new ValidationProcessor(
+        singleValidatorMock,
+        groupValidator,
+        inputErrorsFactory
+      )
+
+      // act
+      const fn = () => {
+        validationProcessor.validate(inputRulesArray)
+      }
+
+      expect(fn).toThrow(
+        `${wrongRuleKey} is not a supported single input validation rule`
+      )
+    })
+
     it('given groupValidator is mocked and passed to constructor, when you pass inputRulesArray of 2 checkbox inputRules with required rule, validationProcessor.validate() should call groupValidator.required() correct number of times with correct checkbox element', () => {
       document.body.innerHTML = `
         <form>
@@ -383,6 +418,39 @@ describe('ValidationProcessor', () => {
 
       const expectedResult = [inputErrors1, inputErrors2]
       expect(inputErrorsArray).toEqual(expectedResult)
+    })
+
+    it("given groupValidator methods are mocked, if you pass an inputRulesArray of group inputs inputRules and there's an inputRules that specifies a rule that is not in groupValidator methods, it should throw an error", () => {
+      document.body.innerHTML = `
+        <form>
+          <input type = "checkbox">
+        </form>
+      `
+      const checkbox = document.querySelector('input')
+      const inputRules = new InputRules(checkbox)
+      const wrongRuleKey = 'wrongRule'
+      inputRules.rules[wrongRuleKey] = 'test'
+      const inputRulesArray = [inputRules]
+
+      const groupValidatorMock = {
+        [IS_GROUP_VALIDATOR_BASE_INSTANCE]: true,
+        required: vi.fn(),
+      }
+
+      const validationProcessor = new ValidationProcessor(
+        singleValidator,
+        groupValidatorMock,
+        inputErrorsFactory
+      )
+
+      // act
+      const fn = () => {
+        validationProcessor.validate(inputRulesArray)
+      }
+
+      expect(fn).toThrow(
+        `${wrongRuleKey} rule is not a supported group input validation rule`
+      )
     })
   })
 })

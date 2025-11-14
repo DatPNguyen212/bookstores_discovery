@@ -60,20 +60,32 @@ class ValidationProcessor {
 
       if (typeCheck.isSingleInputType(input)) {
         for (let rule of rules) {
-          const errorMsg = this.singleValidator[rule](
-            input,
-            inputRules.rules[rule]
-          )
+          if (typeof this.singleValidator[rule] !== 'function') {
+            throw new TypeError(
+              `${rule} is not a supported single input validation rule`
+            )
+          } else {
+            const errorMsg = this.singleValidator[rule](
+              input,
+              inputRules.rules[rule]
+            )
 
-          inputErrors.errors.push(errorMsg)
+            inputErrors.errors.push(errorMsg)
+          }
         }
       }
 
       if (input.type === 'checkbox' || input.type === 'radio') {
         for (let rule of rules) {
-          const errorMsg = this.groupValidator[rule](input)
+          if (typeof this.groupValidator[rule] !== 'function') {
+            throw new TypeError(
+              `${rule} rule is not a supported group input validation rule`
+            )
+          } else {
+            const errorMsg = this.groupValidator[rule](input)
 
-          inputErrors.errors.push(errorMsg)
+            inputErrors.errors.push(errorMsg)
+          }
         }
       }
 
