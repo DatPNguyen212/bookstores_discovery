@@ -34,50 +34,58 @@ describe('ValidationProcessor', () => {
   })
 
   describe('validationProcessor.validate()', () => {
-    it('when you pass inputRulesArray which only contains InputRules instances for single input elements with required and maxLength rules but failed to meet them, it should return correct inputErrorsArray', () => {
+    it('when you pass inputRulesArray which only contains InputRules instances for single input elements with required and minLength rules but failed to meet them, it should return correct inputErrorsArray', () => {
       document.body.innerHTML = `
         <form>
-          <input type = "text" name = "title" required>
-          <textarea name = "description" required></textarea>
+          <input type = "text" name = "title" required minLength = "3">
+          <textarea name = "description" required minLength = "3"></textarea>
         </form>
       `
       const input = document.querySelector('input')
       const textarea = document.querySelector('textarea')
       const inputRules1 = new InputRules(input)
       inputRules1.rules.required = true
+      inputRules1.rules.minLength = 3
       const inputRules2 = new InputRules(textarea)
       inputRules2.rules.required = true
+      inputRules2.rules.minLength = 3
       const inputRulesArray = [inputRules1, inputRules2]
 
       const inputErrorsArray = validationProcessor.validate(inputRulesArray)
 
       expect(inputErrorsArray[0].input).toEqual(input)
       expect(inputErrorsArray[0].errors[0]).toBeTruthy()
+      expect(inputErrorsArray[0].errors[1]).toBeTruthy()
       expect(inputErrorsArray[1].input).toEqual(textarea)
       expect(inputErrorsArray[1].errors[0]).toBeTruthy()
+      expect(inputErrorsArray[1].errors[1]).toBeTruthy()
     })
 
-    it('when you pass inputRulesArray which only contains InputRules instances for single input elements with required rule and successfully meet it, it should return correct inputErrorsArray', () => {
+    it('when you pass inputRulesArray which only contains InputRules instances for single input elements with required and minLength rules and successfully meet it, it should return correct inputErrorsArray', () => {
       document.body.innerHTML = `
         <form>
-          <input type = "text" name = "title" value = "test" required>
-          <textarea name = "description" required>test</textarea>
+          <input type = "text" name = "title" value = "test" required minLength = "3">
+          <textarea name = "description" required minLength = "3">test</textarea>
         </form>
       `
       const input = document.querySelector('input')
       const textarea = document.querySelector('textarea')
       const inputRules1 = new InputRules(input)
       inputRules1.rules.required = true
+      inputRules1.rules.minLength = 3
       const inputRules2 = new InputRules(textarea)
       inputRules2.rules.required = true
+      inputRules2.rules.minLength = 3
       const inputRulesArray = [inputRules1, inputRules2]
 
       const inputErrorsArray = validationProcessor.validate(inputRulesArray)
 
       expect(inputErrorsArray[0].input).toEqual(input)
       expect(inputErrorsArray[0].errors[0]).toBeNull()
+      expect(inputErrorsArray[0].errors[1]).toBeNull()
       expect(inputErrorsArray[1].input).toEqual(textarea)
       expect(inputErrorsArray[1].errors[0]).toBeNull()
+      expect(inputErrorsArray[1].errors[1]).toBeNull()
     })
 
     it('when you pass inputRulesArray which contains InputRules instances for group inputs with required rule but they fail to meet it, it should return correct inputErrorsArray', () => {
