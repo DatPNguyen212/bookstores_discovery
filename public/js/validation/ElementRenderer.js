@@ -4,7 +4,7 @@ class ElementRenderer extends ElementRendererBase {
     super()
   }
 
-  static createTextElement(
+  createTextElement(
     text,
     options = { tagName: 'div', style: { color: 'black', fontSize: '16px' } }
   ) {
