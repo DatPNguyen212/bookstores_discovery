@@ -1,5 +1,6 @@
 import { IS_ELEMENT_RENDERER_BASE_INSTANCE } from '../abstracts/validation/ElementRendererBase.js'
 import { IS_INPUT_ERRORS_INSTANCE } from './InputErrors.js'
+import objectUtils from '../utils/objectUtils.js'
 
 class FormErrorsRenderer {
   constructor(elementRenderer) {
@@ -14,7 +15,7 @@ class FormErrorsRenderer {
     this.elementRenderer = elementRenderer
   }
 
-  render(inputErrorsArray) {
+  render(inputErrorsArray, options) {
     if (!Array.isArray(inputErrorsArray)) {
       throw new TypeError('You need to pass an array of InputErrors instances')
     } else {
@@ -27,18 +28,15 @@ class FormErrorsRenderer {
       }
     }
 
+    if (!objectUtils.isPlainObject(options)) {
+      throw new TypeError('You need to pass a plain object to 2nd parameter')
+    }
+
     for (let inputErrors of inputErrorsArray) {
       const input = inputErrors.input
       const errors = inputErrors.errors
       const errorMsg = errors.join(', ')
 
-      const options = {
-        tagName: 'div',
-        style: {
-          color: 'red',
-          fontSize: '16px',
-        },
-      }
       const newErrorElement = this.elementRenderer.createTextElement(
         errorMsg,
         options

@@ -62,15 +62,40 @@ describe('FormErrorsRenderer', () => {
       const input = document.querySelector('input')
       const inputErrors = new InputErrors(input)
       const inputErrorsArray = [1, inputErrors]
+      const options = {
+        tagName: 'DIV',
+        style: {
+          color: 'black',
+          fontSize: '16px',
+        },
+      }
 
       const fn = () => {
-        formErrorsRenderer.render(inputErrorsArray)
+        formErrorsRenderer.render(inputErrorsArray, options)
       }
 
       expect(fn).toThrow('You need to pass an array of InputErrors instances')
     })
 
-    it('given a form with 2 fieldsets with an input in each of them, when you create an inputErrorsArray from those inputs with errors and pass it as an argument, the errors should be correctly rendered', () => {
+    it('when you pass a non plain obj to 2nd param, it should throw an error', () => {
+      document.body.innerHTML = `
+        <form>
+          <input type = "text">
+        </form>
+      `
+      const input = document.querySelector('input')
+      const inputErrors = new InputErrors(input)
+      const inputErrorsArray = [inputErrors]
+      const options = 3
+
+      const fn = () => {
+        formErrorsRenderer.render(inputErrorsArray, options)
+      }
+
+      expect(fn).toThrow('You need to pass a plain object to 2nd parameter')
+    })
+
+    it('given a form with 2 fieldsets with an input in each of them, when you create an inputErrorsArray from those inputs with errors and pass it to 1st param and you pass a plain options obj in 2nd param, the errors should be correctly rendered according to what you specified in options obj', () => {
       document.body.innerHTML = `
         <form>
           <fieldset id = "fieldset1">
@@ -99,21 +124,37 @@ describe('FormErrorsRenderer', () => {
 
       const inputErrorsArray = [inputErrors1, inputErrors2]
 
-      const result = formErrorsRenderer.render(inputErrorsArray)
+      const options = {
+        tagName: 'section',
+        style: {
+          color: 'purple',
+          fontSize: '18px',
+        },
+      }
 
-      expect(fieldset1.nextElementSibling.tagName).toBe('DIV')
+      const result = formErrorsRenderer.render(inputErrorsArray, options)
+
+      expect(fieldset1.nextElementSibling.tagName).toBe(
+        options.tagName.toUpperCase()
+      )
       expect(fieldset1.nextElementSibling.innerText).toBe(
         inputErrors1.errors.join(', ')
       )
-      expect(fieldset1.nextElementSibling.style.fontSize).toBe('16px')
-      expect(fieldset1.nextElementSibling.style.color).toBe('red')
+      expect(fieldset1.nextElementSibling.style.fontSize).toBe(
+        options.style.fontSize
+      )
+      expect(fieldset1.nextElementSibling.style.color).toBe(options.style.color)
 
-      expect(fieldset2.nextElementSibling.tagName).toBe('DIV')
+      expect(fieldset2.nextElementSibling.tagName).toBe(
+        options.tagName.toUpperCase()
+      )
       expect(fieldset2.nextElementSibling.innerText).toBe(
         inputErrors2.errors.join(', ')
       )
-      expect(fieldset2.nextElementSibling.style.fontSize).toBe('16px')
-      expect(fieldset2.nextElementSibling.style.color).toBe('red')
+      expect(fieldset2.nextElementSibling.style.fontSize).toBe(
+        options.style.fontSize
+      )
+      expect(fieldset2.nextElementSibling.style.color).toBe(options.style.color)
     })
   })
 })
