@@ -1,4 +1,5 @@
 import ElementRendererBase from '../abstracts/validation/ElementRendererBase.js'
+import objectUtils from '../utils/objectUtils.js'
 class ElementRenderer extends ElementRendererBase {
   constructor() {
     super()
@@ -11,6 +12,17 @@ class ElementRenderer extends ElementRendererBase {
     if (typeof text !== 'string') {
       throw new TypeError('First parameter needs to be of string data type')
     }
+
+    if (
+      !objectUtils.isPlainObject(options) ||
+      !options.tagName ||
+      !options.style
+    ) {
+      throw new TypeError(
+        'You need to pass plain obj that contains tagName and style properties'
+      )
+    }
+
     if (options.tagName === undefined) {
       options.tagName = 'div'
     }

@@ -50,64 +50,50 @@ describe('ElementRenderer', () => {
       expect(fn).toThrow('First parameter needs to be of string data type')
     })
 
-    it("when you don't pass options.tagName, it should return an element with default div tagName", () => {
+    it('when pass a non plain obj to 2nd param, it should throw an error', () => {
       const text = 'test'
-      const options = {
-        class: 'test-class',
-        id: 'test-id',
-        style: {
-          color: 'red',
-        },
+      const options = 3
+
+      const fn = () => {
+        elementRenderer.createTextElement(text, options)
       }
 
-      const newElement = elementRenderer.createTextElement(text, options)
-
-      expect(newElement.tagName).toBe('DIV')
+      expect(fn).toThrow(
+        'You need to pass plain obj that contains tagName and style properties'
+      )
     })
 
-    it("when you don't pass options.style.color, it should return element with correct tagName and fontSize with default color", () => {
+    it('when you pass a plain obj that does not contain tagName property, it should throw an error', () => {
       const text = 'test'
       const options = {
-        tagName: 'div',
         style: {
+          color: 'red',
           fontSize: '16px',
         },
       }
 
-      const newElement = elementRenderer.createTextElement(text, options)
-
-      expect(newElement.tagName).toBe('DIV')
-      expect(newElement.style.color).toBe('black')
-      expect(newElement.style.fontSize).toBe('16px')
-    })
-
-    it("when you don't pass options.style.fontSize, it should return element with correct tagName and color with default fontSize", () => {
-      const text = 'test'
-      const options = {
-        tagName: 'div',
-        style: {
-          color: 'black',
-        },
+      const fn = () => {
+        elementRenderer.createTextElement(text, options)
       }
 
-      const newElement = elementRenderer.createTextElement(text, options)
-
-      expect(newElement.tagName).toBe('DIV')
-      expect(newElement.style.color).toBe('black')
-      expect(newElement.style.fontSize).toBe('16px')
+      expect(fn).toThrow(
+        'You need to pass plain obj that contains tagName and style properties'
+      )
     })
 
-    it("when you don't pass options.style, it should return element with correct tagName and default styles", () => {
+    it('when you pass a plain obj that does not contain style property, it should throw an error', () => {
       const text = 'test'
       const options = {
         tagName: 'div',
       }
 
-      const newElement = elementRenderer.createTextElement(text, options)
+      const fn = () => {
+        elementRenderer.createTextElement(text, options)
+      }
 
-      expect(newElement.tagName).toBe('DIV')
-      expect(newElement.style.color).toBe('black')
-      expect(newElement.style.fontSize).toBe('16px')
+      expect(fn).toThrow(
+        'You need to pass plain obj that contains tagName and style properties'
+      )
     })
 
     it("if you don't pass an option obj, it should return an element with default attribute values", () => {
@@ -126,8 +112,6 @@ describe('ElementRenderer', () => {
       const text = 'test'
       const options = {
         tagName: 'div',
-        class: 'test-class',
-        id: 'test-id',
         style: {
           incorrectProperty: '3',
           color: 'red',
