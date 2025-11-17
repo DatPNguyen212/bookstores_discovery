@@ -70,7 +70,7 @@ describe('FormErrorsRenderer', () => {
       expect(fn).toThrow('You need to pass an array of InputErrors instances')
     })
 
-    it('given a form with 2 fieldsets with an input in each of them, when you create an inputErrorsArray from those inputs with errors, the errors should be correctly rendered', () => {
+    it('given a form with 2 fieldsets with an input in each of them, when you create an inputErrorsArray from those inputs with errors and pass it as an argument, the errors should be correctly rendered', () => {
       document.body.innerHTML = `
         <form>
           <fieldset id = "fieldset1">

@@ -65,16 +65,47 @@ describe('ElementRenderer', () => {
       expect(newElement.tagName).toBe('DIV')
     })
 
-    it("when you don't pass options.style, it should return an element that has default styles", () => {
+    it("when you don't pass options.style.color, it should return element with correct tagName and fontSize with default color", () => {
       const text = 'test'
       const options = {
         tagName: 'div',
-        class: 'test-class',
-        id: 'test-id',
+        style: {
+          fontSize: '16px',
+        },
       }
 
       const newElement = elementRenderer.createTextElement(text, options)
 
+      expect(newElement.tagName).toBe('DIV')
+      expect(newElement.style.color).toBe('black')
+      expect(newElement.style.fontSize).toBe('16px')
+    })
+
+    it("when you don't pass options.style.fontSize, it should return element with correct tagName and color with default fontSize", () => {
+      const text = 'test'
+      const options = {
+        tagName: 'div',
+        style: {
+          color: 'black',
+        },
+      }
+
+      const newElement = elementRenderer.createTextElement(text, options)
+
+      expect(newElement.tagName).toBe('DIV')
+      expect(newElement.style.color).toBe('black')
+      expect(newElement.style.fontSize).toBe('16px')
+    })
+
+    it("when you don't pass options.style, it should return element with correct tagName and default styles", () => {
+      const text = 'test'
+      const options = {
+        tagName: 'div',
+      }
+
+      const newElement = elementRenderer.createTextElement(text, options)
+
+      expect(newElement.tagName).toBe('DIV')
       expect(newElement.style.color).toBe('black')
       expect(newElement.style.fontSize).toBe('16px')
     })

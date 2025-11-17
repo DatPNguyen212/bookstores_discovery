@@ -22,6 +22,14 @@ class ElementRenderer extends ElementRendererBase {
       }
     }
 
+    if (options.style.color === undefined) {
+      options.style.color = 'black'
+    }
+
+    if (options.style.fontSize === undefined) {
+      options.style.fontSize = '16px'
+    }
+
     const newElement = document.createElement(options.tagName)
 
     newElement.textContent = text
