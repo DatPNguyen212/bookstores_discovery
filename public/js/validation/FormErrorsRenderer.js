@@ -28,8 +28,14 @@ class FormErrorsRenderer {
       }
     }
 
-    if (!objectUtils.isPlainObject(options)) {
-      throw new TypeError('You need to pass a plain object to 2nd parameter')
+    if (
+      !objectUtils.isPlainObject(options) ||
+      !options.tagName ||
+      !options.style
+    ) {
+      throw new TypeError(
+        'You need to pass a plain object with tagName and style properties to 2nd parameter'
+      )
     }
 
     for (let inputErrors of inputErrorsArray) {

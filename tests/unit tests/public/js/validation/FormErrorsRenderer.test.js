@@ -92,7 +92,56 @@ describe('FormErrorsRenderer', () => {
         formErrorsRenderer.render(inputErrorsArray, options)
       }
 
-      expect(fn).toThrow('You need to pass a plain object to 2nd parameter')
+      expect(fn).toThrow(
+        'You need to pass a plain object with tagName and style properties to 2nd parameter'
+      )
+    })
+
+    it('when you pass plain obj with missing tagName property, it should throw an error', () => {
+      document.body.innerHTML = `
+        <form>
+          <input type = "text">
+        </form>
+      `
+      const input = document.querySelector('input')
+      const inputErrors = new InputErrors(input)
+      const inputErrorsArray = [inputErrors]
+      const options = {
+        style: {
+          color: 'black',
+          fontSize: '16px',
+        },
+      }
+
+      const fn = () => {
+        formErrorsRenderer.render(inputErrorsArray, options)
+      }
+
+      expect(fn).toThrow(
+        'You need to pass a plain object with tagName and style properties to 2nd parameter'
+      )
+    })
+
+    it('when you pass plain obj with missing style property, it should throw an error', () => {
+      document.body.innerHTML = `
+        <form>
+          <input type = "text">
+        </form>
+      `
+      const input = document.querySelector('input')
+      const inputErrors = new InputErrors(input)
+      const inputErrorsArray = [inputErrors]
+      const options = {
+        tagName: 'div',
+      }
+
+      const fn = () => {
+        formErrorsRenderer.render(inputErrorsArray, options)
+      }
+
+      expect(fn).toThrow(
+        'You need to pass a plain object with tagName and style properties to 2nd parameter'
+      )
     })
 
     it('given a form with 2 fieldsets with an input in each of them, when you create an inputErrorsArray from those inputs with errors and pass it to 1st param and you pass a plain options obj in 2nd param, the errors should be correctly rendered according to what you specified in options obj', () => {
