@@ -1,9 +1,11 @@
 import { IS_INPUT_EXTRACTER_BASE_INSTANCE } from '../abstracts/validation/InputExtracterBase.js'
 import { IS_INPUT_RULES_FACTORY_BASE_INSTANCE } from '../abstracts/validation/InputRulesFactoryBase.js'
 import { IS_VALIDATION_SCHEMA_INSTANCE } from './ValidationSchema.js'
+import SchemaParserBase from '../abstracts/validation/SchemaParserBase.js'
 
-class SchemaParser {
+class SchemaParser extends SchemaParserBase {
   constructor(inputExtracter, inputRulesFactory) {
+    super()
     if (!inputExtracter[IS_INPUT_EXTRACTER_BASE_INSTANCE]) {
       throw new TypeError(
         'First parmameter needs an instanceof InputExtracterBase'

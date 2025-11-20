@@ -13,6 +13,7 @@ import FormInputExtracter from '../../../../../public/js/validation/FormInputExt
 import InputRulesFactory from '../../../../../public/js/validation/InputRulesFactory.js'
 import ValidationSchema from '../../../../../public/js/validation/ValidationSchema.js'
 import { IS_GROUP_VALIDATOR_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/GroupValidatorBase.js'
+import { IS_VALIDATION_PROCESSOR_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/ValidationProcessorBase.js'
 const window = new Window()
 const document = window.document
 
@@ -81,7 +82,7 @@ describe('ValidationProcessor', () => {
     )
   })
 
-  it('when you pass valid singleValidator, groupValidator, and inputErrorsFactory to constructor, the instance must store those arguments as properties', () => {
+  it('when you pass valid singleValidator, groupValidator, and inputErrorsFactory to constructor, the instance must store those arguments as properties and it must have a property that checks instance of ValidationProcessorBase', () => {
     const validationProcessor = new ValidationProcessor(
       singleValidator,
       groupValidator,
@@ -91,6 +92,9 @@ describe('ValidationProcessor', () => {
     expect(validationProcessor.singleValidator).toEqual(singleValidator)
     expect(validationProcessor.groupValidator).toEqual(groupValidator)
     expect(validationProcessor.inputErrorsFactory).toEqual(inputErrorsFactory)
+    expect(validationProcessor[IS_VALIDATION_PROCESSOR_BASE_INSTANCE]).toBe(
+      true
+    )
   })
 
   it('when you pass a non instance of InputErrorsFactoryBase to 3rd param, it should throw an error', () => {

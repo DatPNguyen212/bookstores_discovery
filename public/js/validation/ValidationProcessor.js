@@ -3,9 +3,11 @@ import { IS_GROUP_VALIDATOR_BASE_INSTANCE } from '../abstracts/validation/GroupV
 import { IS_INPUT_RULES_INSTANCE } from './InputRules.js'
 import typeCheck from '../utils/typeCheck.js'
 import { IS_INPUT_ERRORS_FACTORY_BASE_INSTANCE } from '../abstracts/validation/InputErrorsFactoryBase.js'
+import ValidationProcessorBase from '../abstracts/validation/ValidationProcessorBase.js'
 
-class ValidationProcessor {
+class ValidationProcessor extends ValidationProcessorBase {
   constructor(singleValidator, groupValidator, inputErrorsFactory) {
+    super()
     if (
       !singleValidator ||
       !singleValidator[IS_SINGLE_VALIDATOR_BASE_INSTANCE]

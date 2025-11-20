@@ -1,9 +1,11 @@
 import { IS_ELEMENT_RENDERER_BASE_INSTANCE } from '../abstracts/validation/ElementRendererBase.js'
 import { IS_INPUT_ERRORS_INSTANCE } from './InputErrors.js'
 import objectUtils from '../utils/objectUtils.js'
+import ErrorsRendererBase from '../abstracts/validation/ErrorsRendererBase.js'
 
-class FormErrorsRenderer {
+class FormErrorsRenderer extends ErrorsRendererBase {
   constructor(elementRenderer) {
+    super()
     if (
       !elementRenderer ||
       !elementRenderer[IS_ELEMENT_RENDERER_BASE_INSTANCE]

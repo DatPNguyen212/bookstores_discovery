@@ -4,6 +4,7 @@ import FormErrorsRenderer from '../../../../../public/js/validation/FormErrorsRe
 import { Window } from 'happy-dom'
 import ElementRenderer from '../../../../../public/js/validation/ElementRenderer.js'
 import InputErrors from '../../../../../public/js/validation/InputErrors.js'
+import { IS_ERRORS_RENDERER_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/ErrorsRendererBase.js'
 const window = new Window()
 const document = window.document
 
@@ -22,12 +23,13 @@ describe('FormErrorsRenderer', () => {
     )
   })
 
-  it('when you pass valid elementRenderer to constructor, the instance should store that elementRenderer', () => {
+  it('when you pass valid elementRenderer to constructor, the instance should store that elementRenderer and have property that checks instance of ErrorsRendererBase', () => {
     const elementRenderer = new ElementRenderer()
 
     const result = new FormErrorsRenderer(elementRenderer)
 
     expect(result.elementRenderer).toEqual(elementRenderer)
+    expect(result[IS_ERRORS_RENDERER_BASE_INSTANCE]).toBe(true)
   })
 
   describe('FormErrorsRenderer.render()', () => {

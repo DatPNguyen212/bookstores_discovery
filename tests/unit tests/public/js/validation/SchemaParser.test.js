@@ -10,6 +10,7 @@ import FormInputExtracter from '../../../../../public/js/validation/FormInputExt
 import { IS_INPUT_EXTRACTER_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/InputExtracterBase.js'
 import { IS_INPUT_RULES_FACTORY_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/InputRulesFactoryBase.js'
 import { IS_INPUT_RULES_INSTANCE } from '../../../../../public/js/validation/InputRules.js'
+import { IS_SCHEMA_PARSER_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/SchemaParserBase.js'
 const window = new Window()
 const document = window.document
 
@@ -69,11 +70,12 @@ describe('SchemaParser', () => {
       'Second parameter needs to be instanceof InputRulesFactoryBase'
     )
   })
-  it('when you pass instance of InputExtracterBase to 1st param and instance of InputRulesFactory to 2nd param in constructor, the instance should store those dependencies in instance properties', () => {
+  it('when you pass instance of InputExtracterBase to 1st param and instance of InputRulesFactory to 2nd param in constructor, the instance should store those dependencies in instance properties and have a property that checks instance of SchemaParserBase', () => {
     const schemaParser = new SchemaParser(inputExtracter, inputRulesFactory)
 
     expect(schemaParser.inputExtracter).toEqual(inputExtracter)
     expect(schemaParser.inputRulesFactory).toEqual(inputRulesFactory)
+    expect(schemaParser[IS_SCHEMA_PARSER_BASE_INSTANCE]).toBe(true)
   })
 
   describe('schemaParser.parse()', () => {
