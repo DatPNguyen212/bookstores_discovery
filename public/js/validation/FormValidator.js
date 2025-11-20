@@ -4,19 +4,22 @@ import { IS_VALIDATION_PROCESSOR_BASE_INSTANCE } from '../abstracts/validation/V
 
 class FormValidator {
   constructor(schemaParser, validationProcessor, errorsRenderer) {
-    if (!schemaParser[IS_SCHEMA_PARSER_BASE_INSTANCE]) {
+    if (!schemaParser || !schemaParser[IS_SCHEMA_PARSER_BASE_INSTANCE]) {
       throw new TypeError(
         'You need to pass instance of SchemaParserBase to 1st param'
       )
     }
 
-    if (!validationProcessor[IS_VALIDATION_PROCESSOR_BASE_INSTANCE]) {
+    if (
+      !validationProcessor ||
+      !validationProcessor[IS_VALIDATION_PROCESSOR_BASE_INSTANCE]
+    ) {
       throw new TypeError(
         'You need to pass instance of ValidationProcessorBase to 2nd parameter'
       )
     }
 
-    if (!errorsRenderer[IS_ERRORS_RENDERER_BASE_INSTANCE]) {
+    if (!errorsRenderer || !errorsRenderer[IS_ERRORS_RENDERER_BASE_INSTANCE]) {
       throw new TypeError(
         'You need to pass instance of ErrorsRendererBase to 3rd parameter'
       )

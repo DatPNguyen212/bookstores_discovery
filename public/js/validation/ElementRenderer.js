@@ -5,7 +5,7 @@ class ElementRenderer extends ElementRendererBase {
   constructor(optionsSchema) {
     super()
 
-    if (!optionsSchema[IS_SCHEMA_ADAPTER_BASE_INSTANCE]) {
+    if (!optionsSchema || !optionsSchema[IS_SCHEMA_ADAPTER_BASE_INSTANCE]) {
       throw new TypeError(
         'You need to pass an instance of SchemaAdapterBase to 1st parameter'
       )

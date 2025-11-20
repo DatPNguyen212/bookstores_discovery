@@ -6,13 +6,16 @@ import SchemaParserBase from '../abstracts/validation/SchemaParserBase.js'
 class SchemaParser extends SchemaParserBase {
   constructor(inputExtracter, inputRulesFactory) {
     super()
-    if (!inputExtracter[IS_INPUT_EXTRACTER_BASE_INSTANCE]) {
+    if (!inputExtracter || !inputExtracter[IS_INPUT_EXTRACTER_BASE_INSTANCE]) {
       throw new TypeError(
         'First parmameter needs an instanceof InputExtracterBase'
       )
     }
 
-    if (!inputRulesFactory[IS_INPUT_RULES_FACTORY_BASE_INSTANCE]) {
+    if (
+      !inputRulesFactory ||
+      !inputRulesFactory[IS_INPUT_RULES_FACTORY_BASE_INSTANCE]
+    ) {
       throw new TypeError(
         'Second parameter needs to be instanceof InputRulesFactoryBase'
       )

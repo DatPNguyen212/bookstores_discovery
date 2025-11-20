@@ -2,9 +2,10 @@ import { IS_ELEMENT_RENDERER_BASE_INSTANCE } from '../abstracts/validation/Eleme
 import { IS_INPUT_ERRORS_INSTANCE } from './InputErrors.js'
 import objectUtils from '../utils/objectUtils.js'
 import ErrorsRendererBase from '../abstracts/validation/ErrorsRendererBase.js'
+import { IS_SCHEMA_ADAPTER_BASE_INSTANCE } from '../abstracts/joi/SchemaAdataperBase.js'
 
 class FormErrorsRenderer extends ErrorsRendererBase {
-  constructor(elementRenderer) {
+  constructor(elementRenderer, optionsSchema) {
     super()
     if (
       !elementRenderer ||
@@ -14,7 +15,14 @@ class FormErrorsRenderer extends ErrorsRendererBase {
         'You need to pass an isntance of ElementRendererBase to constructor'
       )
     }
+
+    if (!optionsSchema || !optionsSchema[IS_SCHEMA_ADAPTER_BASE_INSTANCE]) {
+      throw new TypeError(
+        'You need to pass an instance of SchemaAdapterBase to 2nd parameter'
+      )
+    }
     this.elementRenderer = elementRenderer
+    this.optionsSchema = optionsSchema
   }
 
   render(inputErrorsArray, options) {
@@ -30,15 +38,21 @@ class FormErrorsRenderer extends ErrorsRendererBase {
       }
     }
 
-    if (
-      !objectUtils.isPlainObject(options) ||
-      !options.tagName ||
-      !options.style
-    ) {
-      throw new TypeError(
-        'You need to pass a plain object with tagName and style properties to 2nd parameter'
-      )
+    const error = this.optionsSchema.validate(options)
+
+    if (error) {
+      throw error
     }
+
+    // if (
+    //   !objectUtils.isPlainObject(options) ||
+    //   !options.tagName ||
+    //   !options.style
+    // ) {
+    //   throw new TypeError(
+    //     'You need to pass a plain object with tagName and style properties to 2nd parameter'
+    //   )
+    // }
 
     for (let inputErrors of inputErrorsArray) {
       const input = inputErrors.input

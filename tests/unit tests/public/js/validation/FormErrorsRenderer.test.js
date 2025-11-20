@@ -5,12 +5,43 @@ import { Window } from 'happy-dom'
 import ElementRenderer from '../../../../../public/js/validation/ElementRenderer.js'
 import InputErrors from '../../../../../public/js/validation/InputErrors.js'
 import { IS_ERRORS_RENDERER_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/ErrorsRendererBase.js'
+import OptionsJoiSchema from '../../../../../public/js/joi/OptionsJoiSchema.js'
+import SchemaAdapterBase from '../../../../../public/js/abstracts/joi/SchemaAdataperBase.js'
 const window = new Window()
 const document = window.document
 
 vi.stubGlobal('document', document)
 
 describe('FormErrorsRenderer', () => {
+  let formErrorsRenderer
+  let elementRenderer
+  let optionsSchema
+  let optionsSchemaMock
+
+  beforeEach(() => {
+    document.body.innerHTML = ''
+    optionsSchema = new OptionsJoiSchema()
+    elementRenderer = new ElementRenderer(optionsSchema)
+    class OptionsSchemaMock extends SchemaAdapterBase {
+      constructor() {
+        super()
+      }
+
+      validate = vi.fn(() => {
+        return null
+      })
+    }
+
+    optionsSchemaMock = new OptionsSchemaMock()
+    formErrorsRenderer = new FormErrorsRenderer(
+      elementRenderer,
+      optionsSchemaMock
+    )
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
   it('when you pass a non instance of ElementRendererBase, it should throw an error', () => {
     const elementRenderer = 3
 
@@ -23,28 +54,27 @@ describe('FormErrorsRenderer', () => {
     )
   })
 
-  it('when you pass valid elementRenderer to constructor, the instance should store that elementRenderer and have property that checks instance of ErrorsRendererBase', () => {
-    const elementRenderer = new ElementRenderer()
+  it('when you pass a non instance of SchemaAdapterBase to 2nd param of constructor, it should throw an error', () => {
+    const optionsSchema = 3
 
-    const result = new FormErrorsRenderer(elementRenderer)
+    const fn = () => {
+      new FormErrorsRenderer(elementRenderer, optionsSchema)
+    }
+
+    expect(fn).toThrow(
+      'You need to pass an instance of SchemaAdapterBase to 2nd parameter'
+    )
+  })
+
+  it('when you pass valid elementRenderer and optionsSchema to constructor, the instance should store those dependencies and have property that checks instance of ErrorsRendererBase', () => {
+    const result = new FormErrorsRenderer(elementRenderer, optionsSchema)
 
     expect(result.elementRenderer).toEqual(elementRenderer)
+    expect(result.optionsSchema).toEqual(optionsSchema)
     expect(result[IS_ERRORS_RENDERER_BASE_INSTANCE]).toBe(true)
   })
 
   describe('FormErrorsRenderer.render()', () => {
-    let formErrorsRenderer
-    let elementRenderer
-
-    beforeEach(() => {
-      document.body.innerHTML = ''
-      elementRenderer = new ElementRenderer()
-      formErrorsRenderer = new FormErrorsRenderer(elementRenderer)
-    })
-
-    afterEach(() => {
-      vi.restoreAllMocks()
-    })
     it('when you pass a number to 1st param, it should throw an error', () => {
       const inputErrorsArray = 3
 
@@ -79,12 +109,30 @@ describe('FormErrorsRenderer', () => {
       expect(fn).toThrow('You need to pass an array of InputErrors instances')
     })
 
-    it('when you pass a non plain obj to 2nd param, it should throw an error', () => {
+    it('given optionsSchemaMock.validate() returns error, when you pass valid inputErrorsArray and invalid options, it should throw that error', () => {
+      const errorMock = new Error('test')
+      class OptionsSchemaMock extends SchemaAdapterBase {
+        constructor() {
+          super()
+        }
+
+        validate = vi.fn(() => {
+          return errorMock
+        })
+      }
+
+      const optionsSchemaMock = new OptionsSchemaMock()
+
+      const formErrorsRenderer = new FormErrorsRenderer(
+        elementRenderer,
+        optionsSchemaMock
+      )
+
       document.body.innerHTML = `
-        <form>
-          <input type = "text">
-        </form>
-      `
+       <form>
+        <input type = "text">
+       </form>
+       `
       const input = document.querySelector('input')
       const inputErrors = new InputErrors(input)
       const inputErrorsArray = [inputErrors]
@@ -94,57 +142,75 @@ describe('FormErrorsRenderer', () => {
         formErrorsRenderer.render(inputErrorsArray, options)
       }
 
-      expect(fn).toThrow(
-        'You need to pass a plain object with tagName and style properties to 2nd parameter'
-      )
+      expect(fn).toThrowError(errorMock)
     })
 
-    it('when you pass plain obj with missing tagName property, it should throw an error', () => {
-      document.body.innerHTML = `
-        <form>
-          <input type = "text">
-        </form>
-      `
-      const input = document.querySelector('input')
-      const inputErrors = new InputErrors(input)
-      const inputErrorsArray = [inputErrors]
-      const options = {
-        style: {
-          color: 'black',
-          fontSize: '16px',
-        },
-      }
+    // it('when you pass a non plain obj to 2nd param, it should throw an error', () => {
+    //   document.body.innerHTML = `
+    //     <form>
+    //       <input type = "text">
+    //     </form>
+    //   `
+    //   const input = document.querySelector('input')
+    //   const inputErrors = new InputErrors(input)
+    //   const inputErrorsArray = [inputErrors]
+    //   const options = 3
 
-      const fn = () => {
-        formErrorsRenderer.render(inputErrorsArray, options)
-      }
+    //   const fn = () => {
+    //     formErrorsRenderer.render(inputErrorsArray, options)
+    //   }
 
-      expect(fn).toThrow(
-        'You need to pass a plain object with tagName and style properties to 2nd parameter'
-      )
-    })
+    //   expect(fn).toThrow(
+    //     'You need to pass a plain object with tagName and style properties to 2nd parameter'
+    //   )
+    // })
 
-    it('when you pass plain obj with missing style property, it should throw an error', () => {
-      document.body.innerHTML = `
-        <form>
-          <input type = "text">
-        </form>
-      `
-      const input = document.querySelector('input')
-      const inputErrors = new InputErrors(input)
-      const inputErrorsArray = [inputErrors]
-      const options = {
-        tagName: 'div',
-      }
+    // it('when you pass plain obj with missing tagName property, it should throw an error', () => {
+    //   document.body.innerHTML = `
+    //     <form>
+    //       <input type = "text">
+    //     </form>
+    //   `
+    //   const input = document.querySelector('input')
+    //   const inputErrors = new InputErrors(input)
+    //   const inputErrorsArray = [inputErrors]
+    //   const options = {
+    //     style: {
+    //       color: 'black',
+    //       fontSize: '16px',
+    //     },
+    //   }
 
-      const fn = () => {
-        formErrorsRenderer.render(inputErrorsArray, options)
-      }
+    //   const fn = () => {
+    //     formErrorsRenderer.render(inputErrorsArray, options)
+    //   }
 
-      expect(fn).toThrow(
-        'You need to pass a plain object with tagName and style properties to 2nd parameter'
-      )
-    })
+    //   expect(fn).toThrow(
+    //     'You need to pass a plain object with tagName and style properties to 2nd parameter'
+    //   )
+    // })
+
+    // it('when you pass plain obj with missing style property, it should throw an error', () => {
+    //   document.body.innerHTML = `
+    //     <form>
+    //       <input type = "text">
+    //     </form>
+    //   `
+    //   const input = document.querySelector('input')
+    //   const inputErrors = new InputErrors(input)
+    //   const inputErrorsArray = [inputErrors]
+    //   const options = {
+    //     tagName: 'div',
+    //   }
+
+    //   const fn = () => {
+    //     formErrorsRenderer.render(inputErrorsArray, options)
+    //   }
+
+    //   expect(fn).toThrow(
+    //     'You need to pass a plain object with tagName and style properties to 2nd parameter'
+    //   )
+    // })
 
     it('given a form with 2 fieldsets with an input in each of them, when you create an inputErrorsArray from those inputs with errors and pass it to 1st param and you pass a plain options obj in 2nd param, the errors should be correctly rendered according to what you specified in options obj', () => {
       document.body.innerHTML = `
