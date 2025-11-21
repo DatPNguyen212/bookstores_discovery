@@ -109,6 +109,41 @@ describe('FormErrorsRenderer', () => {
       expect(fn).toThrow('You need to pass an array of InputErrors instances')
     })
 
+    it('given optionsSchema.validate() is mocked, when you pass valid inputErrorsArray and any options value, it should call optionsSchema.validate() with that options arugment', () => {
+      class OptionsSchemaMock extends SchemaAdapterBase {
+        constructor() {
+          super()
+        }
+
+        validate = vi.fn(() => {})
+      }
+
+      const optionsSchemaMock = new OptionsSchemaMock()
+
+      const formErrorsRenderer = new FormErrorsRenderer(
+        elementRenderer,
+        optionsSchemaMock
+      )
+
+      document.body.innerHTML = `
+       <form>
+        <fieldset>
+          <input type = "text">
+        </fieldset>
+       </form>
+       `
+      const input = document.querySelector('input')
+      const inputErrors = new InputErrors(input)
+      const inputErrorsArray = [inputErrors]
+      const options = 3
+
+      try {
+        formErrorsRenderer.render(inputErrorsArray, options)
+      } catch (error) {}
+
+      expect(optionsSchemaMock.validate).toBeCalledWith(options)
+    })
+
     it('given optionsSchemaMock.validate() returns error, when you pass valid inputErrorsArray and invalid options, it should throw that error', () => {
       const errorMock = new Error('test')
       class OptionsSchemaMock extends SchemaAdapterBase {
