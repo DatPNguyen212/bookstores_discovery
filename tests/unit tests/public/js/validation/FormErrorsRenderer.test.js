@@ -5,7 +5,7 @@ import { Window } from 'happy-dom'
 import ElementRenderer from '../../../../../public/js/validation/ElementRenderer.js'
 import InputErrors from '../../../../../public/js/validation/InputErrors.js'
 import { IS_ERRORS_RENDERER_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/ErrorsRendererBase.js'
-import OptionsJoiSchema from '../../../../../public/js/joi/OptionsJoiSchema.js'
+import OptionsJoiSchema from '../../../../../public/js/validation/OptionsJoiSchema.js'
 import SchemaAdapterBase from '../../../../../public/js/abstracts/joi/SchemaAdataperBase.js'
 const window = new Window()
 const document = window.document

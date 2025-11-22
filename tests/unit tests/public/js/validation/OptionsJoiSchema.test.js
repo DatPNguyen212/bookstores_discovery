@@ -1,5 +1,5 @@
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
-import OptionsJoiSchema from '../../../../../public/js/joi/OptionsJoiSchema.js'
+import OptionsJoiSchema from '../../../../../public/js/validation/OptionsJoiSchema.js'
 import Joi from 'joi'
 import { IS_SCHEMA_ADAPTER_BASE_INSTANCE } from '../../../../../public/js/abstracts/joi/SchemaAdataperBase.js'
 

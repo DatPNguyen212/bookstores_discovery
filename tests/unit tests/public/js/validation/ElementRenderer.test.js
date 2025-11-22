@@ -3,7 +3,7 @@ import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import ElementRenderer from '../../../../../public/js/validation/ElementRenderer.js'
 import { Window } from 'happy-dom'
 import { IS_ELEMENT_RENDERER_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/ElementRendererBase.js'
-import OptionsJoiSchema from '../../../../../public/js/joi/OptionsJoiSchema.js'
+import OptionsJoiSchema from '../../../../../public/js/validation/OptionsJoiSchema.js'
 import Joi from 'joi'
 import SchemaAdapterBase, {
   IS_SCHEMA_ADAPTER_BASE_INSTANCE,
