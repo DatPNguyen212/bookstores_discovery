@@ -1,6 +1,11 @@
 import Joi from 'joi'
 import SchemaAdapterBase from '../abstracts/joi/SchemaAdataperBase.js'
 import { IS_OPTIONS_JOI_SCHEMA_INSTANCE } from './OptionsJoiSchema.js'
+
+const IS_VALIDATOR_CONFIG_SCHEMA_INSTANCE = Symbol(
+  'ValidatorConfigSchema/is-instance'
+)
+
 class ValidatorConfigSchema extends SchemaAdapterBase {
   constructor(optionsSchema) {
     super()
@@ -17,6 +22,8 @@ class ValidatorConfigSchema extends SchemaAdapterBase {
       }),
       errors: optionsSchema.schema,
     })
+
+    this[IS_VALIDATOR_CONFIG_SCHEMA_INSTANCE] = true
   }
 
   validate(obj) {
@@ -31,3 +38,4 @@ class ValidatorConfigSchema extends SchemaAdapterBase {
 }
 
 export default ValidatorConfigSchema
+export { IS_VALIDATOR_CONFIG_SCHEMA_INSTANCE }
