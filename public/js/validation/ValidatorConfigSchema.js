@@ -1,13 +1,11 @@
-import OptionsJoiSchema from './OptionsJoiSchema'
 import Joi from 'joi'
 import SchemaAdapterBase from '../abstracts/joi/SchemaAdataperBase.js'
-import { IS_SCHEMA_ADAPTER_BASE_INSTANCE } from '../abstracts/joi/SchemaAdataperBase.js'
-
+import { IS_OPTIONS_JOI_SCHEMA_INSTANCE } from './OptionsJoiSchema.js'
 class ValidatorConfigSchema extends SchemaAdapterBase {
   constructor(optionsSchema) {
     super()
 
-    if (!optionsSchema || !optionsSchema[IS_SCHEMA_ADAPTER_BASE_INSTANCE]) {
+    if (!optionsSchema || !optionsSchema[IS_OPTIONS_JOI_SCHEMA_INSTANCE]) {
       throw new TypeError(
         'You need to pass instance of SchemaAdapterBase to 1st parameter'
       )

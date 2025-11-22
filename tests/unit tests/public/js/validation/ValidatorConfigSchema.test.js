@@ -3,6 +3,7 @@ import ValidatorConfigSchema from '../../../../../public/js/validation/Validator
 import OptionsJoiSchema from '../../../../../public/js/validation/OptionsJoiSchema.js'
 import Joi from 'joi'
 import { IS_SCHEMA_ADAPTER_BASE_INSTANCE } from '../../../../../public/js/abstracts/joi/SchemaAdataperBase.js'
+import SchemaAdapterBase from '../../../../../public/js/abstracts/joi/SchemaAdataperBase.js'
 
 describe('ValidatorConfigSchema', () => {
   it('when when you pass OptionsJoiSchema instance to constructor, new instance should store correct validator config joi schema and property to check instance of SchemaAdapterBase', () => {
@@ -22,7 +23,24 @@ describe('ValidatorConfigSchema', () => {
   })
 
   it('when you pass a non instance of OptionsJoiSchema, it should throw an error', () => {
-    const optionsSchema = 3
+    const optionsSchema = { test: '123' }
+
+    const fn = () => {
+      new ValidatorConfigSchema(optionsSchema)
+    }
+    expect(fn).toThrow(
+      'You need to pass instance of SchemaAdapterBase to 1st parameter'
+    )
+  })
+
+  it('when you pass instance of a mock subclass of SchemaAdapterBase, it should throw an error', () => {
+    class SubclassMock extends SchemaAdapterBase {
+      constructor() {
+        super()
+      }
+    }
+
+    const optionsSchema = new SubclassMock()
 
     const fn = () => {
       new ValidatorConfigSchema(optionsSchema)
