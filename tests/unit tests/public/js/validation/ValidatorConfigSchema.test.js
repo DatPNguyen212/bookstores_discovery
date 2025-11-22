@@ -21,7 +21,7 @@ describe('ValidatorConfigSchema', () => {
     expect(result[IS_SCHEMA_ADAPTER_BASE_INSTANCE]).toBe(true)
   })
 
-  it('when you pass a non instance of SchemaAdapterBase, it should throw an error', () => {
+  it('when you pass a non instance of OptionsJoiSchema, it should throw an error', () => {
     const optionsSchema = 3
 
     const fn = () => {

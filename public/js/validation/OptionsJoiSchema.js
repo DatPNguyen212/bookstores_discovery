@@ -1,6 +1,6 @@
 import Joi from 'joi'
 import SchemaAdapterBase from '../abstracts/joi/SchemaAdataperBase.js'
-
+const IS_OPTIONS_JOI_SCHEMA_INSTANCE = Symbol('OptionsJoiSchema/is-instance')
 class OptionsJoiSchema extends SchemaAdapterBase {
   constructor() {
     super()
@@ -11,6 +11,8 @@ class OptionsJoiSchema extends SchemaAdapterBase {
       id: Joi.string(),
       style: Joi.object().pattern(Joi.string(), Joi.string()),
     })
+
+    this[IS_OPTIONS_JOI_SCHEMA_INSTANCE] = true
   }
 
   validate(options) {
@@ -25,3 +27,4 @@ class OptionsJoiSchema extends SchemaAdapterBase {
 }
 
 export default OptionsJoiSchema
+export { IS_OPTIONS_JOI_SCHEMA_INSTANCE }

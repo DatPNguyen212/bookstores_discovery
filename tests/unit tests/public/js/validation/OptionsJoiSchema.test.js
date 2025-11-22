@@ -1,10 +1,12 @@
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
-import OptionsJoiSchema from '../../../../../public/js/validation/OptionsJoiSchema.js'
+import OptionsJoiSchema, {
+  IS_OPTIONS_JOI_SCHEMA_INSTANCE,
+} from '../../../../../public/js/validation/OptionsJoiSchema.js'
 import Joi from 'joi'
 import { IS_SCHEMA_ADAPTER_BASE_INSTANCE } from '../../../../../public/js/abstracts/joi/SchemaAdataperBase.js'
 
 describe('OptionsJoiSchema', () => {
-  it('should instantiate with correct options schema', () => {
+  it('should instantiate with correct options schema and have property that check instanceof OptionsJoiSchema', () => {
     const result = new OptionsJoiSchema()
 
     const expectedSchema = Joi.object({
@@ -15,6 +17,7 @@ describe('OptionsJoiSchema', () => {
     })
 
     expect(result.schema.describe()).toEqual(expectedSchema.describe())
+    expect(result[IS_OPTIONS_JOI_SCHEMA_INSTANCE]).toBe(true)
   })
   describe('optionsJoiSchema.validate()', () => {
     let optionsJoiSchema
