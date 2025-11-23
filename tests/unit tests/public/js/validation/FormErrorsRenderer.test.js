@@ -6,7 +6,7 @@ import ElementRenderer from '../../../../../public/js/validation/ElementRenderer
 import InputErrors from '../../../../../public/js/validation/InputErrors.js'
 import { IS_ERRORS_RENDERER_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/ErrorsRendererBase.js'
 import OptionsJoiSchema from '../../../../../public/js/validation/OptionsJoiSchema.js'
-import SchemaAdapterBase from '../../../../../public/js/abstracts/joi/SchemaAdataperBase.js'
+import SchemaAdapterBase from '../../../../../public/js/abstracts/validation/SchemaAdataperBase.js'
 const window = new Window()
 const document = window.document
 
@@ -15,28 +15,13 @@ vi.stubGlobal('document', document)
 describe('FormErrorsRenderer', () => {
   let formErrorsRenderer
   let elementRenderer
-  let optionsSchema
-  let optionsSchemaMock
 
   beforeEach(() => {
     document.body.innerHTML = ''
-    optionsSchema = new OptionsJoiSchema()
-    elementRenderer = new ElementRenderer(optionsSchema)
-    class OptionsSchemaMock extends SchemaAdapterBase {
-      constructor() {
-        super()
-      }
 
-      validate = vi.fn(() => {
-        return null
-      })
-    }
+    elementRenderer = new ElementRenderer()
 
-    optionsSchemaMock = new OptionsSchemaMock()
-    formErrorsRenderer = new FormErrorsRenderer(
-      elementRenderer,
-      optionsSchemaMock
-    )
+    formErrorsRenderer = new FormErrorsRenderer(elementRenderer)
   })
 
   afterEach(() => {
@@ -54,23 +39,10 @@ describe('FormErrorsRenderer', () => {
     )
   })
 
-  it('when you pass a non instance of SchemaAdapterBase to 2nd param of constructor, it should throw an error', () => {
-    const optionsSchema = 3
-
-    const fn = () => {
-      new FormErrorsRenderer(elementRenderer, optionsSchema)
-    }
-
-    expect(fn).toThrow(
-      'You need to pass an instance of SchemaAdapterBase to 2nd parameter'
-    )
-  })
-
-  it('when you pass valid elementRenderer and optionsSchema to constructor, the instance should store those dependencies and have property that checks instance of ErrorsRendererBase', () => {
-    const result = new FormErrorsRenderer(elementRenderer, optionsSchema)
+  it('when you pass valid elementRenderer to constructor, the instance should store those dependencies and have property that checks instance of ErrorsRendererBase', () => {
+    const result = new FormErrorsRenderer(elementRenderer)
 
     expect(result.elementRenderer).toEqual(elementRenderer)
-    expect(result.optionsSchema).toEqual(optionsSchema)
     expect(result[IS_ERRORS_RENDERER_BASE_INSTANCE]).toBe(true)
   })
 
@@ -107,77 +79,6 @@ describe('FormErrorsRenderer', () => {
       }
 
       expect(fn).toThrow('You need to pass an array of InputErrors instances')
-    })
-
-    it('given optionsSchema.validate() is mocked, when you pass valid inputErrorsArray and any options value, it should call optionsSchema.validate() with that options arugment', () => {
-      class OptionsSchemaMock extends SchemaAdapterBase {
-        constructor() {
-          super()
-        }
-
-        validate = vi.fn(() => {})
-      }
-
-      const optionsSchemaMock = new OptionsSchemaMock()
-
-      const formErrorsRenderer = new FormErrorsRenderer(
-        elementRenderer,
-        optionsSchemaMock
-      )
-
-      document.body.innerHTML = `
-       <form>
-        <fieldset>
-          <input type = "text">
-        </fieldset>
-       </form>
-       `
-      const input = document.querySelector('input')
-      const inputErrors = new InputErrors(input)
-      const inputErrorsArray = [inputErrors]
-      const options = 3
-
-      try {
-        formErrorsRenderer.render(inputErrorsArray, options)
-      } catch (error) {}
-
-      expect(optionsSchemaMock.validate).toBeCalledWith(options)
-    })
-
-    it('given optionsSchemaMock.validate() returns error, when you pass valid inputErrorsArray and invalid options, it should throw that error', () => {
-      const errorMock = new Error('test')
-      class OptionsSchemaMock extends SchemaAdapterBase {
-        constructor() {
-          super()
-        }
-
-        validate = vi.fn(() => {
-          return errorMock
-        })
-      }
-
-      const optionsSchemaMock = new OptionsSchemaMock()
-
-      const formErrorsRenderer = new FormErrorsRenderer(
-        elementRenderer,
-        optionsSchemaMock
-      )
-
-      document.body.innerHTML = `
-       <form>
-        <input type = "text">
-       </form>
-       `
-      const input = document.querySelector('input')
-      const inputErrors = new InputErrors(input)
-      const inputErrorsArray = [inputErrors]
-      const options = 3
-
-      const fn = () => {
-        formErrorsRenderer.render(inputErrorsArray, options)
-      }
-
-      expect(fn).toThrowError(errorMock)
     })
 
     // it('when you pass a non plain obj to 2nd param, it should throw an error', () => {

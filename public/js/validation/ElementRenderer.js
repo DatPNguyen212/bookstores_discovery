@@ -1,27 +1,14 @@
 import ElementRendererBase from '../abstracts/validation/ElementRendererBase.js'
 import objectUtils from '../utils/objectUtils.js'
-import { IS_SCHEMA_ADAPTER_BASE_INSTANCE } from '../abstracts/joi/SchemaAdataperBase.js'
+import { IS_SCHEMA_ADAPTER_BASE_INSTANCE } from '../abstracts/validation/SchemaAdataperBase.js'
 class ElementRenderer extends ElementRendererBase {
-  constructor(optionsSchema) {
+  constructor() {
     super()
-
-    if (!optionsSchema || !optionsSchema[IS_SCHEMA_ADAPTER_BASE_INSTANCE]) {
-      throw new TypeError(
-        'You need to pass an instance of SchemaAdapterBase to 1st parameter'
-      )
-    }
-    this.optionsSchema = optionsSchema
   }
 
   createTextElement(text, options = {}) {
     if (typeof text !== 'string') {
       throw new TypeError('First parameter needs to be of string data type')
-    }
-
-    const error = this.optionsSchema.validate(options)
-
-    if (error) {
-      throw error
     }
 
     const defaultOptions = {

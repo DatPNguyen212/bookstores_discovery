@@ -1,5 +1,5 @@
 import Joi from 'joi'
-import SchemaAdapterBase from '../abstracts/joi/SchemaAdataperBase.js'
+import SchemaAdapterBase from '../abstracts/validation/SchemaAdataperBase.js'
 const IS_OPTIONS_JOI_SCHEMA_INSTANCE = Symbol('OptionsJoiSchema/is-instance')
 class OptionsJoiSchema extends SchemaAdapterBase {
   constructor() {

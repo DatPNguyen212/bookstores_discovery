@@ -4,7 +4,10 @@ import FormValidator from '../../../../../public/js/validation/FormValidator.js'
 import { IS_SCHEMA_PARSER_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/SchemaParserBase.js'
 import { IS_VALIDATION_PROCESSOR_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/ValidationProcessorBase.js'
 import { IS_ERRORS_RENDERER_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/ErrorsRendererBase.js'
+import ValidatorConfigSchema from '../../../../../public/js/validation/ValidatorConfigSchema.js'
 import { Window } from 'happy-dom'
+import { IS_SCHEMA_ADAPTER_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/SchemaAdataperBase.js'
+import { IS_VALIDATOR_CONFIG_SCHEMA_INSTANCE } from '../../../../../public/js/validation/ValidatorConfigSchema.js'
 const window = new Window()
 const document = window.document
 
@@ -21,6 +24,7 @@ describe('FormValidator', () => {
   let formValidator
 
   beforeEach(() => {
+    document.body.innerHTML = ''
     SchemaParserMock = vi.fn(function () {
       this[IS_SCHEMA_PARSER_BASE_INSTANCE] = true
     })

@@ -3,7 +3,7 @@ import OptionsJoiSchema, {
   IS_OPTIONS_JOI_SCHEMA_INSTANCE,
 } from '../../../../../public/js/validation/OptionsJoiSchema.js'
 import Joi from 'joi'
-import { IS_SCHEMA_ADAPTER_BASE_INSTANCE } from '../../../../../public/js/abstracts/joi/SchemaAdataperBase.js'
+import { IS_SCHEMA_ADAPTER_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/SchemaAdataperBase.js'
 
 describe('OptionsJoiSchema', () => {
   it('should instantiate with correct options schema and have property that check instanceof OptionsJoiSchema', () => {

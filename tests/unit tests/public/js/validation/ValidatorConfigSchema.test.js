@@ -4,8 +4,8 @@ import ValidatorConfigSchema, {
 } from '../../../../../public/js/validation/ValidatorConfigSchema.js'
 import OptionsJoiSchema from '../../../../../public/js/validation/OptionsJoiSchema.js'
 import Joi from 'joi'
-import { IS_SCHEMA_ADAPTER_BASE_INSTANCE } from '../../../../../public/js/abstracts/joi/SchemaAdataperBase.js'
-import SchemaAdapterBase from '../../../../../public/js/abstracts/joi/SchemaAdataperBase.js'
+import { IS_SCHEMA_ADAPTER_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/SchemaAdataperBase.js'
+import SchemaAdapterBase from '../../../../../public/js/abstracts/validation/SchemaAdataperBase.js'
 
 describe('ValidatorConfigSchema', () => {
   it('when when you pass OptionsJoiSchema instance to constructor, new instance should store correct validator config joi schema and property to check instance of SchemaAdapterBase and one that checks instance of itself', () => {

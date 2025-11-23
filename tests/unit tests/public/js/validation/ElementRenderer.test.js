@@ -7,7 +7,7 @@ import OptionsJoiSchema from '../../../../../public/js/validation/OptionsJoiSche
 import Joi from 'joi'
 import SchemaAdapterBase, {
   IS_SCHEMA_ADAPTER_BASE_INSTANCE,
-} from '../../../../../public/js/abstracts/joi/SchemaAdataperBase.js'
+} from '../../../../../public/js/abstracts/validation/SchemaAdataperBase.js'
 
 const window = new Window()
 const document = window.document
@@ -16,48 +16,16 @@ vi.stubGlobal('document', document)
 
 describe('ElementRenderer', () => {
   let elementRenderer
-  let optionsSchema
   beforeEach(() => {
     document.body.innerHTML = ''
-    optionsSchema = new OptionsJoiSchema()
-    elementRenderer = new ElementRenderer(optionsSchema)
-  })
-
-  it('when you pass a non instance of SchemaAdapterBase, it should throw an error', () => {
-    const optionsSchema = 3
-
-    const fn = () => {
-      new ElementRenderer(optionsSchema)
-    }
-
-    expect(fn).toThrow(
-      'You need to pass an instance of SchemaAdapterBase to 1st parameter'
-    )
-  })
-
-  it('when you pass valid optionsSchema to constructor, new instance should contain a property that stores the optionsSchema, and a property that checks instance of ElementRendererBase', () => {
-    const result = new ElementRenderer(optionsSchema)
-
-    expect(result.optionsSchema).toEqual(optionsSchema)
-    expect(result[IS_ELEMENT_RENDERER_BASE_INSTANCE]).toBe(true)
+    elementRenderer = new ElementRenderer()
   })
 
   describe('elementRenderer.createTextElement()', () => {
-    let optionsSchemaMock
     let elementRenderer
 
     beforeEach(() => {
-      class OptionsSchemaMock extends SchemaAdapterBase {
-        constructor() {
-          super()
-        }
-
-        validate = vi.fn().mockReturnValue(null)
-      }
-
-      optionsSchemaMock = new OptionsSchemaMock()
-
-      elementRenderer = new ElementRenderer(optionsSchemaMock)
+      elementRenderer = new ElementRenderer()
     })
 
     it('when you pass valid text and options, it should return an element with correct text and attributes values', () => {
@@ -141,32 +109,6 @@ describe('ElementRenderer', () => {
 
     //   expect(fn).toThrow('options.id needs to be of string data type')
     // })
-
-    it('given optionsSchemaMock.validate() returns a mocked Error instance and optionsSchemaMock is passed to ElementRenderer, instance method should throw that mocked Error instance', () => {
-      const errorMock = new Error('test')
-      class OptionsSchemaMock extends SchemaAdapterBase {
-        constructor() {
-          super()
-        }
-
-        validate = vi.fn().mockReturnValue(errorMock)
-      }
-
-      const optionsSchemaMock = new OptionsSchemaMock()
-
-      const elementRenderer = new ElementRenderer(optionsSchemaMock)
-
-      const text = 'test'
-      const options = {
-        tagName: 3,
-      }
-
-      const fn = () => {
-        const result = elementRenderer.createTextElement(text, options)
-      }
-
-      expect(fn).toThrowError(errorMock)
-    })
 
     it('when you pass options obj with missing tagName, it should return an element with correct default div tagName, styles, class, id you specified and text', () => {
       const text = 'test'
