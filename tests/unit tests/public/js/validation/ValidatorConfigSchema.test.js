@@ -2,22 +2,22 @@ import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import ValidatorConfigSchema, {
   IS_VALIDATOR_CONFIG_SCHEMA_INSTANCE,
 } from '../../../../../public/js/validation/ValidatorConfigSchema.js'
-import OptionsJoiSchema from '../../../../../public/js/validation/OptionsJoiSchema.js'
+import CreateTextOptsSchema from '../../../../../public/js/validation/CreateTextOptsSchema.js'
 import Joi from 'joi'
 import { IS_SCHEMA_ADAPTER_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/SchemaAdataperBase.js'
 import SchemaAdapterBase from '../../../../../public/js/abstracts/validation/SchemaAdataperBase.js'
 
 describe('ValidatorConfigSchema', () => {
-  it('when when you pass OptionsJoiSchema instance to constructor, new instance should store correct validator config joi schema and property to check instance of SchemaAdapterBase and one that checks instance of itself', () => {
-    const optionsJoiSchema = new OptionsJoiSchema()
+  it('when when you pass CreateTextOptsSchema instance to constructor, new instance should store correct validator config joi schema and property to check instance of SchemaAdapterBase and one that checks instance of itself', () => {
+    const createTextOptsSchema = new CreateTextOptsSchema()
 
-    const result = new ValidatorConfigSchema(optionsJoiSchema)
+    const result = new ValidatorConfigSchema(createTextOptsSchema)
 
     const expectedSchema = Joi.object({
       asyncUrl: Joi.object({
         isEmailUnique: Joi.string(),
       }),
-      errors: optionsJoiSchema.schema,
+      errors: createTextOptsSchema.schema,
     })
 
     expect(result.schema.describe()).toEqual(expectedSchema.describe())
@@ -25,11 +25,11 @@ describe('ValidatorConfigSchema', () => {
     expect(result[IS_VALIDATOR_CONFIG_SCHEMA_INSTANCE]).toBe(true)
   })
 
-  it('when you pass a non instance of OptionsJoiSchema, it should throw an error', () => {
-    const optionsSchema = { test: '123' }
+  it('when you pass a non instance of CreateTextOptsSchema, it should throw an error', () => {
+    const createTextOptsSchema = { test: '123' }
 
     const fn = () => {
-      new ValidatorConfigSchema(optionsSchema)
+      new ValidatorConfigSchema(createTextOptsSchema)
     }
     expect(fn).toThrow(
       'You need to pass instance of SchemaAdapterBase to 1st parameter'
@@ -43,10 +43,10 @@ describe('ValidatorConfigSchema', () => {
       }
     }
 
-    const optionsSchema = new SubclassMock()
+    const createTextOptsSchema = new SubclassMock()
 
     const fn = () => {
-      new ValidatorConfigSchema(optionsSchema)
+      new ValidatorConfigSchema(createTextOptsSchema)
     }
     expect(fn).toThrow(
       'You need to pass instance of SchemaAdapterBase to 1st parameter'
@@ -64,11 +64,11 @@ describe('ValidatorConfigSchema', () => {
 
   describe('validatorConfigSchema.validate()', () => {
     let validatorConfigSchema
-    let optionsJoiSchema
+    let createTextOptsSchema
     beforeEach(() => {
-      optionsJoiSchema = new OptionsJoiSchema()
+      createTextOptsSchema = new CreateTextOptsSchema()
 
-      validatorConfigSchema = new ValidatorConfigSchema(optionsJoiSchema)
+      validatorConfigSchema = new ValidatorConfigSchema(createTextOptsSchema)
     })
 
     afterEach(() => {

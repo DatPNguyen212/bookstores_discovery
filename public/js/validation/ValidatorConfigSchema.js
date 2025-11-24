@@ -1,16 +1,19 @@
 import Joi from 'joi'
 import SchemaAdapterBase from '../abstracts/validation/SchemaAdataperBase.js'
-import { IS_OPTIONS_JOI_SCHEMA_INSTANCE } from './OptionsJoiSchema.js'
+import { IS_CREATE_TEXT_OPTS_SCHEMA_INSTANCE } from './CreateTextOptsSchema.js'
 
 const IS_VALIDATOR_CONFIG_SCHEMA_INSTANCE = Symbol(
   'ValidatorConfigSchema/is-instance'
 )
 
 class ValidatorConfigSchema extends SchemaAdapterBase {
-  constructor(optionsSchema) {
+  constructor(createTextOptsSchema) {
     super()
 
-    if (!optionsSchema || !optionsSchema[IS_OPTIONS_JOI_SCHEMA_INSTANCE]) {
+    if (
+      !createTextOptsSchema ||
+      !createTextOptsSchema[IS_CREATE_TEXT_OPTS_SCHEMA_INSTANCE]
+    ) {
       throw new TypeError(
         'You need to pass instance of SchemaAdapterBase to 1st parameter'
       )
@@ -20,7 +23,7 @@ class ValidatorConfigSchema extends SchemaAdapterBase {
       asyncUrl: Joi.object({
         isEmailUnique: Joi.string(),
       }),
-      errors: optionsSchema.schema,
+      errors: createTextOptsSchema.schema,
     })
 
     this[IS_VALIDATOR_CONFIG_SCHEMA_INSTANCE] = true

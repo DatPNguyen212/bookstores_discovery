@@ -1,13 +1,13 @@
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
-import OptionsJoiSchema, {
-  IS_OPTIONS_JOI_SCHEMA_INSTANCE,
-} from '../../../../../public/js/validation/OptionsJoiSchema.js'
+import CreateTextOptsSchema, {
+  IS_CREATE_TEXT_OPTS_SCHEMA_INSTANCE,
+} from '../../../../../public/js/validation/CreateTextOptsSchema.js'
 import Joi from 'joi'
 import { IS_SCHEMA_ADAPTER_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/SchemaAdataperBase.js'
 
-describe('OptionsJoiSchema', () => {
-  it('should instantiate with correct options schema and have property that check instanceof OptionsJoiSchema', () => {
-    const result = new OptionsJoiSchema()
+describe('CreateTextOptsSchema', () => {
+  it('should instantiate with correct options schema and have property that check instanceof CreateTextOptsSchema', () => {
+    const result = new CreateTextOptsSchema()
 
     const expectedSchema = Joi.object({
       tagName: Joi.string(),
@@ -17,17 +17,17 @@ describe('OptionsJoiSchema', () => {
     })
 
     expect(result.schema.describe()).toEqual(expectedSchema.describe())
-    expect(result[IS_OPTIONS_JOI_SCHEMA_INSTANCE]).toBe(true)
+    expect(result[IS_CREATE_TEXT_OPTS_SCHEMA_INSTANCE]).toBe(true)
   })
-  describe('optionsJoiSchema.validate()', () => {
-    let optionsJoiSchema
+  describe('createTextOptsSchema.validate()', () => {
+    let createTextOptsSchema
     beforeEach(() => {
-      optionsJoiSchema = new OptionsJoiSchema()
+      createTextOptsSchema = new CreateTextOptsSchema()
     })
     it('when you pass a number, it should return an error from Joi', () => {
       const obj = 3
 
-      const result = optionsJoiSchema.validate(obj)
+      const result = createTextOptsSchema.validate(obj)
 
       expect(Joi.isError(result)).toBe(true)
     })
@@ -37,7 +37,7 @@ describe('OptionsJoiSchema', () => {
         tagName: 3,
       }
 
-      const result = optionsJoiSchema.validate(obj)
+      const result = createTextOptsSchema.validate(obj)
 
       expect(Joi.isError(result)).toBe(true)
     })
@@ -53,7 +53,7 @@ describe('OptionsJoiSchema', () => {
         },
       }
 
-      const result = optionsJoiSchema.validate(options)
+      const result = createTextOptsSchema.validate(options)
 
       expect(result).toBeNull()
     })

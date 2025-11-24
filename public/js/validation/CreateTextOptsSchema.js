@@ -1,7 +1,9 @@
 import Joi from 'joi'
 import SchemaAdapterBase from '../abstracts/validation/SchemaAdataperBase.js'
-const IS_OPTIONS_JOI_SCHEMA_INSTANCE = Symbol('OptionsJoiSchema/is-instance')
-class OptionsJoiSchema extends SchemaAdapterBase {
+const IS_CREATE_TEXT_OPTS_SCHEMA_INSTANCE = Symbol(
+  'CreateTextOptsSchema/is-instance'
+)
+class CreateTextOptsSchema extends SchemaAdapterBase {
   constructor() {
     super()
 
@@ -12,7 +14,7 @@ class OptionsJoiSchema extends SchemaAdapterBase {
       style: Joi.object().pattern(Joi.string(), Joi.string()),
     })
 
-    this[IS_OPTIONS_JOI_SCHEMA_INSTANCE] = true
+    this[IS_CREATE_TEXT_OPTS_SCHEMA_INSTANCE] = true
   }
 
   validate(options) {
@@ -26,5 +28,5 @@ class OptionsJoiSchema extends SchemaAdapterBase {
   }
 }
 
-export default OptionsJoiSchema
-export { IS_OPTIONS_JOI_SCHEMA_INSTANCE }
+export default CreateTextOptsSchema
+export { IS_CREATE_TEXT_OPTS_SCHEMA_INSTANCE }
