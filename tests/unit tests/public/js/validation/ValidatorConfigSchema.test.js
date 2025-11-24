@@ -8,7 +8,7 @@ import { IS_SCHEMA_ADAPTER_BASE_INSTANCE } from '../../../../../public/js/abstra
 import SchemaAdapterBase from '../../../../../public/js/abstracts/validation/SchemaAdataperBase.js'
 
 describe('ValidatorConfigSchema', () => {
-  it('when when you pass CreateTextOptsSchema instance to constructor, new instance should store correct validator config joi schema and property to check instance of SchemaAdapterBase and one that checks instance of itself', () => {
+  it('when when you pass valid CreateTextOptsSchema instance to constructor, new instance should store correct properties and their values', () => {
     const createTextOptsSchema = new CreateTextOptsSchema()
 
     const result = new ValidatorConfigSchema(createTextOptsSchema)
@@ -23,6 +23,7 @@ describe('ValidatorConfigSchema', () => {
     expect(result.schema.describe()).toEqual(expectedSchema.describe())
     expect(result[IS_SCHEMA_ADAPTER_BASE_INSTANCE]).toBe(true)
     expect(result[IS_VALIDATOR_CONFIG_SCHEMA_INSTANCE]).toBe(true)
+    expect(result.name).toBe('config')
   })
 
   it('when you pass a non instance of CreateTextOptsSchema, it should throw an error', () => {
