@@ -17,7 +17,7 @@ class ObjArgValidator {
     }
 
     if (!Array.isArray(schemaAdapters)) {
-      this[schemaAdapters.name] = schemaAdapters
+      this.schema = schemaAdapters
     } else {
       this.schemas = schemaAdapters
     }

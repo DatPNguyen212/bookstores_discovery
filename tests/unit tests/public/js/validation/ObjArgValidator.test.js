@@ -63,13 +63,13 @@ describe('ObjArgValidator', () => {
     )
   })
 
-  it("when you pass a single valid instance of SingleAdapterBase to constructor, new instance should store that schemaAdapter in property whose name is that schemaAdapter.name's value", () => {
+  it('when you pass a single valid instance of SingleAdapterBase to constructor, new instance should store that schemaAdapter correctly', () => {
     const result = new ObjArgValidator(schemaAdapterMock)
 
-    expect(result[schemaAdapterMock.name]).toEqual(schemaAdapterMock)
+    expect(result.schema).toEqual(schemaAdapterMock)
   })
 
-  it("when you pass an array of instances of SchemaAdaptersBase, new instance should store those SchemaAdapterBase instances in properties whose name is each of those SchemaAdapterBase's instance name property value", () => {
+  it('when you pass an array of instances of SchemaAdaptersBase, objArgValidator.schemas needs to store that array', () => {
     const schemaAdapter1 = new SchemaAdapterMock()
     const schemaAdapter2 = new SchemaAdapterMock()
 
