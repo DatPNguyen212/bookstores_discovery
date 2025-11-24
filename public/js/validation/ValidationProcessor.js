@@ -8,25 +8,19 @@ import ValidationProcessorBase from '../abstracts/validation/ValidationProcessor
 class ValidationProcessor extends ValidationProcessorBase {
   constructor(singleValidator, groupValidator, inputErrorsFactory) {
     super()
-    if (
-      !singleValidator ||
-      !singleValidator[IS_SINGLE_VALIDATOR_BASE_INSTANCE]
-    ) {
+    if (!singleValidator?.[IS_SINGLE_VALIDATOR_BASE_INSTANCE]) {
       throw new TypeError(
         'You need to pass instance of SingleValidatorBase to first parameter'
       )
     }
 
-    if (!groupValidator || !groupValidator[IS_GROUP_VALIDATOR_BASE_INSTANCE]) {
+    if (!groupValidator?.[IS_GROUP_VALIDATOR_BASE_INSTANCE]) {
       throw new TypeError(
         'You need to pass instance of GroupValidatorBase in 2nd parameter'
       )
     }
 
-    if (
-      !inputErrorsFactory ||
-      !inputErrorsFactory[IS_INPUT_ERRORS_FACTORY_BASE_INSTANCE]
-    ) {
+    if (!inputErrorsFactory?.[IS_INPUT_ERRORS_FACTORY_BASE_INSTANCE]) {
       throw new TypeError(
         'You need to pass instance of InputErrorsFactoryBase in 3rd parameter'
       )

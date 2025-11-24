@@ -10,10 +10,7 @@ class ValidatorConfigSchema extends SchemaAdapterBase {
   constructor(createTextOptsSchema) {
     super()
 
-    if (
-      !createTextOptsSchema ||
-      !createTextOptsSchema[IS_CREATE_TEXT_OPTS_SCHEMA_INSTANCE]
-    ) {
+    if (!createTextOptsSchema?.[IS_CREATE_TEXT_OPTS_SCHEMA_INSTANCE]) {
       throw new TypeError(
         'You need to pass instance of SchemaAdapterBase to 1st parameter'
       )

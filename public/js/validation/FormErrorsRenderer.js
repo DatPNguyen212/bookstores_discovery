@@ -7,10 +7,7 @@ import { IS_SCHEMA_ADAPTER_BASE_INSTANCE } from '../abstracts/validation/SchemaA
 class FormErrorsRenderer extends ErrorsRendererBase {
   constructor(elementRenderer) {
     super()
-    if (
-      !elementRenderer ||
-      !elementRenderer[IS_ELEMENT_RENDERER_BASE_INSTANCE]
-    ) {
+    if (!elementRenderer?.[IS_ELEMENT_RENDERER_BASE_INSTANCE]) {
       throw new TypeError(
         'You need to pass an isntance of ElementRendererBase to constructor'
       )

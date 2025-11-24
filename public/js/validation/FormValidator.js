@@ -7,28 +7,25 @@ import ValidatorConfigSchema, {
 
 class FormValidator {
   constructor(schemaParser, validationProcessor, errorsRenderer, configSchema) {
-    if (!schemaParser || !schemaParser[IS_SCHEMA_PARSER_BASE_INSTANCE]) {
+    if (!schemaParser?.[IS_SCHEMA_PARSER_BASE_INSTANCE]) {
       throw new TypeError(
         'You need to pass instance of SchemaParserBase to 1st param'
       )
     }
 
-    if (
-      !validationProcessor ||
-      !validationProcessor[IS_VALIDATION_PROCESSOR_BASE_INSTANCE]
-    ) {
+    if (!validationProcessor?.[IS_VALIDATION_PROCESSOR_BASE_INSTANCE]) {
       throw new TypeError(
         'You need to pass instance of ValidationProcessorBase to 2nd parameter'
       )
     }
 
-    if (!errorsRenderer || !errorsRenderer[IS_ERRORS_RENDERER_BASE_INSTANCE]) {
+    if (!errorsRenderer?.[IS_ERRORS_RENDERER_BASE_INSTANCE]) {
       throw new TypeError(
         'You need to pass instance of ErrorsRendererBase to 3rd parameter'
       )
     }
 
-    if (!configSchema || !configSchema[IS_VALIDATOR_CONFIG_SCHEMA_INSTANCE]) {
+    if (!configSchema?.[IS_VALIDATOR_CONFIG_SCHEMA_INSTANCE]) {
       throw new TypeError(
         'You need to pass an instance of ValidatorConfigSchema to 4th parameter'
       )
