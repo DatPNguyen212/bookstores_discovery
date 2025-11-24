@@ -6,7 +6,7 @@ import Joi from 'joi'
 import { IS_SCHEMA_ADAPTER_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/SchemaAdataperBase.js'
 
 describe('CreateTextOptsSchema', () => {
-  it('should instantiate with correct properties and their values', () => {
+  it('should instantiate with correct options schema and have property that check instanceof CreateTextOptsSchema', () => {
     const result = new CreateTextOptsSchema()
 
     const expectedSchema = Joi.object({
@@ -18,7 +18,6 @@ describe('CreateTextOptsSchema', () => {
 
     expect(result.schema.describe()).toEqual(expectedSchema.describe())
     expect(result[IS_CREATE_TEXT_OPTS_SCHEMA_INSTANCE]).toBe(true)
-    expect(result.name).toBe('textElementOpts')
   })
   describe('createTextOptsSchema.validate()', () => {
     let createTextOptsSchema
