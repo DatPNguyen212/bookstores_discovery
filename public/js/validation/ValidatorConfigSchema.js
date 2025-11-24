@@ -24,7 +24,6 @@ class ValidatorConfigSchema extends SchemaAdapterBase {
     })
 
     this[IS_VALIDATOR_CONFIG_SCHEMA_INSTANCE] = true
-    this.name = 'config'
   }
 
   validate(obj) {
