@@ -15,6 +15,7 @@ class CreateTextOptsSchema extends SchemaAdapterBase {
     })
 
     this[IS_CREATE_TEXT_OPTS_SCHEMA_INSTANCE] = true
+    this.name = 'textElementOpts'
   }
 
   validate(options) {
