@@ -21,6 +21,8 @@ describe('FormValidator', () => {
   let validationProcessorMock
   let ErrorsRendererMock
   let errorsRendererMock
+  let ValidatorConfigSchemaMock
+  let validatorConfigSchemaMock
   let formValidator
 
   beforeEach(() => {
@@ -40,10 +42,17 @@ describe('FormValidator', () => {
     })
     errorsRendererMock = new ErrorsRendererMock()
 
+    ValidatorConfigSchemaMock = vi.fn(function () {
+      this[IS_VALIDATOR_CONFIG_SCHEMA_INSTANCE] = true
+    })
+
+    validatorConfigSchemaMock = new ValidatorConfigSchemaMock()
+
     formValidator = new FormValidator(
       schemaParserMock,
       validationProcessorMock,
-      errorsRendererMock
+      errorsRendererMock,
+      validatorConfigSchemaMock
     )
   })
   it('when you pass a non instance of SchemaPasrerBase to 1st param, it should throw an error', () => {
@@ -53,7 +62,8 @@ describe('FormValidator', () => {
       new FormValidator(
         schemaParser,
         validationProcessorMock,
-        errorsRendererMock
+        errorsRendererMock,
+        validatorConfigSchemaMock
       )
     }
 
@@ -69,7 +79,8 @@ describe('FormValidator', () => {
       new FormValidator(
         schemaParserMock,
         validationProcessor,
-        errorsRendererMock
+        errorsRendererMock,
+        validatorConfigSchemaMock
       )
     }
 
@@ -85,7 +96,8 @@ describe('FormValidator', () => {
       new FormValidator(
         schemaParserMock,
         validationProcessorMock,
-        errorsRenderer
+        errorsRenderer,
+        validatorConfigSchemaMock
       )
     }
 
@@ -94,11 +106,29 @@ describe('FormValidator', () => {
     )
   })
 
+  it('when you pass a non instance of ValidatorConfigSchema, it should throw an error', () => {
+    const validatorConfigSchema = 3
+
+    const fn = () => {
+      new FormValidator(
+        schemaParserMock,
+        validationProcessorMock,
+        errorsRendererMock,
+        validatorConfigSchema
+      )
+    }
+
+    expect(fn).toThrow(
+      'You need to pass an instance of ValidatorConfigSchema to 4th parameter'
+    )
+  })
+
   it('when you pass valid dependencies to constructor, the instance should correctly store those dependencies in its properties', () => {
     const result = new FormValidator(
       schemaParserMock,
       validationProcessorMock,
-      errorsRendererMock
+      errorsRendererMock,
+      validatorConfigSchemaMock
     )
 
     expect(result.schemaParser).toEqual(schemaParserMock)
