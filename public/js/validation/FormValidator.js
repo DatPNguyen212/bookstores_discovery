@@ -6,7 +6,7 @@ import ValidatorConfigSchema, {
 } from './ValidatorConfigSchema.js'
 
 class FormValidator {
-  constructor(schemaParser, validationProcessor, errorsRenderer, configSchema) {
+  constructor(schemaParser, validationProcessor, errorsRenderer) {
     if (!schemaParser?.[IS_SCHEMA_PARSER_BASE_INSTANCE]) {
       throw new TypeError(
         'You need to pass instance of SchemaParserBase to 1st param'
@@ -22,12 +22,6 @@ class FormValidator {
     if (!errorsRenderer?.[IS_ERRORS_RENDERER_BASE_INSTANCE]) {
       throw new TypeError(
         'You need to pass instance of ErrorsRendererBase to 3rd parameter'
-      )
-    }
-
-    if (!configSchema?.[IS_VALIDATOR_CONFIG_SCHEMA_INSTANCE]) {
-      throw new TypeError(
-        'You need to pass an instance of ValidatorConfigSchema to 4th parameter'
       )
     }
 

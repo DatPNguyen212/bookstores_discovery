@@ -106,23 +106,6 @@ describe('FormValidator', () => {
     )
   })
 
-  it('when you pass a non instance of ValidatorConfigSchema, it should throw an error', () => {
-    const validatorConfigSchema = 3
-
-    const fn = () => {
-      new FormValidator(
-        schemaParserMock,
-        validationProcessorMock,
-        errorsRendererMock,
-        validatorConfigSchema
-      )
-    }
-
-    expect(fn).toThrow(
-      'You need to pass an instance of ValidatorConfigSchema to 4th parameter'
-    )
-  })
-
   it('when you pass valid dependencies to constructor, the instance should correctly store those dependencies in its properties', () => {
     const result = new FormValidator(
       schemaParserMock,
