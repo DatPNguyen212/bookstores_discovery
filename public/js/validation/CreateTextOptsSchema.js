@@ -7,6 +7,12 @@ class CreateTextOptsSchema extends SchemaAdapterBase {
   constructor(paramName) {
     super()
 
+    if (typeof paramName !== 'string') {
+      throw new TypeError(
+        'You need to pass string data type to first parameter'
+      )
+    }
+
     this.paramName = paramName
     this.schema = Joi.object({
       tagName: Joi.string(),

@@ -6,6 +6,16 @@ import Joi from 'joi'
 import { IS_SCHEMA_ADAPTER_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/SchemaAdataperBase.js'
 
 describe('CreateTextOptsSchema', () => {
+  it('when you pass a non string value, it should throw an error', () => {
+    const paramName = 3
+
+    const fn = () => {
+      new CreateTextOptsSchema(paramName)
+    }
+
+    expect(fn).toThrow('You need to pass string data type to first parameter')
+  })
+
   it('when you pass a string, new instance should have paramName property with that string value, schema property with correct JOI schema and a property that checks instance of this constructor', () => {
     const paramName = 'options'
 
@@ -23,9 +33,11 @@ describe('CreateTextOptsSchema', () => {
     expect(result[IS_CREATE_TEXT_OPTS_SCHEMA_INSTANCE]).toBe(true)
   })
   describe('createTextOptsSchema.validate()', () => {
+    let paramName
     let createTextOptsSchema
     beforeEach(() => {
-      createTextOptsSchema = new CreateTextOptsSchema()
+      paramName = 'options'
+      createTextOptsSchema = new CreateTextOptsSchema(paramName)
     })
     it('when you pass a number, it should return an error from Joi', () => {
       const obj = 3
