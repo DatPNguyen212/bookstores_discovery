@@ -4,9 +4,10 @@ const IS_CREATE_TEXT_OPTS_SCHEMA_INSTANCE = Symbol(
   'CreateTextOptsSchema/is-instance'
 )
 class CreateTextOptsSchema extends SchemaAdapterBase {
-  constructor() {
+  constructor(paramName) {
     super()
 
+    this.paramName = paramName
     this.schema = Joi.object({
       tagName: Joi.string(),
       class: Joi.string(),
