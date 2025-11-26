@@ -8,10 +8,17 @@ import { IS_SCHEMA_ADAPTER_BASE_INSTANCE } from '../../../../../public/js/abstra
 import SchemaAdapterBase from '../../../../../public/js/abstracts/validation/SchemaAdataperBase.js'
 
 describe('ValidatorConfigSchema', () => {
-  it('when when you pass CreateTextOptsSchema instance to constructor, new instance should store correct validator config joi schema and property to check instance of SchemaAdapterBase and one that checks instance of itself', () => {
-    const createTextOptsSchema = new CreateTextOptsSchema()
+  it('when when you pass valid paramName and CreateTextOptsSchema instance to constructor, new instance should store that paramName, correct validator config joi schema and property to check instance of SchemaAdapterBase and one that checks instance of itself', () => {
+    const createTextOptsParamName = 'options'
+    const createTextOptsSchema = new CreateTextOptsSchema(
+      createTextOptsParamName
+    )
+    const validatorConfigParamName = 'config'
 
-    const result = new ValidatorConfigSchema(createTextOptsSchema)
+    const result = new ValidatorConfigSchema(
+      validatorConfigParamName,
+      createTextOptsSchema
+    )
 
     const expectedSchema = Joi.object({
       asyncUrl: Joi.object({
@@ -20,23 +27,25 @@ describe('ValidatorConfigSchema', () => {
       errors: createTextOptsSchema.schema,
     })
 
+    expect(result.paramName).toBe(validatorConfigParamName)
     expect(result.schema.describe()).toEqual(expectedSchema.describe())
     expect(result[IS_SCHEMA_ADAPTER_BASE_INSTANCE]).toBe(true)
     expect(result[IS_VALIDATOR_CONFIG_SCHEMA_INSTANCE]).toBe(true)
   })
 
-  it('when you pass a non instance of CreateTextOptsSchema, it should throw an error', () => {
+  it('when you pass a non instance of CreateTextOptsSchema to 2nd param, it should throw an error', () => {
+    const paramName = 'config'
     const createTextOptsSchema = { test: '123' }
 
     const fn = () => {
-      new ValidatorConfigSchema(createTextOptsSchema)
+      new ValidatorConfigSchema(paramName, createTextOptsSchema)
     }
     expect(fn).toThrow(
       'You need to pass instance of SchemaAdapterBase to 1st parameter'
     )
   })
 
-  it('when you pass instance of a mock subclass of SchemaAdapterBase, it should throw an error', () => {
+  it('when you pass instance of a mock subclass of SchemaAdapterBase to 2nd param, it should throw an error', () => {
     class SubclassMock extends SchemaAdapterBase {
       constructor() {
         super()
@@ -44,31 +53,47 @@ describe('ValidatorConfigSchema', () => {
     }
 
     const createTextOptsSchema = new SubclassMock()
+    const paramName = 'config'
 
     const fn = () => {
-      new ValidatorConfigSchema(createTextOptsSchema)
+      new ValidatorConfigSchema(paramName, createTextOptsSchema)
     }
     expect(fn).toThrow(
       'You need to pass instance of SchemaAdapterBase to 1st parameter'
     )
   })
 
-  it("when you don't pass any value to 1st param, it should throw an error", () => {
-    const fn = () => {
-      new ValidatorConfigSchema()
-    }
-    expect(fn).toThrow(
-      'You need to pass instance of SchemaAdapterBase to 1st parameter'
+  it('when you pass a non string value to 1st param, it should throw an error', () => {
+    const paramName = 3
+
+    const createTextOptsParamName = 'options'
+    const createTextOptsSchema = new CreateTextOptsSchema(
+      createTextOptsParamName
     )
+
+    const fn = () => {
+      new ValidatorConfigSchema(paramName, createTextOptsSchema)
+    }
+
+    expect(fn).toThrow('You need to pass string data type to first parameter')
   })
 
   describe('validatorConfigSchema.validate()', () => {
     let validatorConfigSchema
     let createTextOptsSchema
+    let createTextOptsParamName
+    let validatorConfigParamName
     beforeEach(() => {
-      createTextOptsSchema = new CreateTextOptsSchema()
+      createTextOptsParamName = 'options'
 
-      validatorConfigSchema = new ValidatorConfigSchema(createTextOptsSchema)
+      createTextOptsSchema = new CreateTextOptsSchema(createTextOptsParamName)
+
+      validatorConfigParamName = 'config'
+
+      validatorConfigSchema = new ValidatorConfigSchema(
+        validatorConfigParamName,
+        createTextOptsSchema
+      )
     })
 
     afterEach(() => {

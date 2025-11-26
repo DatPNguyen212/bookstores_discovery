@@ -7,8 +7,14 @@ const IS_VALIDATOR_CONFIG_SCHEMA_INSTANCE = Symbol(
 )
 
 class ValidatorConfigSchema extends SchemaAdapterBase {
-  constructor(createTextOptsSchema) {
+  constructor(paramName, createTextOptsSchema) {
     super()
+
+    if (typeof paramName !== 'string') {
+      throw new TypeError(
+        'You need to pass string data type to first parameter'
+      )
+    }
 
     if (!createTextOptsSchema?.[IS_CREATE_TEXT_OPTS_SCHEMA_INSTANCE]) {
       throw new TypeError(
@@ -16,6 +22,7 @@ class ValidatorConfigSchema extends SchemaAdapterBase {
       )
     }
 
+    this.paramName = paramName
     this.schema = Joi.object({
       asyncUrl: Joi.object({
         isEmailUnique: Joi.string(),
