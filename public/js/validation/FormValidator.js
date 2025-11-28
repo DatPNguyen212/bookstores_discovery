@@ -2,6 +2,7 @@ import { IS_ERRORS_RENDERER_BASE_INSTANCE } from '../abstracts/validation/Errors
 import { IS_OBJ_ARG_VALIDATOR_BASE_INSTANCE } from '../abstracts/validation/ObjArgValidatorBase.js'
 import { IS_SCHEMA_PARSER_BASE_INSTANCE } from '../abstracts/validation/SchemaParserBase.js'
 import { IS_VALIDATION_PROCESSOR_BASE_INSTANCE } from '../abstracts/validation/ValidationProcessorBase.js'
+import { IS_VALIDATION_SCHEMA_INSTANCE } from './ValidationSchema.js'
 import ValidatorConfigSchema, {
   IS_VALIDATOR_CONFIG_SCHEMA_INSTANCE,
 } from './ValidatorConfigSchema.js'
@@ -43,9 +44,15 @@ class FormValidator {
     this.objArgValidator = objArgValidator
   }
 
-  validate(form) {
+  validate(form, schema) {
     if (!(form instanceof HTMLFormElement)) {
       throw new TypeError('You need to pass form element to first parameter')
+    }
+
+    if (!schema?.[IS_VALIDATION_SCHEMA_INSTANCE]) {
+      throw new TypeError(
+        'You need to pass instance of ValidationSchema to 2nd parameter'
+      )
     }
   }
 }

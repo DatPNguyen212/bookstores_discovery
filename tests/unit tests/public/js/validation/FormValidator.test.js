@@ -9,6 +9,7 @@ import { Window } from 'happy-dom'
 import { IS_SCHEMA_ADAPTER_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/SchemaAdataperBase.js'
 import { IS_VALIDATOR_CONFIG_SCHEMA_INSTANCE } from '../../../../../public/js/validation/ValidatorConfigSchema.js'
 import { IS_OBJ_ARG_VALIDATOR_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/ObjArgValidatorBase.js'
+import { IS_VALIDATION_SCHEMA_INSTANCE } from '../../../../../public/js/validation/ValidationSchema.js'
 const window = new Window()
 const document = window.document
 
@@ -55,6 +56,10 @@ describe('FormValidator', () => {
       errorsRendererMock,
       objArgValidatorMock
     )
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
   })
   it('when you pass a non instance of SchemaPasrerBase to 1st param, it should throw an error', () => {
     const schemaParser = 3
@@ -139,14 +144,53 @@ describe('FormValidator', () => {
   })
 
   describe('formValidator.validate()', () => {
+    let formMock
+    let ValidationSchemaMock
+    let schemaMock
+    let configMock
+    beforeEach(() => {
+      formMock = document.createElement('form')
+      ValidationSchemaMock = vi.fn(function () {
+        this[IS_VALIDATION_SCHEMA_INSTANCE] = true
+      })
+
+      schemaMock = new ValidationSchemaMock()
+
+      configMock = {
+        async: {
+          isEmailUnique: 'url',
+        },
+        errprs: {
+          tagName: 'test',
+          class: 'testClass',
+          id: 'testId',
+          style: {
+            color: 'black',
+            fontSize: '16px',
+          },
+        },
+      }
+    })
     it("when you don't pass form element to 1st param, it should throw an error", () => {
       const form = 3
 
       const fn = () => {
-        formValidator.validate(form)
+        formValidator.validate(form, schemaMock)
       }
 
       expect(fn).toThrow('You need to pass form element to first parameter')
+    })
+
+    it('when you pass a non instance of ValidationSchema to 2nd param, it should throw an error', () => {
+      const schema = {}
+
+      const fn = () => {
+        formValidator.validate(formMock, schema)
+      }
+
+      expect(fn).toThrow(
+        'You need to pass instance of ValidationSchema to 2nd parameter'
+      )
     })
   })
 })
