@@ -8,6 +8,7 @@ import SchemaAdapterBase, {
   IS_SCHEMA_ADAPTER_BASE_INSTANCE,
 } from '../../../../../public/js/abstracts/validation/SchemaAdataperBase.js'
 import Joi from 'joi'
+import { IS_OBJ_ARG_VALIDATOR_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/ObjArgValidatorBase.js'
 
 describe('ObjArgValidator', () => {
   class SchemaAdapterMock extends SchemaAdapterBase {
@@ -66,7 +67,7 @@ describe('ObjArgValidator', () => {
     )
   })
 
-  it('given a SchemaAdapterMock extends from SchemaAdapterBase, when you pass its instance to constructor, new instance should store it in property whose key is that schemaAdapterMock.paramName and value is schemaAdapterMock.schema, and it should have property that checks instance of constructor', () => {
+  it('given a SchemaAdapterMock extends from SchemaAdapterBase, when you pass its instance to constructor, new instance should store it in property whose key is that schemaAdapterMock.paramName and value is schemaAdapterMock.schema, and it should have property that checks instance of this constructor and property that checks instance of ObjArgValidatorBase', () => {
     const paramName = 'options'
     const schemaMock = Joi.object({
       tagName: Joi.string(),
@@ -87,6 +88,8 @@ describe('ObjArgValidator', () => {
       schemaAdapterMock.schema
     )
     expect(result[IS_OBJ_ARG_VALIDATOR_INSTANCE]).toBe(true)
+
+    expect(result[IS_OBJ_ARG_VALIDATOR_BASE_INSTANCE]).toBe(true)
   })
 
   it('given 2 different mock classes with different paramName instance property values extended from SchemaAdapterBase, when you pass an array of instances of those 2 mock classes, the new instance should contain 2 properties whose keys are the .propertyName value of the respective mock class, and value is the the respective mock class schema property value, and it should have property that checks instance of constructor', () => {

@@ -1,8 +1,10 @@
+import ObjArgValidatorBase from '../abstracts/validation/ObjArgValidatorBase.js'
 import { IS_SCHEMA_ADAPTER_BASE_INSTANCE } from '../abstracts/validation/SchemaAdataperBase.js'
 const IS_OBJ_ARG_VALIDATOR_INSTANCE = Symbol('ObjArgValidator/is-instance')
 
-class ObjArgValidator {
+class ObjArgValidator extends ObjArgValidatorBase {
   constructor(schemaAdapters) {
+    super()
     if (!Array.isArray(schemaAdapters)) {
       if (!schemaAdapters?.[IS_SCHEMA_ADAPTER_BASE_INSTANCE]) {
         throw new TypeError('You need to pass intsance of SchemaAdapterBase')
