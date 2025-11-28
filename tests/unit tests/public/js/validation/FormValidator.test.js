@@ -8,6 +8,7 @@ import ValidatorConfigSchema from '../../../../../public/js/validation/Validator
 import { Window } from 'happy-dom'
 import { IS_SCHEMA_ADAPTER_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/SchemaAdataperBase.js'
 import { IS_VALIDATOR_CONFIG_SCHEMA_INSTANCE } from '../../../../../public/js/validation/ValidatorConfigSchema.js'
+import { IS_OBJ_ARG_VALIDATOR_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/ObjArgValidatorBase.js'
 const window = new Window()
 const document = window.document
 
@@ -21,8 +22,8 @@ describe('FormValidator', () => {
   let validationProcessorMock
   let ErrorsRendererMock
   let errorsRendererMock
-  let ValidatorConfigSchemaMock
-  let validatorConfigSchemaMock
+  let ObjArgValidatorMock
+  let objArgValidatorMock
   let formValidator
 
   beforeEach(() => {
@@ -42,17 +43,17 @@ describe('FormValidator', () => {
     })
     errorsRendererMock = new ErrorsRendererMock()
 
-    ValidatorConfigSchemaMock = vi.fn(function () {
-      this[IS_VALIDATOR_CONFIG_SCHEMA_INSTANCE] = true
+    ObjArgValidatorMock = vi.fn(function () {
+      this[IS_OBJ_ARG_VALIDATOR_BASE_INSTANCE] = true
     })
 
-    validatorConfigSchemaMock = new ValidatorConfigSchemaMock()
+    objArgValidatorMock = new ObjArgValidatorMock()
 
     formValidator = new FormValidator(
       schemaParserMock,
       validationProcessorMock,
       errorsRendererMock,
-      validatorConfigSchemaMock
+      objArgValidatorMock
     )
   })
   it('when you pass a non instance of SchemaPasrerBase to 1st param, it should throw an error', () => {
@@ -63,7 +64,7 @@ describe('FormValidator', () => {
         schemaParser,
         validationProcessorMock,
         errorsRendererMock,
-        validatorConfigSchemaMock
+        objArgValidatorMock
       )
     }
 
@@ -80,7 +81,7 @@ describe('FormValidator', () => {
         schemaParserMock,
         validationProcessor,
         errorsRendererMock,
-        validatorConfigSchemaMock
+        objArgValidatorMock
       )
     }
 
@@ -97,7 +98,7 @@ describe('FormValidator', () => {
         schemaParserMock,
         validationProcessorMock,
         errorsRenderer,
-        validatorConfigSchemaMock
+        objArgValidatorMock
       )
     }
 
@@ -106,17 +107,35 @@ describe('FormValidator', () => {
     )
   })
 
+  it('when you pass a non instance of ObjArgValidatorBase in 4th param, it should throw an error', () => {
+    const objArgValidator = 3
+
+    const fn = () => {
+      new FormValidator(
+        schemaParserMock,
+        validationProcessorMock,
+        errorsRendererMock,
+        objArgValidator
+      )
+    }
+
+    expect(fn).toThrow(
+      'You need to pass an instance of ObjArgValidatorBase to 4th parameter'
+    )
+  })
+
   it('when you pass valid dependencies to constructor, the instance should correctly store those dependencies in its properties', () => {
     const result = new FormValidator(
       schemaParserMock,
       validationProcessorMock,
       errorsRendererMock,
-      validatorConfigSchemaMock
+      objArgValidatorMock
     )
 
     expect(result.schemaParser).toEqual(schemaParserMock)
     expect(result.validationProcessor).toEqual(validationProcessorMock)
     expect(result.errorsRenderer).toEqual(errorsRendererMock)
+    expect(result.objArgValidator).toEqual(objArgValidatorMock)
   })
 
   describe('formValidator.validate()', () => {
