@@ -1,9 +1,17 @@
 import ElementRendererBase from '../abstracts/validation/ElementRendererBase.js'
 import objectUtils from '../utils/objectUtils.js'
 import { IS_SCHEMA_ADAPTER_BASE_INSTANCE } from '../abstracts/validation/SchemaAdataperBase.js'
+import { IS_OBJ_ARG_VALIDATOR_BASE_INSTANCE } from '../abstracts/validation/ObjArgValidatorBase.js'
 class ElementRenderer extends ElementRendererBase {
-  constructor() {
+  constructor(objArgValidator) {
     super()
+    if (!objArgValidator?.[IS_OBJ_ARG_VALIDATOR_BASE_INSTANCE]) {
+      throw new TypeError(
+        'You need to pass instance of ObjArgValidatorBase to constructor'
+      )
+    }
+
+    this.objArgValidator = objArgValidator
   }
 
   createTextElement(text, options = {}) {

@@ -8,6 +8,8 @@ import Joi from 'joi'
 import SchemaAdapterBase, {
   IS_SCHEMA_ADAPTER_BASE_INSTANCE,
 } from '../../../../../public/js/abstracts/validation/SchemaAdataperBase.js'
+import ObjArgValidator from '../../../../../public/js/validation/objArgValidator.js'
+import ObjArgValidatorBase from '../../../../../public/js/abstracts/validation/ObjArgValidatorBase.js'
 
 const window = new Window()
 const document = window.document
@@ -15,19 +17,42 @@ const document = window.document
 vi.stubGlobal('document', document)
 
 describe('ElementRenderer', () => {
+  class ObjArgValidatorMock extends ObjArgValidatorBase {
+    constructor() {
+      super()
+    }
+  }
+
+  let objArgValidatorMock
   let elementRenderer
+
   beforeEach(() => {
     document.body.innerHTML = ''
-    elementRenderer = new ElementRenderer()
+
+    objArgValidatorMock = new ObjArgValidatorMock()
+
+    elementRenderer = new ElementRenderer(objArgValidatorMock)
+  })
+
+  it('when you pass a non instance of ObjArgValidatorBase to constructor, it should throw an error', () => {
+    const objArgValidator = 3
+
+    const fn = () => {
+      const elementRenderer = new ElementRenderer(objArgValidator)
+    }
+
+    expect(fn).toThrow(
+      'You need to pass instance of ObjArgValidatorBase to constructor'
+    )
+  })
+
+  it('when you pass valid objArgValidator to constructor, new instance should correctly store it in property', () => {
+    const result = new ElementRenderer(objArgValidatorMock)
+
+    expect(result.objArgValidator).toEqual(objArgValidatorMock)
   })
 
   describe('elementRenderer.createTextElement()', () => {
-    let elementRenderer
-
-    beforeEach(() => {
-      elementRenderer = new ElementRenderer()
-    })
-
     it('when you pass valid text and options, it should return an element with correct text and attributes values', () => {
       const text = 'test'
       const options = {
