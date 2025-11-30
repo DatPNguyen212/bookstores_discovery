@@ -9,7 +9,9 @@ import { Window } from 'happy-dom'
 import { IS_SCHEMA_ADAPTER_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/SchemaAdataperBase.js'
 import { IS_VALIDATOR_CONFIG_SCHEMA_INSTANCE } from '../../../../../public/js/validation/ValidatorConfigSchema.js'
 import { IS_OBJ_ARG_VALIDATOR_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/ObjArgValidatorBase.js'
-import { IS_VALIDATION_SCHEMA_INSTANCE } from '../../../../../public/js/validation/ValidationSchema.js'
+import ValidationSchema, {
+  IS_VALIDATION_SCHEMA_INSTANCE,
+} from '../../../../../public/js/validation/ValidationSchema.js'
 const window = new Window()
 const document = window.document
 
@@ -46,10 +48,10 @@ describe('FormValidator', () => {
 
     ObjArgValidatorMock = vi.fn(function () {
       this[IS_OBJ_ARG_VALIDATOR_BASE_INSTANCE] = true
-      config: {
+      this.config = {
         validate: vi.fn(function () {
           return null
-        })
+        }),
       }
     })
 
@@ -196,6 +198,24 @@ describe('FormValidator', () => {
       expect(fn).toThrow(
         'You need to pass instance of ValidationSchema to 2nd parameter'
       )
+    })
+
+    it('given objArgValidator.config.validate is mocked, it should call that method with config argument', () => {
+      const form = document.createElement('form')
+      const schema = new ValidationSchema({
+        title: {
+          required: true,
+        },
+      })
+      const config = {
+        errors: {
+          tagName: 'div',
+        },
+      }
+
+      const result = formValidator.validate(form, schema, config)
+
+      expect(objArgValidatorMock.config.validate).toBeCalledWith(config)
     })
 
     it('given objArgValidatorMock.config.validate returns an error, it should throw that error', () => {
