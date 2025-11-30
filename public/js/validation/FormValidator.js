@@ -44,7 +44,7 @@ class FormValidator {
     this.objArgValidator = objArgValidator
   }
 
-  validate(form, schema) {
+  validate(form, schema, config) {
     if (!(form instanceof HTMLFormElement)) {
       throw new TypeError('You need to pass form element to first parameter')
     }
@@ -53,6 +53,12 @@ class FormValidator {
       throw new TypeError(
         'You need to pass instance of ValidationSchema to 2nd parameter'
       )
+    }
+
+    const error = this.objArgValidator.config.validate(config)
+
+    if (error) {
+      throw error
     }
   }
 }

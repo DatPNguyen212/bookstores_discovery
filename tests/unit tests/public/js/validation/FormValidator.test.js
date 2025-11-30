@@ -46,6 +46,11 @@ describe('FormValidator', () => {
 
     ObjArgValidatorMock = vi.fn(function () {
       this[IS_OBJ_ARG_VALIDATOR_BASE_INSTANCE] = true
+      config: {
+        validate: vi.fn(function () {
+          return null
+        })
+      }
     })
 
     objArgValidatorMock = new ObjArgValidatorMock()
@@ -191,6 +196,28 @@ describe('FormValidator', () => {
       expect(fn).toThrow(
         'You need to pass instance of ValidationSchema to 2nd parameter'
       )
+    })
+
+    it('given objArgValidatorMock.config.validate returns an error, it should throw that error', () => {
+      const errorMock = new Error('test')
+      objArgValidatorMock.config = {
+        validate: vi.fn(function () {
+          return errorMock
+        }),
+      }
+
+      const formValidator = new FormValidator(
+        schemaParserMock,
+        validationProcessorMock,
+        errorsRendererMock,
+        objArgValidatorMock
+      )
+
+      const fn = () => {
+        formValidator.validate(formMock, schemaMock, configMock)
+      }
+
+      expect(fn).toThrowError(errorMock)
     })
   })
 })
