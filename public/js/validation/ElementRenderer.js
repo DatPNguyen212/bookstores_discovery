@@ -19,6 +19,12 @@ class ElementRenderer extends ElementRendererBase {
       throw new TypeError('First parameter needs to be of string data type')
     }
 
+    const error = this.objArgValidator.options.validate(options)
+
+    if (error) {
+      throw error
+    }
+
     const defaultOptions = {
       tagName: 'div',
       class: '',

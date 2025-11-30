@@ -31,6 +31,12 @@ describe('ElementRenderer', () => {
 
     objArgValidatorMock = new ObjArgValidatorMock()
 
+    objArgValidatorMock.options = {
+      validate: vi.fn(function () {
+        return null
+      }),
+    }
+
     elementRenderer = new ElementRenderer(objArgValidatorMock)
   })
 
@@ -80,6 +86,31 @@ describe('ElementRenderer', () => {
       }
 
       expect(fn).toThrow('First parameter needs to be of string data type')
+    })
+
+    it('given objArgValidator.options.validate() is mocked, when you pass text and options, it should call objArgValidator.validate() with options', () => {
+      const text = 'test'
+      const options = {
+        tagName: 'test',
+      }
+
+      const result = elementRenderer.createTextElement(text, options)
+
+      expect(objArgValidatorMock.options.validate).toBeCalledWith(options)
+    })
+
+    it('given objArgValidator.options.validate() returns an error, when pass text and options, it should throw that error', () => {
+      const errorMock = new Error('test')
+      objArgValidatorMock.options.validate.mockReturnValue(errorMock)
+
+      const text = 'test'
+      const options = 3
+
+      const fn = () => {
+        elementRenderer.createTextElement(text, options)
+      }
+
+      expect(fn).toThrowError(errorMock)
     })
 
     // it('when pass a non plain obj to 2nd param, it should throw an error', () => {
