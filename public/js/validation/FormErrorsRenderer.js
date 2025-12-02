@@ -3,9 +3,10 @@ import { IS_INPUT_ERRORS_INSTANCE } from './InputErrors.js'
 import objectUtils from '../utils/objectUtils.js'
 import ErrorsRendererBase from '../abstracts/validation/ErrorsRendererBase.js'
 import { IS_SCHEMA_ADAPTER_BASE_INSTANCE } from '../abstracts/validation/SchemaAdataperBase.js'
+import { IS_OBJ_ARG_VALIDATOR_BASE_INSTANCE } from '../abstracts/validation/ObjArgValidatorBase.js'
 
 class FormErrorsRenderer extends ErrorsRendererBase {
-  constructor(elementRenderer) {
+  constructor(elementRenderer, objArgValidator) {
     super()
     if (!elementRenderer?.[IS_ELEMENT_RENDERER_BASE_INSTANCE]) {
       throw new TypeError(
@@ -13,7 +14,14 @@ class FormErrorsRenderer extends ErrorsRendererBase {
       )
     }
 
+    if (!objArgValidator?.[IS_OBJ_ARG_VALIDATOR_BASE_INSTANCE]) {
+      throw new TypeError(
+        'You need to pass instance of ObjArgValidatorBase to 2nd parameter'
+      )
+    }
+
     this.elementRenderer = elementRenderer
+    this.objArgValidator = objArgValidator
   }
 
   render(inputErrorsArray, options) {
@@ -27,6 +35,12 @@ class FormErrorsRenderer extends ErrorsRendererBase {
           )
         }
       }
+    }
+
+    const error = this.objArgValidator.options.validate(options)
+
+    if (error) {
+      throw error
     }
 
     // if (

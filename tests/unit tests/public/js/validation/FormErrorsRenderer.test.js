@@ -7,6 +7,10 @@ import InputErrors from '../../../../../public/js/validation/InputErrors.js'
 import { IS_ERRORS_RENDERER_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/ErrorsRendererBase.js'
 import CreateTextOptsSchema from '../../../../../public/js/validation/CreateTextOptsSchema.js'
 import SchemaAdapterBase from '../../../../../public/js/abstracts/validation/SchemaAdataperBase.js'
+import ObjArgValidatorBase, {
+  IS_OBJ_ARG_VALIDATOR_BASE_INSTANCE,
+} from '../../../../../public/js/abstracts/validation/ObjArgValidatorBase.js'
+import e from 'express'
 const window = new Window()
 const document = window.document
 
@@ -15,13 +19,30 @@ vi.stubGlobal('document', document)
 describe('FormErrorsRenderer', () => {
   let formErrorsRenderer
   let elementRenderer
+  class ObjArgValidatorMock extends ObjArgValidatorBase {
+    constructor() {
+      super()
+    }
+  }
+  let objArgValidatorMock
 
   beforeEach(() => {
     document.body.innerHTML = ''
 
-    elementRenderer = new ElementRenderer()
+    objArgValidatorMock = new ObjArgValidatorMock()
 
-    formErrorsRenderer = new FormErrorsRenderer(elementRenderer)
+    objArgValidatorMock.options = {
+      validate: vi.fn(function () {
+        return null
+      }),
+    }
+
+    elementRenderer = new ElementRenderer(objArgValidatorMock)
+
+    formErrorsRenderer = new FormErrorsRenderer(
+      elementRenderer,
+      objArgValidatorMock
+    )
   })
 
   afterEach(() => {
@@ -39,11 +60,24 @@ describe('FormErrorsRenderer', () => {
     )
   })
 
-  it('when you pass valid elementRenderer to constructor, the instance should store those dependencies and have property that checks instance of ErrorsRendererBase', () => {
-    const result = new FormErrorsRenderer(elementRenderer)
+  it('when you pass valid elementRenderer and objArgValidator to constructor, the instance should store those dependencies and have property that checks instance of ErrorsRendererBase', () => {
+    const result = new FormErrorsRenderer(elementRenderer, objArgValidatorMock)
 
     expect(result.elementRenderer).toEqual(elementRenderer)
+    expect(result.objArgValidator).toEqual(objArgValidatorMock)
     expect(result[IS_ERRORS_RENDERER_BASE_INSTANCE]).toBe(true)
+  })
+
+  it('when you pass a non instance of ObjArgValidatorBase to 2nd param of constructor, it should throw an error', () => {
+    objArgValidatorMock = 3
+
+    const fn = () => {
+      new FormErrorsRenderer(elementRenderer, objArgValidatorMock)
+    }
+
+    expect(fn).toThrow(
+      'You need to pass instance of ObjArgValidatorBase to 2nd parameter'
+    )
   })
 
   describe('FormErrorsRenderer.render()', () => {
@@ -79,6 +113,87 @@ describe('FormErrorsRenderer', () => {
       }
 
       expect(fn).toThrow('You need to pass an array of InputErrors instances')
+    })
+
+    it('given objArgValidator.options.validate() is mocked, when you pass inputErrorsArray and options, it should call objArgValidator.options.validate() with that options argument', () => {
+      document.body.innerHTML = `
+        <form>
+          <fieldset>
+            <input type = "text" name = "title" required>
+          </fieldset>
+
+          <fieldset>
+            <input type = "text" name = "description" required>
+          </fieldset>
+        </form>
+      `
+
+      const input1 = document.querySelector(`[name="title"]`)
+      const input2 = document.querySelector(`[name="description"]`)
+
+      const inputErrors1 = new InputErrors(input1)
+      inputErrors1.errors.push('test')
+      const inputErrors2 = new InputErrors(input2)
+      inputErrors2.errors.push('test')
+
+      const inputErrorsArray = [inputErrors1, inputErrors2]
+
+      const options = {
+        tagName: 'div',
+      }
+
+      const result = formErrorsRenderer.render(inputErrorsArray, options)
+
+      expect(objArgValidatorMock.options.validate).toBeCalledWith(options)
+    })
+
+    it('given objArgValidator.options.validate() is mocked to return an error, when you pass inputErrorsArray and options, it should throw that error', () => {
+      const errorMock = new Error('test')
+
+      const objArgValidator = new ObjArgValidatorMock()
+
+      objArgValidator.options = {
+        validate: vi.fn(() => {
+          return errorMock
+        }),
+      }
+
+      const formErrorsRenderer = new FormErrorsRenderer(
+        elementRenderer,
+        objArgValidator
+      )
+
+      document.body.innerHTML = `
+        <form>
+          <fieldset>
+            <input type = "text" name = "title" required>
+          </fieldset>
+
+          <fieldset>
+            <input type = "text" name = "description" required>
+          </fieldset>
+        </form>
+      `
+
+      const input1 = document.querySelector(`[name="title"]`)
+      const input2 = document.querySelector(`[name="description"]`)
+
+      const inputErrors1 = new InputErrors(input1)
+      inputErrors1.errors.push('test')
+      const inputErrors2 = new InputErrors(input2)
+      inputErrors2.errors.push('test')
+
+      const inputErrorsArray = [inputErrors1, inputErrors2]
+
+      const options = {
+        tagName: 'div',
+      }
+
+      const fn = () => {
+        formErrorsRenderer.render(inputErrorsArray, options)
+      }
+
+      expect(fn).toThrowError(errorMock)
     })
 
     // it('when you pass a non plain obj to 2nd param, it should throw an error', () => {
