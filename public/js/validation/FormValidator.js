@@ -60,6 +60,12 @@ class FormValidator {
     if (error) {
       throw error
     }
+
+    const inputRulesArray = this.schemaParser.parse(form, schema)
+
+    const inputErrorsArray = this.validationProcessor.validate(inputRulesArray)
+
+    this.errorsRenderer.render(inputErrorsArray, config)
   }
 }
 

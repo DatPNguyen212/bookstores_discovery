@@ -33,16 +33,19 @@ describe('FormValidator', () => {
     document.body.innerHTML = ''
     SchemaParserMock = vi.fn(function () {
       this[IS_SCHEMA_PARSER_BASE_INSTANCE] = true
+      this.parse = vi.fn()
     })
     schemaParserMock = new SchemaParserMock()
 
     ValidationProcessorMock = vi.fn(function () {
       this[IS_VALIDATION_PROCESSOR_BASE_INSTANCE] = true
+      this.validate = vi.fn()
     })
     validationProcessorMock = new ValidationProcessorMock()
 
     ErrorsRendererMock = vi.fn(function () {
       this[IS_ERRORS_RENDERER_BASE_INSTANCE] = true
+      this.render = vi.fn()
     })
     errorsRendererMock = new ErrorsRendererMock()
 
@@ -238,6 +241,83 @@ describe('FormValidator', () => {
       }
 
       expect(fn).toThrowError(errorMock)
+    })
+
+    it('given schemaParser.parse, validationProcessor.validate and errorsRenderer.render are mocked, when you pass valid form, schema and config, it should call the correct functions with correct arguments', () => {
+      document.body.innerHTML = `
+        <form>
+          <fieldset>
+            <input type = "text" name = "title" required>
+          </fieldset>
+
+          <fieldset>
+            <input type = "email" name = "email" required>
+          </fieldset>
+        </form>
+      `
+
+      const form = document.querySelector('form')
+
+      const input1 = document.querySelector(`[name="title"]`)
+      const input2 = document.querySelector(`[name="email"]`)
+
+      const schema = new ValidationSchema({
+        title: {
+          required: true,
+        },
+        email: {
+          required: true,
+          isEmailUnique: 'url',
+        },
+      })
+
+      const config = {
+        tagName: 'div',
+      }
+
+      const inputRules1 = {
+        input: input1,
+        rules: {
+          ...schema.title,
+        },
+      }
+
+      const inputRules2 = {
+        input: input2,
+        rules: {
+          ...schema.description,
+        },
+      }
+
+      const inputRulesArray = [inputRules1, inputRules2]
+
+      const inputErrors1 = {
+        input: input1,
+        errors: ['test'],
+      }
+
+      const inputErrors2 = {
+        input: input2,
+        errors: ['test'],
+      }
+
+      const inputErrorsArray = [inputErrors1, inputErrors2]
+
+      schemaParserMock.parse = vi.fn().mockReturnValue(inputRulesArray)
+
+      validationProcessorMock.validate = vi
+        .fn()
+        .mockReturnValue(inputErrorsArray)
+
+      errorsRendererMock.render = vi.fn()
+
+      formValidator.validate(form, schema, config)
+
+      expect(schemaParserMock.parse).toBeCalledWith(form, schema)
+
+      expect(validationProcessorMock.validate).toBeCalledWith(inputRulesArray)
+
+      expect(errorsRendererMock.render).toBeCalledWith(inputErrorsArray, config)
     })
   })
 })
