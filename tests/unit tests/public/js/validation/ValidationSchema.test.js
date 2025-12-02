@@ -3,16 +3,22 @@ import ValidationSchema from '../../../../../public/js/validation/ValidationSche
 import { IS_VALIDATION_SCHEMA_INSTANCE } from '../../../../../public/js/validation/ValidationSchema.js'
 
 describe('new ValidationSchema()', () => {
-  it('if you pass an object with properties, it should return an obj with those same properties and their values AND a prpoerty that checks instanceof', () => {
+  it('if you pass an object which contains names of inputs and their schemas, it should return an obj with those same properties and their values AND a prpoerty that checks instanceof', () => {
     const schemaDef = {
-      required: true,
-      maxLength: 3,
+      title: {
+        required: true,
+        maxLength: 3,
+      },
+      description: {
+        required: true,
+      },
     }
 
     const validationSchema = new ValidationSchema(schemaDef)
 
-    expect(validationSchema.required).toBe(true)
-    expect(validationSchema.maxLength).toBe(3)
+    expect(validationSchema.title.required).toBe(true)
+    expect(validationSchema.title.maxLength).toBe(3)
+    expect(validationSchema.description.required).toBe(true)
     expect(validationSchema[IS_VALIDATION_SCHEMA_INSTANCE]).toBe(true)
   })
 
