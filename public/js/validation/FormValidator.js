@@ -3,9 +3,6 @@ import { IS_OBJ_ARG_VALIDATOR_BASE_INSTANCE } from '../abstracts/validation/ObjA
 import { IS_SCHEMA_PARSER_BASE_INSTANCE } from '../abstracts/validation/SchemaParserBase.js'
 import { IS_VALIDATION_PROCESSOR_BASE_INSTANCE } from '../abstracts/validation/ValidationProcessorBase.js'
 import { IS_VALIDATION_SCHEMA_INSTANCE } from './ValidationSchema.js'
-import ValidatorConfigSchema, {
-  IS_VALIDATOR_CONFIG_SCHEMA_INSTANCE,
-} from './ValidatorConfigSchema.js'
 
 class FormValidator {
   constructor(
@@ -44,7 +41,7 @@ class FormValidator {
     this.objArgValidator = objArgValidator
   }
 
-  validate(form, schema, config) {
+  validate(form, schema, options) {
     if (!(form instanceof HTMLFormElement)) {
       throw new TypeError('You need to pass form element to first parameter')
     }
@@ -55,7 +52,7 @@ class FormValidator {
       )
     }
 
-    const error = this.objArgValidator.config.validate(config)
+    const error = this.objArgValidator.options.validate(options)
 
     if (error) {
       throw error
@@ -65,7 +62,7 @@ class FormValidator {
 
     const inputErrorsArray = this.validationProcessor.validate(inputRulesArray)
 
-    this.errorsRenderer.render(inputErrorsArray, config)
+    this.errorsRenderer.render(inputErrorsArray, options)
   }
 }
 

@@ -4,10 +4,8 @@ import FormValidator from '../../../../../public/js/validation/FormValidator.js'
 import { IS_SCHEMA_PARSER_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/SchemaParserBase.js'
 import { IS_VALIDATION_PROCESSOR_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/ValidationProcessorBase.js'
 import { IS_ERRORS_RENDERER_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/ErrorsRendererBase.js'
-import ValidatorConfigSchema from '../../../../../public/js/validation/ValidatorConfigSchema.js'
 import { Window } from 'happy-dom'
 import { IS_SCHEMA_ADAPTER_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/SchemaAdataperBase.js'
-import { IS_VALIDATOR_CONFIG_SCHEMA_INSTANCE } from '../../../../../public/js/validation/ValidatorConfigSchema.js'
 import { IS_OBJ_ARG_VALIDATOR_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/ObjArgValidatorBase.js'
 import ValidationSchema, {
   IS_VALIDATION_SCHEMA_INSTANCE,
@@ -51,7 +49,7 @@ describe('FormValidator', () => {
 
     ObjArgValidatorMock = vi.fn(function () {
       this[IS_OBJ_ARG_VALIDATOR_BASE_INSTANCE] = true
-      this.config = {
+      this.options = {
         validate: vi.fn(function () {
           return null
         }),
@@ -157,7 +155,7 @@ describe('FormValidator', () => {
     let formMock
     let ValidationSchemaMock
     let schemaMock
-    let configMock
+    let optionsMock
     beforeEach(() => {
       formMock = document.createElement('form')
       ValidationSchemaMock = vi.fn(function () {
@@ -166,18 +164,13 @@ describe('FormValidator', () => {
 
       schemaMock = new ValidationSchemaMock()
 
-      configMock = {
-        async: {
-          isEmailUnique: 'url',
-        },
-        errprs: {
-          tagName: 'test',
-          class: 'testClass',
-          id: 'testId',
-          style: {
-            color: 'black',
-            fontSize: '16px',
-          },
+      optionsMock = {
+        tagName: 'test',
+        class: 'testClass',
+        id: 'testId',
+        style: {
+          color: 'black',
+          fontSize: '16px',
         },
       }
     })
@@ -185,7 +178,7 @@ describe('FormValidator', () => {
       const form = 3
 
       const fn = () => {
-        formValidator.validate(form, schemaMock)
+        formValidator.validate(form, schemaMock, optionsMock)
       }
 
       expect(fn).toThrow('You need to pass form element to first parameter')
@@ -195,7 +188,7 @@ describe('FormValidator', () => {
       const schema = {}
 
       const fn = () => {
-        formValidator.validate(formMock, schema)
+        formValidator.validate(formMock, schema, optionsMock)
       }
 
       expect(fn).toThrow(
@@ -203,27 +196,25 @@ describe('FormValidator', () => {
       )
     })
 
-    it('given objArgValidator.config.validate is mocked, it should call that method with config argument', () => {
+    it('given objArgValidator.options.validate is mocked, it should call that method with options argument', () => {
       const form = document.createElement('form')
       const schema = new ValidationSchema({
         title: {
           required: true,
         },
       })
-      const config = {
-        errors: {
-          tagName: 'div',
-        },
+      const options = {
+        tagName: 'div',
       }
 
-      const result = formValidator.validate(form, schema, config)
+      const result = formValidator.validate(form, schema, options)
 
-      expect(objArgValidatorMock.config.validate).toBeCalledWith(config)
+      expect(objArgValidatorMock.options.validate).toBeCalledWith(options)
     })
 
-    it('given objArgValidatorMock.config.validate returns an error, it should throw that error', () => {
+    it('given objArgValidatorMock.options.validate returns an error, it should throw that error', () => {
       const errorMock = new Error('test')
-      objArgValidatorMock.config = {
+      objArgValidatorMock.options = {
         validate: vi.fn(function () {
           return errorMock
         }),
@@ -237,13 +228,13 @@ describe('FormValidator', () => {
       )
 
       const fn = () => {
-        formValidator.validate(formMock, schemaMock, configMock)
+        formValidator.validate(formMock, schemaMock, optionsMock)
       }
 
       expect(fn).toThrowError(errorMock)
     })
 
-    it('given schemaParser.parse, validationProcessor.validate and errorsRenderer.render are mocked, when you pass valid form, schema and config, it should call the correct functions with correct arguments', () => {
+    it('given schemaParser.parse, validationProcessor.validate and errorsRenderer.render are mocked, when you pass valid form, schema and options, it should call the correct functions with correct arguments', () => {
       document.body.innerHTML = `
         <form>
           <fieldset>
@@ -271,7 +262,7 @@ describe('FormValidator', () => {
         },
       })
 
-      const config = {
+      const options = {
         tagName: 'div',
       }
 
@@ -311,13 +302,16 @@ describe('FormValidator', () => {
 
       errorsRendererMock.render = vi.fn()
 
-      formValidator.validate(form, schema, config)
+      formValidator.validate(form, schema, options)
 
       expect(schemaParserMock.parse).toBeCalledWith(form, schema)
 
       expect(validationProcessorMock.validate).toBeCalledWith(inputRulesArray)
 
-      expect(errorsRendererMock.render).toBeCalledWith(inputErrorsArray, config)
+      expect(errorsRendererMock.render).toBeCalledWith(
+        inputErrorsArray,
+        options
+      )
     })
   })
 })
