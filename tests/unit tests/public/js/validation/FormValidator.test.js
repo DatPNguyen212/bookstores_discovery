@@ -27,17 +27,90 @@ describe('FormValidator', () => {
   let objArgValidatorMock
   let formValidator
 
+  let form
+  let input1
+  let input2
+  let schema
+  let options
+  let inputRules1
+  let inputRules2
+  let inputRulesArray
+  let inputErrors1
+  let inputErrors2
+  let inputErrorsArray
   beforeEach(() => {
-    document.body.innerHTML = ''
+    document.body.innerHTML = `
+        <form>
+          <fieldset>
+            <input type = "text" name = "title" required>
+          </fieldset>
+
+          <fieldset>
+            <input type = "email" name = "email" required>
+          </fieldset>
+        </form>
+      `
+
+    form = document.querySelector('form')
+
+    input1 = document.querySelector(`[name="title"]`)
+    input2 = document.querySelector(`[name="email"]`)
+
+    schema = new ValidationSchema({
+      title: {
+        required: true,
+      },
+      email: {
+        required: true,
+        isEmailUnique: 'url',
+      },
+    })
+
+    options = {
+      tagName: 'div',
+    }
+
+    inputRules1 = {
+      input: input1,
+      rules: {
+        ...schema.title,
+      },
+    }
+
+    inputRules2 = {
+      input: input2,
+      rules: {
+        ...schema.description,
+      },
+    }
+
+    inputRulesArray = [inputRules1, inputRules2]
+
+    inputErrors1 = {
+      input: input1,
+      errors: ['test'],
+    }
+
+    inputErrors2 = {
+      input: input2,
+      errors: ['test'],
+    }
+
+    inputErrorsArray = [inputErrors1, inputErrors2]
+
     SchemaParserMock = vi.fn(function () {
       this[IS_SCHEMA_PARSER_BASE_INSTANCE] = true
-      this.parse = vi.fn()
+      this.parse = vi.fn(() => {
+        return inputRulesArray
+      })
     })
     schemaParserMock = new SchemaParserMock()
 
     ValidationProcessorMock = vi.fn(function () {
       this[IS_VALIDATION_PROCESSOR_BASE_INSTANCE] = true
-      this.validate = vi.fn()
+      this.validate = vi.fn(() => {
+        return inputErrorsArray
+      })
     })
     validationProcessorMock = new ValidationProcessorMock()
 
@@ -234,74 +307,16 @@ describe('FormValidator', () => {
       expect(fn).toThrowError(errorMock)
     })
 
-    it('given schemaParser.parse, validationProcessor.validate and errorsRenderer.render are mocked, when you pass valid form, schema and options, it should call the correct functions with correct arguments', () => {
-      document.body.innerHTML = `
-        <form>
-          <fieldset>
-            <input type = "text" name = "title" required>
-          </fieldset>
-
-          <fieldset>
-            <input type = "email" name = "email" required>
-          </fieldset>
-        </form>
-      `
-
-      const form = document.querySelector('form')
-
-      const input1 = document.querySelector(`[name="title"]`)
-      const input2 = document.querySelector(`[name="email"]`)
-
-      const schema = new ValidationSchema({
-        title: {
-          required: true,
-        },
-        email: {
-          required: true,
-          isEmailUnique: 'url',
-        },
-      })
-
+    it('given schemaParser.parse, validationProcessor.validate and errorsRenderer.render are mocked, when you pass valid form, schema and options with no missing properties, it should call the correct functions with correct arguments', () => {
       const options = {
         tagName: 'div',
-      }
-
-      const inputRules1 = {
-        input: input1,
-        rules: {
-          ...schema.title,
+        class: 'error',
+        id: '',
+        style: {
+          color: 'black',
+          fontSize: '16px',
         },
       }
-
-      const inputRules2 = {
-        input: input2,
-        rules: {
-          ...schema.description,
-        },
-      }
-
-      const inputRulesArray = [inputRules1, inputRules2]
-
-      const inputErrors1 = {
-        input: input1,
-        errors: ['test'],
-      }
-
-      const inputErrors2 = {
-        input: input2,
-        errors: ['test'],
-      }
-
-      const inputErrorsArray = [inputErrors1, inputErrors2]
-
-      schemaParserMock.parse = vi.fn().mockReturnValue(inputRulesArray)
-
-      validationProcessorMock.validate = vi
-        .fn()
-        .mockReturnValue(inputErrorsArray)
-
-      errorsRendererMock.render = vi.fn()
-
       formValidator.validate(form, schema, options)
 
       expect(schemaParserMock.parse).toBeCalledWith(form, schema)
@@ -312,6 +327,192 @@ describe('FormValidator', () => {
         inputErrorsArray,
         options
       )
+    })
+
+    describe('Tests to check if correct default values are applied to propeties of the obj parameter', () => {
+      it("when you don't pass any value to options param, it should call errorsRenderer.render() with correct inputErrorsArray and correct default options obj", () => {
+        const expectedOptions = {
+          tagName: 'div',
+          class: 'error',
+          id: '',
+          style: {
+            color: 'red',
+            fontSize: '16px',
+          },
+        }
+
+        formValidator.validate(form, schema)
+
+        expect(errorsRendererMock.render).toBeCalledWith(
+          inputErrorsArray,
+          expectedOptions
+        )
+      })
+
+      it('when you pass options obj where its tagName property is missing to 3rd param, it should call errorsRenderer.render() with correct inputErrorsArray and that same options obj but with default tagName value', () => {
+        const options = {
+          class: 'error',
+          id: '',
+          style: {
+            color: 'black',
+            fontSize: '16px',
+          },
+        }
+
+        const expectedOptions = {
+          tagName: 'div',
+          class: 'error',
+          id: '',
+          style: {
+            color: 'black',
+            fontSize: '16px',
+          },
+        }
+
+        formValidator.validate(form, schema, options)
+
+        expect(errorsRendererMock.render).toBeCalledWith(
+          inputErrorsArray,
+          expectedOptions
+        )
+      })
+
+      it('when you pass options obj where its class property is missing to 3rd param, it should call errorsRenderer.render() with correct inputErrorsArray and that same options obj but with default class value', () => {
+        const options = {
+          tagName: 'div',
+          id: '',
+          style: {
+            color: 'black',
+            fontSize: '16px',
+          },
+        }
+
+        const expectedOptions = {
+          tagName: 'div',
+          class: 'error',
+          id: '',
+          style: {
+            color: 'black',
+            fontSize: '16px',
+          },
+        }
+
+        formValidator.validate(form, schema, options)
+
+        expect(errorsRendererMock.render).toBeCalledWith(
+          inputErrorsArray,
+          expectedOptions
+        )
+      })
+
+      it('when you pass options obj where its id property is missing to 3rd param, it should call errorsRenderer.render() with correct inputErrorsArray and that same options obj but with default id value', () => {
+        const options = {
+          tagName: 'div',
+          class: 'error',
+          style: {
+            color: 'black',
+            fontSize: '16px',
+          },
+        }
+
+        const expectedOptions = {
+          tagName: 'div',
+          class: 'error',
+          id: '',
+          style: {
+            color: 'black',
+            fontSize: '16px',
+          },
+        }
+
+        formValidator.validate(form, schema, options)
+
+        expect(errorsRendererMock.render).toBeCalledWith(
+          inputErrorsArray,
+          expectedOptions
+        )
+      })
+
+      it('when you pass options obj where its style property is missing to 3rd param, it should call errorsRenderer.render() with correct inputErrorsArray and that same options obj but with default style properties values', () => {
+        const options = {
+          tagName: 'div',
+          class: 'error',
+          id: '',
+        }
+
+        const expectedOptions = {
+          tagName: 'div',
+          class: 'error',
+          id: '',
+          style: {
+            color: 'red',
+            fontSize: '16px',
+          },
+        }
+
+        formValidator.validate(form, schema, options)
+
+        expect(errorsRendererMock.render).toBeCalledWith(
+          inputErrorsArray,
+          expectedOptions
+        )
+      })
+
+      it('when you pass options obj where its style.color property is missing to 3rd param, it should call errorsRenderer.render() with correct inputErrorsArray and that same options obj but with default style.color value', () => {
+        const options = {
+          tagName: 'div',
+          class: 'error',
+          id: '',
+          style: {
+            fontSize: '16px',
+          },
+        }
+
+        const expectedOptions = {
+          tagName: 'div',
+          class: 'error',
+          id: '',
+          style: {
+            color: 'red',
+            fontSize: '16px',
+          },
+        }
+
+        formValidator.validate(form, schema, options)
+
+        expect(errorsRendererMock.render).toBeCalledWith(
+          inputErrorsArray,
+          expectedOptions
+        )
+      })
+
+      it('when you pass options obj where its style.fontSize property is missing to 3rd param, it should call errorsRenderer.render() with correct inputErrorsArray and that same options obj but with default style.fontSize value', () => {
+        const options = {
+          tagName: 'div',
+          class: 'error',
+          id: '',
+          style: {
+            color: 'red',
+          },
+        }
+
+        const expectedOptions = {
+          tagName: 'div',
+          class: 'error',
+          id: '',
+          style: {
+            color: 'red',
+            fontSize: '16px',
+          },
+        }
+
+        formValidator.validate(form, schema, options)
+
+        expect(errorsRendererMock.render).toBeCalledWith(
+          inputErrorsArray,
+          expectedOptions
+        )
+      })
     })
   })
 })

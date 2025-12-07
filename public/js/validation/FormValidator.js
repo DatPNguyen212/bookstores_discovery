@@ -41,7 +41,7 @@ class FormValidator {
     this.objArgValidator = objArgValidator
   }
 
-  validate(form, schema, options) {
+  validate(form, schema, options = {}) {
     if (!(form instanceof HTMLFormElement)) {
       throw new TypeError('You need to pass form element to first parameter')
     }
@@ -58,11 +58,31 @@ class FormValidator {
       throw error
     }
 
+    const defaultOptions = {
+      tagName: 'div',
+      class: 'error',
+      id: '',
+      style: {
+        color: 'red',
+        fontSize: '16px',
+      },
+    }
+
+    const finalOptions = {
+      ...defaultOptions,
+      ...options,
+    }
+
+    finalOptions.style = {
+      ...defaultOptions.style,
+      ...options.style,
+    }
+
     const inputRulesArray = this.schemaParser.parse(form, schema)
 
     const inputErrorsArray = this.validationProcessor.validate(inputRulesArray)
 
-    this.errorsRenderer.render(inputErrorsArray, options)
+    this.errorsRenderer.render(inputErrorsArray, finalOptions)
   }
 }
 
