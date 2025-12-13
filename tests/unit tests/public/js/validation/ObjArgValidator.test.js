@@ -3,7 +3,7 @@ import ObjArgValidator, {
   IS_OBJ_ARG_VALIDATOR_INSTANCE,
 } from '../../../../../public/js/validation/ObjArgValidator.js'
 import CreateTextOptsSchema from '../../../../../public/js/validation/CreateTextOptsSchema.js'
-import ValidatorConfigSchema from '../../../../../public/js/validation/ValidatorConfigSchema.js'
+
 import SchemaAdapterBase, {
   IS_SCHEMA_ADAPTER_BASE_INSTANCE,
 } from '../../../../../public/js/abstracts/validation/SchemaAdataperBase.js'
