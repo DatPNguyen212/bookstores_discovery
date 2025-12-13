@@ -1,6 +1,4 @@
-const { IS_SCHEMA_PARSER_BASE_INSTANCE } = Symbol(
-  'SchemaParserBase/is-instance'
-)
+const IS_SCHEMA_PARSER_BASE_INSTANCE = Symbol('SchemaParserBase/is-instance')
 
 class SchemaParserBase {
   constructor() {
