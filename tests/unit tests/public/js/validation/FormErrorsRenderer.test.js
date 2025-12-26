@@ -332,5 +332,82 @@ describe('FormErrorsRenderer', () => {
       )
       expect(fieldset2.nextElementSibling.style.color).toBe(options.style.color)
     })
+
+    it('given a form with 2 fieldsets with an input and a DIV element for error msg in each of them, when you create an inputErrorsArray from those inputs with errors and pass it to 1st param and you pass a plain options obj that specify class name of error elements in 2nd param, ALL CURRENT error elements with that class name should be removed and NEW ERROR ELEMENTS should be correctly rendered according to what you specified in options obj', () => {
+      document.body.innerHTML = `
+        <form>
+          <fieldset id = "fieldset1">
+            <input type = "text" name = "title" required maxLength = "3">
+            <div class = "error" id = "error1">Test</div>
+          </fieldset>
+
+          <fieldset id = "fieldset2">
+            <input type = "checkbox" name = "genres" value = "fantasy" required>
+             <div class = "error" id = "error2">Test</div>
+          </fieldset>
+        </form>
+      `
+
+      const fieldset1 = document.querySelector('#fieldset1')
+      const fieldset2 = document.querySelector('#fieldset2')
+
+      const input1 = document.querySelector(`[name="title"]`)
+      const inputErrors1 = new InputErrors(input1)
+      const requiredError = 'Field is required'
+      const maxLengthError = 'Field exeeded maxLength'
+      inputErrors1.errors.push(requiredError, maxLengthError)
+
+      const input2 = document.querySelector(`[value="fantasy"]`)
+      const inputErrors2 = new InputErrors(input2)
+      const groupRequiredError = 'You must check atleast one item'
+      inputErrors2.errors.push(groupRequiredError)
+
+      const inputErrorsArray = [inputErrors1, inputErrors2]
+
+      const options = {
+        tagName: 'section',
+        class: 'error',
+        style: {
+          color: 'purple',
+          fontSize: '18px',
+        },
+      }
+
+      const result = formErrorsRenderer.render(inputErrorsArray, options)
+
+      const oldErrorElement1 = document.getElementById('#error1')
+      const oldErrorElement2 = document.getElementById('#error2')
+
+      expect(oldErrorElement1).toBeNull()
+      expect(oldErrorElement2).toBeNull()
+
+      expect(fieldset1.nextElementSibling.tagName).toBe(
+        options.tagName.toUpperCase()
+      )
+      expect(fieldset1.nextElementSibling.classList.contains('error')).toBe(
+        true
+      )
+      expect(fieldset1.nextElementSibling.innerText).toBe(
+        inputErrors1.errors.join('')
+      )
+      expect(fieldset1.nextElementSibling.style.fontSize).toBe(
+        options.style.fontSize
+      )
+      expect(fieldset1.nextElementSibling.style.color).toBe(options.style.color)
+
+      expect(fieldset2.nextElementSibling.tagName).toBe(
+        options.tagName.toUpperCase()
+      )
+      expect(fieldset2.nextElementSibling.classList.contains('error')).toBe(
+        true
+      )
+      expect(fieldset2.nextElementSibling.innerText).toBe(
+        inputErrors2.errors.join('')
+      )
+      expect(fieldset2.nextElementSibling.style.fontSize).toBe(
+        options.style.fontSize
+      )
+      expect(fieldset2.nextElementSibling.style.color).toBe(options.style.color)
+    })
   })
 })

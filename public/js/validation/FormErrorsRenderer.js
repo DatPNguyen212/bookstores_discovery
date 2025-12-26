@@ -53,6 +53,14 @@ class FormErrorsRenderer extends ErrorsRendererBase {
     //   )
     // }
 
+    const oldErrorElements = Array.from(
+      document.querySelectorAll(`.${options.class}`)
+    )
+
+    for (let oldErrorElement of oldErrorElements) {
+      oldErrorElement.remove()
+    }
+
     for (let inputErrors of inputErrorsArray) {
       const input = inputErrors.input
       const errors = inputErrors.errors

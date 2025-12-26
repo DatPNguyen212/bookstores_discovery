@@ -15638,6 +15638,8 @@ class FormErrorsRenderer extends (0, _errorsRendererBaseJsDefault.default) {
         //     'You need to pass a plain object with tagName and style properties to 2nd parameter'
         //   )
         // }
+        const oldErrorElements = Array.from(document.querySelectorAll(`.${options.class}`));
+        for (let oldErrorElement of oldErrorElements)oldErrorElement.remove();
         for (let inputErrors of inputErrorsArray){
             const input = inputErrors.input;
             const errors = inputErrors.errors;
