@@ -23,8 +23,8 @@ describe('CreateTextOptsSchema', () => {
 
     const expectedSchema = Joi.object({
       tagName: Joi.string(),
-      class: Joi.string(),
-      id: Joi.string(),
+      class: Joi.string().allow(''),
+      id: Joi.string().allow(''),
       style: Joi.object().pattern(Joi.string(), Joi.string()),
     })
 

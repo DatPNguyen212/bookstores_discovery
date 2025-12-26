@@ -15,11 +15,11 @@ class CreateTextOptsSchema extends SchemaAdapterBase {
 
     this.paramName = paramName
     this.schema = Joi.object({
-      tagName: Joi.string().allow(''),
+      tagName: Joi.string(),
       class: Joi.string().allow(''),
       id: Joi.string().allow(''),
       style: Joi.object().pattern(Joi.string(), Joi.string()),
-    }).allow({})
+    })
 
     this[IS_CREATE_TEXT_OPTS_SCHEMA_INSTANCE] = true
   }
