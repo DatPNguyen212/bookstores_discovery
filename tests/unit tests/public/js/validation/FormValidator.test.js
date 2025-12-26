@@ -23,6 +23,7 @@ describe('FormValidator', () => {
   let validationProcessorMock
   let ErrorsRendererMock
   let errorsRendererMock
+  let resultMock
   let ObjArgValidatorMock
   let objArgValidatorMock
   let formValidator
@@ -120,11 +121,15 @@ describe('FormValidator', () => {
     })
     errorsRendererMock = new ErrorsRendererMock()
 
+    resultMock = {
+      error: undefined,
+    }
+
     ObjArgValidatorMock = vi.fn(function () {
       this[IS_OBJ_ARG_VALIDATOR_BASE_INSTANCE] = true
       this.options = {
         validate: vi.fn(function () {
-          return null
+          return resultMock
         }),
       }
     })
@@ -285,11 +290,14 @@ describe('FormValidator', () => {
       expect(objArgValidatorMock.options.validate).toBeCalledWith(options)
     })
 
-    it('given objArgValidatorMock.options.validate returns an error, it should throw that error', () => {
+    it('given objArgValidatorMock.options.validate returns a mocked result obj that contains an error, it should throw that error', () => {
       const errorMock = new Error('test')
+      resultMock = {
+        error: errorMock,
+      }
       objArgValidatorMock.options = {
         validate: vi.fn(function () {
-          return errorMock
+          return resultMock
         }),
       }
 
@@ -304,7 +312,7 @@ describe('FormValidator', () => {
         formValidator.validate(formMock, schemaMock, optionsMock)
       }
 
-      expect(fn).toThrowError(errorMock)
+      expect(fn).toThrowError(resultMock.error)
     })
 
     it('given schemaParser.parse, validationProcessor.validate and errorsRenderer.render are mocked, when you pass valid form, schema and options with no missing properties, it should call the correct functions with correct arguments', () => {

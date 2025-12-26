@@ -37,7 +37,7 @@ class FormErrorsRenderer extends ErrorsRendererBase {
       }
     }
 
-    const error = this.objArgValidator.options.validate(options)
+    const { error } = this.objArgValidator.options.validate(options)
 
     if (error) {
       throw error
@@ -56,7 +56,7 @@ class FormErrorsRenderer extends ErrorsRendererBase {
     for (let inputErrors of inputErrorsArray) {
       const input = inputErrors.input
       const errors = inputErrors.errors
-      const errorMsg = errors.join(', ')
+      const errorMsg = errors.join('')
 
       const newErrorElement = this.elementRenderer.createTextElement(
         errorMsg,

@@ -52,9 +52,10 @@ class FormValidator {
       )
     }
 
-    const error = this.objArgValidator.options.validate(options)
+    const { error } = this.objArgValidator.options.validate(options)
 
     if (error) {
+      console.log(error)
       throw error
     }
 

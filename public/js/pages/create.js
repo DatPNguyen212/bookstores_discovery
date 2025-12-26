@@ -10,6 +10,7 @@ import ElementRenderer from '../validation/ElementRenderer.js'
 import ObjArgValidator from '../validation/ObjArgValidator.js'
 import FormValidator from '../validation/FormValidator.js'
 import ValidationSchema from '../validation/ValidationSchema.js'
+import CreateTextOptsSchema from '../validation/CreateTextOptsSchema.js'
 
 const inputExtracter = new FormInputExtracter()
 const inputRulesFactory = new InputRulesFactory()
@@ -24,19 +25,22 @@ const validationProcessor = new ValidationProcessor(
   inputErrorsFactory
 )
 
-const elementRenderer = new ElementRenderer()
-const objArgValidator = new ObjArgValidator()
+const createTextOptsSchema = new CreateTextOptsSchema('options')
+
+const createTextOptsSchemaAdapter = new ObjArgValidator(createTextOptsSchema)
+
+const elementRenderer = new ElementRenderer(createTextOptsSchemaAdapter)
 
 const formErrorsRenderer = new FormErrorsRenderer(
   elementRenderer,
-  objArgValidator
+  createTextOptsSchemaAdapter
 )
 
 const formValidator = new FormValidator(
   schemaParser,
   validationProcessor,
   formErrorsRenderer,
-  objArgValidator
+  createTextOptsSchemaAdapter
 )
 
 const form = document.querySelector('.form-create')
@@ -67,5 +71,15 @@ const schema = new ValidationSchema({
 form.addEventListener('submit', (event) => {
   event.preventDefault()
 
-  formValidator.validate(form, schema)
+  formValidator.validate(form, schema, {
+    tagName: 'div',
+    class: 'error',
+    id: '',
+    style: {
+      color: 'red',
+      fontSize: '16px',
+    },
+  })
 })
+
+console.log('test')
