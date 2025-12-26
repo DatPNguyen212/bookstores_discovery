@@ -23,6 +23,7 @@ describe('ElementRenderer', () => {
     }
   }
 
+  let resultMock
   let objArgValidatorMock
   let elementRenderer
 
@@ -31,9 +32,13 @@ describe('ElementRenderer', () => {
 
     objArgValidatorMock = new ObjArgValidatorMock()
 
+    resultMock = {
+      error: undefined,
+    }
+
     objArgValidatorMock.options = {
       validate: vi.fn(function () {
-        return null
+        return resultMock
       }),
     }
 
@@ -99,9 +104,11 @@ describe('ElementRenderer', () => {
       expect(objArgValidatorMock.options.validate).toBeCalledWith(options)
     })
 
-    it('given objArgValidator.options.validate() returns an error, when pass text and options, it should throw that error', () => {
+    it('given objArgValidator.options.validate() returns resultMock with a mocked error, when pass text and options, it should throw that error', () => {
       const errorMock = new Error('test')
-      objArgValidatorMock.options.validate.mockReturnValue(errorMock)
+      resultMock = {
+        error: errorMock,
+      }
 
       const text = 'test'
       const options = 3

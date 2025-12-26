@@ -24,6 +24,8 @@ describe('FormErrorsRenderer', () => {
       super()
     }
   }
+
+  let resultMock
   let objArgValidatorMock
 
   beforeEach(() => {
@@ -31,9 +33,12 @@ describe('FormErrorsRenderer', () => {
 
     objArgValidatorMock = new ObjArgValidatorMock()
 
+    resultMock = {
+      error: undefined,
+    }
     objArgValidatorMock.options = {
       validate: vi.fn(function () {
-        return null
+        return resultMock
       }),
     }
 
@@ -149,12 +154,15 @@ describe('FormErrorsRenderer', () => {
 
     it('given objArgValidator.options.validate() is mocked to return an error, when you pass inputErrorsArray and options, it should throw that error', () => {
       const errorMock = new Error('test')
+      resultMock = {
+        error: errorMock,
+      }
 
       const objArgValidator = new ObjArgValidatorMock()
 
       objArgValidator.options = {
         validate: vi.fn(() => {
-          return errorMock
+          return resultMock
         }),
       }
 
@@ -306,7 +314,7 @@ describe('FormErrorsRenderer', () => {
         options.tagName.toUpperCase()
       )
       expect(fieldset1.nextElementSibling.innerText).toBe(
-        inputErrors1.errors.join(', ')
+        inputErrors1.errors.join('')
       )
       expect(fieldset1.nextElementSibling.style.fontSize).toBe(
         options.style.fontSize
@@ -317,7 +325,7 @@ describe('FormErrorsRenderer', () => {
         options.tagName.toUpperCase()
       )
       expect(fieldset2.nextElementSibling.innerText).toBe(
-        inputErrors2.errors.join(', ')
+        inputErrors2.errors.join('')
       )
       expect(fieldset2.nextElementSibling.style.fontSize).toBe(
         options.style.fontSize

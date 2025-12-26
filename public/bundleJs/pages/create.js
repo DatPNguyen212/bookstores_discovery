@@ -15862,10 +15862,10 @@ class CreateTextOptsSchema extends (0, _schemaAdataperBaseJsDefault.default) {
         this.paramName = paramName;
         this.schema = (0, _joiDefault.default).object({
             tagName: (0, _joiDefault.default).string(),
-            class: (0, _joiDefault.default).string(),
+            class: (0, _joiDefault.default).string().allow(''),
             id: (0, _joiDefault.default).string().allow(''),
             style: (0, _joiDefault.default).object().pattern((0, _joiDefault.default).string(), (0, _joiDefault.default).string())
-        }).allow({});
+        });
         this[IS_CREATE_TEXT_OPTS_SCHEMA_INSTANCE] = true;
     }
     validate(options) {
