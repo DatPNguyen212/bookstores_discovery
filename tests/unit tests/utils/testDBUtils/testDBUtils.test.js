@@ -37,6 +37,10 @@ vi.mock('mongoose', () => {
 })
 
 describe('testDBUtils.connect()', () => {
+
+    beforeEach(() => {
+        vi.spyOn(connectionMock, "asPromise").mockReturnValue(Promise.resolve())
+    })
   afterEach(() => {
     vi.restoreAllMocks()
   })
