@@ -75,4 +75,17 @@ describe('InputErrors', () => {
       expect(fn).toThrow('You need to pass a string to first parameter')
     })
   })
+
+    describe("inputErrors.isEmpty()", () => {
+        it("when inputErrors.errors array is empty, it should return true", () => {
+            document.body.innerHTML = `<input type = "text">`
+            const input = document.querySelector("input");
+            const inputErrors = new InputErrors(input)
+
+            const result = inputErrors.isEmpty();
+
+            expect(result).toBe(true)
+            
+        })
+    })
 })
