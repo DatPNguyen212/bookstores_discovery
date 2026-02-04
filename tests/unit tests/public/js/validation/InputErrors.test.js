@@ -77,7 +77,7 @@ describe('InputErrors', () => {
   })
 
     describe("inputErrors.isEmpty()", () => {
-        it("when inputErrors.errors array is empty, it should return true", () => {
+        it("when all of inputErrors.errors array items are null, it should return true", () => {
             document.body.innerHTML = `<input type = "text">`
             const input = document.querySelector("input");
             const inputErrors = new InputErrors(input)
