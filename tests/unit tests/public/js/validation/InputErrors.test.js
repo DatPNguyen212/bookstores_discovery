@@ -81,6 +81,8 @@ describe('InputErrors', () => {
             document.body.innerHTML = `<input type = "text">`
             const input = document.querySelector("input");
             const inputErrors = new InputErrors(input)
+            inputErrors.errors.push(null);
+            inputErrors.errors.push(null);
 
             const result = inputErrors.isEmpty();
 
