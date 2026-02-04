@@ -1,16 +1,16 @@
-import bookstoreJoiSchema from '../joi/bookstoreSchema.js'
-import ExpressError from '../utils/ExpressError.js'
+import bookstoreJoiSchema from "../joi/bookstoreSchema.js";
+import ExpressError from "../utils/ExpressError.js";
 const middlewares = {
   isValidStore(req, res, next) {
-    const { error } = bookstoreJoiSchema.validate(req.body)
+    const { error } = bookstoreJoiSchema.validate(req.body);
 
     if (error) {
-      const expressError = new ExpressError(error.message, 400)
-      return next(expressError)
+      const expressError = new ExpressError(error.message, 400);
+      return next(expressError);
     } else {
-      return next()
+      return next();
     }
   },
-}
+};
 
-export default middlewares
+export default middlewares;

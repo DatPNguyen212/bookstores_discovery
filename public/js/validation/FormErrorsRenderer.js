@@ -1,46 +1,46 @@
-import { IS_ELEMENT_RENDERER_BASE_INSTANCE } from '../abstracts/validation/ElementRendererBase.js'
-import { IS_INPUT_ERRORS_INSTANCE } from './InputErrors.js'
-import objectUtils from '../utils/objectUtils.js'
-import ErrorsRendererBase from '../abstracts/validation/ErrorsRendererBase.js'
-import { IS_SCHEMA_ADAPTER_BASE_INSTANCE } from '../abstracts/validation/SchemaAdataperBase.js'
-import { IS_OBJ_ARG_VALIDATOR_BASE_INSTANCE } from '../abstracts/validation/ObjArgValidatorBase.js'
+import { IS_ELEMENT_RENDERER_BASE_INSTANCE } from "../abstracts/validation/ElementRendererBase.js";
+import { IS_INPUT_ERRORS_INSTANCE } from "./InputErrors.js";
+import objectUtils from "../utils/objectUtils.js";
+import ErrorsRendererBase from "../abstracts/validation/ErrorsRendererBase.js";
+import { IS_SCHEMA_ADAPTER_BASE_INSTANCE } from "../abstracts/validation/SchemaAdataperBase.js";
+import { IS_OBJ_ARG_VALIDATOR_BASE_INSTANCE } from "../abstracts/validation/ObjArgValidatorBase.js";
 
 class FormErrorsRenderer extends ErrorsRendererBase {
   constructor(elementRenderer, objArgValidator) {
-    super()
+    super();
     if (!elementRenderer?.[IS_ELEMENT_RENDERER_BASE_INSTANCE]) {
       throw new TypeError(
-        'You need to pass an isntance of ElementRendererBase to constructor'
-      )
+        "You need to pass an isntance of ElementRendererBase to constructor",
+      );
     }
 
     if (!objArgValidator?.[IS_OBJ_ARG_VALIDATOR_BASE_INSTANCE]) {
       throw new TypeError(
-        'You need to pass instance of ObjArgValidatorBase to 2nd parameter'
-      )
+        "You need to pass instance of ObjArgValidatorBase to 2nd parameter",
+      );
     }
 
-    this.elementRenderer = elementRenderer
-    this.objArgValidator = objArgValidator
+    this.elementRenderer = elementRenderer;
+    this.objArgValidator = objArgValidator;
   }
 
   render(inputErrorsArray, options) {
     if (!Array.isArray(inputErrorsArray)) {
-      throw new TypeError('You need to pass an array of InputErrors instances')
+      throw new TypeError("You need to pass an array of InputErrors instances");
     } else {
       for (let inputErrors of inputErrorsArray) {
         if (!inputErrors[IS_INPUT_ERRORS_INSTANCE]) {
           throw new TypeError(
-            'You need to pass an array of InputErrors instances'
-          )
+            "You need to pass an array of InputErrors instances",
+          );
         }
       }
     }
 
-    const { error } = this.objArgValidator.options.validate(options)
+    const { error } = this.objArgValidator.options.validate(options);
 
     if (error) {
-      throw error
+      throw error;
     }
 
     // if (
@@ -54,28 +54,28 @@ class FormErrorsRenderer extends ErrorsRendererBase {
     // }
 
     const oldErrorElements = Array.from(
-      document.querySelectorAll(`.${options.class}`)
-    )
+      document.querySelectorAll(`.${options.class}`),
+    );
 
     for (let oldErrorElement of oldErrorElements) {
-      oldErrorElement.remove()
+      oldErrorElement.remove();
     }
 
     for (let inputErrors of inputErrorsArray) {
-      const input = inputErrors.input
-      const errors = inputErrors.errors
-      const errorMsg = errors.join('')
+      const input = inputErrors.input;
+      const errors = inputErrors.errors;
+      const errorMsg = errors.join("");
 
       const newErrorElement = this.elementRenderer.createTextElement(
         errorMsg,
-        options
-      )
+        options,
+      );
 
-      const fieldset = input.closest('fieldset')
+      const fieldset = input.closest("fieldset");
 
-      fieldset.after(newErrorElement)
+      fieldset.after(newErrorElement);
     }
   }
 }
 
-export default FormErrorsRenderer
+export default FormErrorsRenderer;

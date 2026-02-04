@@ -1,13 +1,13 @@
 const typeCheck = {
   isSingleInputType(input) {
     if (!this.isInputElement(input)) {
-      return false
+      return false;
     }
     if (input instanceof HTMLInputElement) {
-      if (input.type === 'checkbox' || input.type === 'radio') {
-        return false
+      if (input.type === "checkbox" || input.type === "radio") {
+        return false;
       } else {
-        return true
+        return true;
       }
     }
 
@@ -17,9 +17,9 @@ const typeCheck = {
         input instanceof HTMLTextAreaElement
       )
     ) {
-      return false
+      return false;
     } else {
-      return true
+      return true;
     }
   },
   isInputElement(input) {
@@ -28,11 +28,11 @@ const typeCheck = {
       input instanceof HTMLSelectElement ||
       input instanceof HTMLTextAreaElement
     ) {
-      return true
+      return true;
     } else {
-      return false
+      return false;
     }
   },
-}
+};
 
-export default typeCheck
+export default typeCheck;

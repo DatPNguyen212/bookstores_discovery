@@ -1,5 +1,5 @@
-@use '../abstracts/_mixins.scss';
-@use '../abstracts/_variables.scss';
+@use "../abstracts/_mixins.scss";
+@use "../abstracts/_variables.scss";
 
 .nav {
   width: 100vw;
@@ -51,7 +51,7 @@
   }
 
   #{&}__link::before {
-    content: '';
+    content: "";
     position: absolute;
     bottom: 0;
     height: variables.$nav-link-hover-underline-height;

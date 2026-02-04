@@ -1,23 +1,23 @@
-import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
-import seedHelpers from '../../../seeds/seedHelpers.js'
-import fs from 'fs'
-import arrayUtils from '../../../utils/arrayUtils.js'
-import numberUtils from '../../../utils/numberUtils.js'
-import names from '../../../seeds/names.js'
-import path from 'path'
-import pathUtils from '../../../utils/pathUtils.js'
-import models from '../../../models/index.js'
-import lodash from 'lodash'
+import { vi, describe, it, expect, beforeEach, afterEach } from "vitest";
+import seedHelpers from "../../../seeds/seedHelpers.js";
+import fs from "fs";
+import arrayUtils from "../../../utils/arrayUtils.js";
+import numberUtils from "../../../utils/numberUtils.js";
+import names from "../../../seeds/names.js";
+import path from "path";
+import pathUtils from "../../../utils/pathUtils.js";
+import models from "../../../models/index.js";
+import lodash from "lodash";
 
-vi.mock('../../../utils/pathUtils.js', () => {
+vi.mock("../../../utils/pathUtils.js", () => {
   return {
     default: {
       getDirnamePathFromUrl: vi.fn((url) => {
-        return 'path'
+        return "path";
       }),
     },
-  }
-})
+  };
+});
 
 const vnDataSetJsonMock = `[
   {
@@ -56,206 +56,206 @@ const vnDataSetJsonMock = `[
       }
     ]
   }
-]`
+]`;
 
-vi.mock('fs', () => {
+vi.mock("fs", () => {
   return {
     default: {
       promises: {
         readFile: vi.fn(async () => {
-          return vnDataSetJsonMock
+          return vnDataSetJsonMock;
         }),
       },
     },
-  }
-})
+  };
+});
 
-describe('seedHelpers.generateRandName()', () => {
-  let mathRandomSpy
-
-  beforeEach(() => {
-    mathRandomSpy = vi.spyOn(Math, 'random')
-  })
-
-  afterEach(() => {
-    vi.restoreAllMocks()
-  })
-
-  it('given Math.random() returns 0, it should take the 0 index item in each of the 2 array arguments and return concatenated string with space between of them', () => {
-    // arrange
-    mathRandomSpy.mockImplementation(
-      vi.fn(() => {
-        return 0
-      })
-    )
-    const firstNames = ['a', 'b', 'c']
-    const lastNames = ['a', 'b', 'c']
-
-    // act
-    const res = seedHelpers.generateRandName(firstNames, lastNames)
-    // assert
-
-    expect(res).toBe('a a')
-  })
-
-  it('given Math.random() returns 0.999, it should take the last index item in each of the 2 array arguments and return the concatenated string with space between of them', () => {
-    // arrange
-    mathRandomSpy.mockImplementation(
-      vi.fn(() => {
-        return 0.999
-      })
-    )
-    const firstNames = ['a', 'b', 'c']
-    const lastNames = ['a', 'b', 'c']
-    // act
-    const res = seedHelpers.generateRandName(firstNames, lastNames)
-    // assert
-    expect(res).toBe('c c')
-  })
-
-  it('given Math.random() returns 0.6 and the length of the 2 array arguments is 3, it should return a concatenated string with space between of the 2nd index item of the 2 array parameters', () => {
-    // arrange
-    mathRandomSpy.mockImplementation(
-      vi.fn(() => {
-        return 0.6
-      })
-    )
-    const firstNames = ['a', 'b', 'c']
-    const lastNames = ['a', 'b', 'c']
-    // act
-    const res = seedHelpers.generateRandName(firstNames, lastNames)
-    // assert
-    expect(res).toBe('b b')
-  })
-
-  it('should throw an error if first parameter is not an array', () => {
-    const firstNames = 'a'
-    const lastNames = ['b']
-
-    const fn = () => {
-      seedHelpers.generateRandName(firstNames, lastNames)
-    }
-
-    expect(fn).toThrow('First and second parameters must be an array')
-  })
-
-  it('should throw an error if second parameter is not an array', () => {
-    const firstNames = ['a']
-    const lastNames = 'b'
-
-    const fn = () => {
-      seedHelpers.generateRandName(firstNames, lastNames)
-    }
-
-    expect(fn).toThrow('First and second parameters must be an array')
-  })
-
-  it('should throw an error if first array argument contains contains atleast one item that is NOT of string data type', () => {
-    const firstNames = ['a', 2, 'b']
-    const lastNames = ['b']
-
-    const fn = () => {
-      seedHelpers.generateRandName(firstNames, lastNames)
-    }
-
-    expect(fn).toThrow(
-      'First parameter array must only contain string data type'
-    )
-  })
-  it('should throw an error if second array argument contains contains atleast one item that is NOT of string data type', () => {
-    const firstNames = ['a']
-    const lastNames = ['a', 2, 'b']
-
-    const fn = () => {
-      seedHelpers.generateRandName(firstNames, lastNames)
-    }
-
-    expect(fn).toThrow(
-      'Second parameter array must only contain string data type'
-    )
-  })
-})
-
-describe('seedHelpers.generateRandAddress()', () => {
-  let mathRandomSpy
+describe("seedHelpers.generateRandName()", () => {
+  let mathRandomSpy;
 
   beforeEach(() => {
-    mathRandomSpy = vi.spyOn(Math, 'random')
-  })
+    mathRandomSpy = vi.spyOn(Math, "random");
+  });
 
   afterEach(() => {
-    vi.restoreAllMocks()
-  })
+    vi.restoreAllMocks();
+  });
 
-  it('given Math.random() returns 0 and a mocked vnDataSet.json content when read, when a path to vnDataSet json file is passed to it, it should return a deterministc address full string based on the vnDataSet json file', async () => {
+  it("given Math.random() returns 0, it should take the 0 index item in each of the 2 array arguments and return concatenated string with space between of them", () => {
+    // arrange
     mathRandomSpy.mockImplementation(
       vi.fn(() => {
-        return 0
-      })
-    )
-    const filePath = 'path'
+        return 0;
+      }),
+    );
+    const firstNames = ["a", "b", "c"];
+    const lastNames = ["a", "b", "c"];
 
-    await expect(seedHelpers.generateRandAddress(filePath)).resolves.toBe(
-      '0, 1 Street, Binh Chanh District, Ho Chi Minh City'
-    )
-  })
+    // act
+    const res = seedHelpers.generateRandName(firstNames, lastNames);
+    // assert
 
-  it('given Math.random() returns 0.999 and a mocked vnDataSet,json content when read, when a path to vnDataSet json file is passed to it, it should return a deterministic address full string based on the vnDataSet json file', async () => {
+    expect(res).toBe("a a");
+  });
+
+  it("given Math.random() returns 0.999, it should take the last index item in each of the 2 array arguments and return the concatenated string with space between of them", () => {
+    // arrange
     mathRandomSpy.mockImplementation(
       vi.fn(() => {
-        return 0.999
-      })
-    )
+        return 0.999;
+      }),
+    );
+    const firstNames = ["a", "b", "c"];
+    const lastNames = ["a", "b", "c"];
+    // act
+    const res = seedHelpers.generateRandName(firstNames, lastNames);
+    // assert
+    expect(res).toBe("c c");
+  });
 
-    const filePath = 'path'
-
-    await expect(seedHelpers.generateRandAddress(filePath)).resolves.toBe(
-      '300, 10 Street, Cam Le District, Da Nang City'
-    )
-  })
-
-  it('given Math.random() returns 0.6 and a mocked vnDataSet,json content when read, when a path to vnDataSet json file is passed to it, it should return a deterministic address full string based on the vnDataSet json file', async () => {
+  it("given Math.random() returns 0.6 and the length of the 2 array arguments is 3, it should return a concatenated string with space between of the 2nd index item of the 2 array parameters", () => {
+    // arrange
     mathRandomSpy.mockImplementation(
       vi.fn(() => {
-        return 0.6
-      })
-    )
+        return 0.6;
+      }),
+    );
+    const firstNames = ["a", "b", "c"];
+    const lastNames = ["a", "b", "c"];
+    // act
+    const res = seedHelpers.generateRandName(firstNames, lastNames);
+    // assert
+    expect(res).toBe("b b");
+  });
 
-    const filePath = 'path'
+  it("should throw an error if first parameter is not an array", () => {
+    const firstNames = "a";
+    const lastNames = ["b"];
+
+    const fn = () => {
+      seedHelpers.generateRandName(firstNames, lastNames);
+    };
+
+    expect(fn).toThrow("First and second parameters must be an array");
+  });
+
+  it("should throw an error if second parameter is not an array", () => {
+    const firstNames = ["a"];
+    const lastNames = "b";
+
+    const fn = () => {
+      seedHelpers.generateRandName(firstNames, lastNames);
+    };
+
+    expect(fn).toThrow("First and second parameters must be an array");
+  });
+
+  it("should throw an error if first array argument contains contains atleast one item that is NOT of string data type", () => {
+    const firstNames = ["a", 2, "b"];
+    const lastNames = ["b"];
+
+    const fn = () => {
+      seedHelpers.generateRandName(firstNames, lastNames);
+    };
+
+    expect(fn).toThrow(
+      "First parameter array must only contain string data type",
+    );
+  });
+  it("should throw an error if second array argument contains contains atleast one item that is NOT of string data type", () => {
+    const firstNames = ["a"];
+    const lastNames = ["a", 2, "b"];
+
+    const fn = () => {
+      seedHelpers.generateRandName(firstNames, lastNames);
+    };
+
+    expect(fn).toThrow(
+      "Second parameter array must only contain string data type",
+    );
+  });
+});
+
+describe("seedHelpers.generateRandAddress()", () => {
+  let mathRandomSpy;
+
+  beforeEach(() => {
+    mathRandomSpy = vi.spyOn(Math, "random");
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("given Math.random() returns 0 and a mocked vnDataSet.json content when read, when a path to vnDataSet json file is passed to it, it should return a deterministc address full string based on the vnDataSet json file", async () => {
+    mathRandomSpy.mockImplementation(
+      vi.fn(() => {
+        return 0;
+      }),
+    );
+    const filePath = "path";
 
     await expect(seedHelpers.generateRandAddress(filePath)).resolves.toBe(
-      '180, 10 Street, Ba Dinh District, Ha Noi City'
-    )
-  })
+      "0, 1 Street, Binh Chanh District, Ho Chi Minh City",
+    );
+  });
 
-  it('should throw an error if the first parameter is not string data type', async () => {
-    const filePath = 3
+  it("given Math.random() returns 0.999 and a mocked vnDataSet,json content when read, when a path to vnDataSet json file is passed to it, it should return a deterministic address full string based on the vnDataSet json file", async () => {
+    mathRandomSpy.mockImplementation(
+      vi.fn(() => {
+        return 0.999;
+      }),
+    );
+
+    const filePath = "path";
+
+    await expect(seedHelpers.generateRandAddress(filePath)).resolves.toBe(
+      "300, 10 Street, Cam Le District, Da Nang City",
+    );
+  });
+
+  it("given Math.random() returns 0.6 and a mocked vnDataSet,json content when read, when a path to vnDataSet json file is passed to it, it should return a deterministic address full string based on the vnDataSet json file", async () => {
+    mathRandomSpy.mockImplementation(
+      vi.fn(() => {
+        return 0.6;
+      }),
+    );
+
+    const filePath = "path";
+
+    await expect(seedHelpers.generateRandAddress(filePath)).resolves.toBe(
+      "180, 10 Street, Ba Dinh District, Ha Noi City",
+    );
+  });
+
+  it("should throw an error if the first parameter is not string data type", async () => {
+    const filePath = 3;
 
     await expect(seedHelpers.generateRandAddress(filePath)).rejects.toThrow(
-      'First parameter should be of string data type'
-    )
-  })
-})
+      "First parameter should be of string data type",
+    );
+  });
+});
 
-describe('seedHelpers.generateBookstoreObj()', () => {
-  let generateRandNameSpy
-  let generateRandAddressSpy
+describe("seedHelpers.generateBookstoreObj()", () => {
+  let generateRandNameSpy;
+  let generateRandAddressSpy;
 
   beforeEach(() => {
     generateRandNameSpy = vi
-      .spyOn(seedHelpers, 'generateRandName')
-      .mockReturnValue('John Wick')
+      .spyOn(seedHelpers, "generateRandName")
+      .mockReturnValue("John Wick");
     generateRandAddressSpy = vi
-      .spyOn(seedHelpers, 'generateRandAddress')
-      .mockReturnValue('3, Ba Thang Hai Street, 10 District, Ho Chi Minh City')
-  })
+      .spyOn(seedHelpers, "generateRandAddress")
+      .mockReturnValue("3, Ba Thang Hai Street, 10 District, Ho Chi Minh City");
+  });
 
   afterEach(() => {
-    vi.restoreAllMocks()
-  })
+    vi.restoreAllMocks();
+  });
 
-  it('should return a predictable obj', () => {})
-})
+  it("should return a predictable obj", () => {});
+});
 
 // describe('seedHelpers.generateRandGenres()', () => {
 //   let getRandItemSpy
@@ -296,340 +296,340 @@ describe('seedHelpers.generateBookstoreObj()', () => {
 //   })
 // })
 
-describe('seedHelpers.generateRandGenres()', () => {
-  let generateRandNumSpy
-  let getRandItemSpy
+describe("seedHelpers.generateRandGenres()", () => {
+  let generateRandNumSpy;
+  let getRandItemSpy;
 
   beforeEach(() => {
-    generateRandNumSpy = vi.spyOn(numberUtils, 'generateRandNum')
-    getRandItemSpy = vi.spyOn(arrayUtils, 'getRandItem')
-  })
+    generateRandNumSpy = vi.spyOn(numberUtils, "generateRandNum");
+    getRandItemSpy = vi.spyOn(arrayUtils, "getRandItem");
+  });
 
   afterEach(() => {
-    vi.restoreAllMocks()
-  })
+    vi.restoreAllMocks();
+  });
 
-  it('given numberUtils.generateRandNum() returns 3, when you pass an array of genres, it should return an array', () => {
-    generateRandNumSpy.mockReturnValueOnce(3)
+  it("given numberUtils.generateRandNum() returns 3, when you pass an array of genres, it should return an array", () => {
+    generateRandNumSpy.mockReturnValueOnce(3);
 
-    const genres = ['fantasy', 'fiction', 'science', 'romance']
+    const genres = ["fantasy", "fiction", "science", "romance"];
 
-    const result = seedHelpers.generateRandGenres(genres)
+    const result = seedHelpers.generateRandGenres(genres);
 
-    expect(result).toBeInstanceOf(Array)
-  })
+    expect(result).toBeInstanceOf(Array);
+  });
 
-  it('given numberUtils.generateRandNum() returns 3 and arrayUtils.getRandItem(genres) return same genre 2 times, when you pass an array of genres, each item in the return array should still be unique', () => {
-    generateRandNumSpy.mockReturnValueOnce(3)
+  it("given numberUtils.generateRandNum() returns 3 and arrayUtils.getRandItem(genres) return same genre 2 times, when you pass an array of genres, each item in the return array should still be unique", () => {
+    generateRandNumSpy.mockReturnValueOnce(3);
 
-    const genres = ['fantasy', 'fiction', 'science', 'romance']
+    const genres = ["fantasy", "fiction", "science", "romance"];
 
-    const randGenres = seedHelpers.generateRandGenres(genres)
+    const randGenres = seedHelpers.generateRandGenres(genres);
 
-    let isUnique = true
+    let isUnique = true;
 
     for (let i = 0; i < randGenres.length; i++) {
       const randGenresCopy = randGenres.map((item) => {
-        return item
-      })
-      randGenresCopy.splice(i, 1)
+        return item;
+      });
+      randGenresCopy.splice(i, 1);
 
       for (let j = 0; j < randGenresCopy.length; j++) {
         if (randGenres[i] === randGenresCopy[j]) {
-          isUnique = false
+          isUnique = false;
           if (isUnique === false) {
-            break
+            break;
           }
         }
       }
 
       if (isUnique === false) {
-        break
+        break;
       }
     }
 
-    expect(isUnique).toBe(true)
-  })
-  it('when you pass an array of 2 genres, it should return predictable array of genres', () => {
-    generateRandNumSpy.mockReturnValueOnce(2)
-    const genres = ['fantasy', 'fiction']
+    expect(isUnique).toBe(true);
+  });
+  it("when you pass an array of 2 genres, it should return predictable array of genres", () => {
+    generateRandNumSpy.mockReturnValueOnce(2);
+    const genres = ["fantasy", "fiction"];
 
-    const res = seedHelpers.generateRandGenres(genres)
+    const res = seedHelpers.generateRandGenres(genres);
 
-    const possibleRes1 = ['fantasy', 'fiction']
-    const possibleRes2 = ['fiction', 'fantasy']
-    let isExpectedArray = false
+    const possibleRes1 = ["fantasy", "fiction"];
+    const possibleRes2 = ["fiction", "fantasy"];
+    let isExpectedArray = false;
 
     if (
       lodash.isEqual(res, possibleRes1) ||
       lodash.isEqual(res, possibleRes2)
     ) {
-      isExpectedArray = true
+      isExpectedArray = true;
     }
 
-    expect(isExpectedArray).toBe(true)
-  })
-  it('when you pass non array data type in 1st param, it should throw an error', () => {
-    const genres = 3
+    expect(isExpectedArray).toBe(true);
+  });
+  it("when you pass non array data type in 1st param, it should throw an error", () => {
+    const genres = 3;
 
     const fn = () => {
-      seedHelpers.generateRandGenres(genres)
-    }
+      seedHelpers.generateRandGenres(genres);
+    };
 
     expect(fn).toThrow(
-      'First param must be an array where each item is of string data type'
-    )
-  })
-  it('when you pass an array where each item is NOT string data type, it should throw an error', () => {
-    const genres = [1, 2, 3]
+      "First param must be an array where each item is of string data type",
+    );
+  });
+  it("when you pass an array where each item is NOT string data type, it should throw an error", () => {
+    const genres = [1, 2, 3];
 
     const fn = () => {
-      seedHelpers.generateRandGenres(genres)
-    }
+      seedHelpers.generateRandGenres(genres);
+    };
 
     expect(fn).toThrow(
-      'First param must be an array where each item is of string data type'
-    )
-  })
-})
+      "First param must be an array where each item is of string data type",
+    );
+  });
+});
 
-describe('seedHelpers.generateOpenDays()', () => {
-  let generateArraySpy
-  let mathRandomSpy
-  let generateRandNumSpy
+describe("seedHelpers.generateOpenDays()", () => {
+  let generateArraySpy;
+  let mathRandomSpy;
+  let generateRandNumSpy;
 
   beforeEach(() => {
-    generateArraySpy = vi.spyOn(arrayUtils, 'generateArray')
-    mathRandomSpy = vi.spyOn(Math, 'random')
-    generateRandNumSpy = vi.spyOn(numberUtils, 'generateRandNum')
-  })
+    generateArraySpy = vi.spyOn(arrayUtils, "generateArray");
+    mathRandomSpy = vi.spyOn(Math, "random");
+    generateRandNumSpy = vi.spyOn(numberUtils, "generateRandNum");
+  });
 
   afterEach(() => {
-    vi.restoreAllMocks()
-  })
-  it('should call numberUtils.generateRandNum() with 1 and 7 as arguments', () => {
-    const min = 1
-    const max = 7
+    vi.restoreAllMocks();
+  });
+  it("should call numberUtils.generateRandNum() with 1 and 7 as arguments", () => {
+    const min = 1;
+    const max = 7;
 
-    const res = seedHelpers.generateOpenDays()
+    const res = seedHelpers.generateOpenDays();
 
-    expect(generateRandNumSpy).toBeCalledWith(min, max)
-  })
-  it('given Math.random() returns 0, it should call arrayUtils.generateArray() with correct option object', () => {
-    mathRandomSpy.mockReturnValue(0)
+    expect(generateRandNumSpy).toBeCalledWith(min, max);
+  });
+  it("given Math.random() returns 0, it should call arrayUtils.generateArray() with correct option object", () => {
+    mathRandomSpy.mockReturnValue(0);
     const option = {
       numberItems: 1,
       enum: [
-        'Monday',
-        'Tuesday',
-        'Wednesday',
-        'Thursday',
-        'Friday',
-        'Saturday',
-        'Sunday',
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
       ],
       uniqueItems: true,
-    }
+    };
 
-    const res = seedHelpers.generateOpenDays()
+    const res = seedHelpers.generateOpenDays();
 
-    expect(generateArraySpy).toBeCalledWith(option)
-  })
-  it('given Math.random() returns predetermined values every time it is called such that numberUtils.generateRandNum() returns 3, it should return a predictable array of open days', () => {
-    mathRandomSpy.mockReturnValueOnce(0.3)
-    mathRandomSpy.mockReturnValueOnce(0)
-    mathRandomSpy.mockReturnValueOnce(0.6)
-    mathRandomSpy.mockReturnValueOnce(0.9)
+    expect(generateArraySpy).toBeCalledWith(option);
+  });
+  it("given Math.random() returns predetermined values every time it is called such that numberUtils.generateRandNum() returns 3, it should return a predictable array of open days", () => {
+    mathRandomSpy.mockReturnValueOnce(0.3);
+    mathRandomSpy.mockReturnValueOnce(0);
+    mathRandomSpy.mockReturnValueOnce(0.6);
+    mathRandomSpy.mockReturnValueOnce(0.9);
 
-    const res = seedHelpers.generateOpenDays()
+    const res = seedHelpers.generateOpenDays();
 
-    expect(res).toEqual(['Monday', 'Friday', 'Sunday'])
-  })
-})
+    expect(res).toEqual(["Monday", "Friday", "Sunday"]);
+  });
+});
 
-describe('seedHelpers.genObjForBookstoreClass', () => {
-  let generateRandNameSpy
-  let generateRandAddressSpy
-  let generateRandGenresSpy
-  let generateOpenDaysSpy
-  let moduleFileUrlSpy
-  let pathJoinSpy
+describe("seedHelpers.genObjForBookstoreClass", () => {
+  let generateRandNameSpy;
+  let generateRandAddressSpy;
+  let generateRandGenresSpy;
+  let generateOpenDaysSpy;
+  let moduleFileUrlSpy;
+  let pathJoinSpy;
 
   beforeEach(() => {
-    generateRandNameSpy = vi.spyOn(seedHelpers, 'generateRandName')
-    generateRandAddressSpy = vi.spyOn(seedHelpers, 'generateRandAddress')
-    generateRandGenresSpy = vi.spyOn(seedHelpers, 'generateRandGenres')
-    generateOpenDaysSpy = vi.spyOn(seedHelpers, 'generateOpenDays')
-    moduleFileUrlSpy = vi.spyOn(seedHelpers, 'moduleFileUrl', 'get')
-    pathJoinSpy = vi.spyOn(path, 'join')
-  })
+    generateRandNameSpy = vi.spyOn(seedHelpers, "generateRandName");
+    generateRandAddressSpy = vi.spyOn(seedHelpers, "generateRandAddress");
+    generateRandGenresSpy = vi.spyOn(seedHelpers, "generateRandGenres");
+    generateOpenDaysSpy = vi.spyOn(seedHelpers, "generateOpenDays");
+    moduleFileUrlSpy = vi.spyOn(seedHelpers, "moduleFileUrl", "get");
+    pathJoinSpy = vi.spyOn(path, "join");
+  });
   afterEach(() => {
-    vi.restoreAllMocks()
-  })
-  it('should call seedHelpers.generateRandName() with firstNames and lastNames from names module', async () => {
-    const firstNames = names.firstNames
-    const lastNames = names.lastNames
+    vi.restoreAllMocks();
+  });
+  it("should call seedHelpers.generateRandName() with firstNames and lastNames from names module", async () => {
+    const firstNames = names.firstNames;
+    const lastNames = names.lastNames;
 
-    await seedHelpers.genObjForBookstoreClass()
+    await seedHelpers.genObjForBookstoreClass();
 
-    expect(generateRandNameSpy).toBeCalledWith(firstNames, lastNames)
-  })
-  it('given seedHelpers.moduleFileUrl returns a mocked value, it should call pathUtils.getDirnamePathFromUrl() with that value', async () => {
-    moduleFileUrlSpy.mockReturnValue('url')
+    expect(generateRandNameSpy).toBeCalledWith(firstNames, lastNames);
+  });
+  it("given seedHelpers.moduleFileUrl returns a mocked value, it should call pathUtils.getDirnamePathFromUrl() with that value", async () => {
+    moduleFileUrlSpy.mockReturnValue("url");
 
-    await seedHelpers.genObjForBookstoreClass()
+    await seedHelpers.genObjForBookstoreClass();
 
-    expect(pathUtils.getDirnamePathFromUrl).toBeCalledWith('url')
-  })
+    expect(pathUtils.getDirnamePathFromUrl).toBeCalledWith("url");
+  });
   it("given pathUtils.getDirnamePathFromUrl()'s return value is mocked, it should call path.join() with that mocked return value, and other values to form correct path to vnDataSet.json", async () => {
     //pathUtils is vi.mock() above already, and .getDirnamePathFromUrl() mock return value is "path";
 
-    await seedHelpers.genObjForBookstoreClass()
+    await seedHelpers.genObjForBookstoreClass();
 
-    expect(pathJoinSpy).toBeCalledWith('path', './', 'vnDataSet.json')
-  })
+    expect(pathJoinSpy).toBeCalledWith("path", "./", "vnDataSet.json");
+  });
 
-  it('should call seedHelpers.generateRandAddress() with file path to vnDataSet.json file', async () => {
+  it("should call seedHelpers.generateRandAddress() with file path to vnDataSet.json file", async () => {
     const JSON_PATH = path.join(
       pathUtils.getDirnamePathFromUrl(seedHelpers.moduleFileUrl),
-      './',
-      'vnDataSet.json'
-    )
+      "./",
+      "vnDataSet.json",
+    );
 
-    await seedHelpers.genObjForBookstoreClass()
+    await seedHelpers.genObjForBookstoreClass();
 
-    expect(generateRandAddressSpy).toBeCalledWith(JSON_PATH)
-  })
-  it('should call seedHelpers.generateRandGenres() with the correct predefined array of genres', async () => {
+    expect(generateRandAddressSpy).toBeCalledWith(JSON_PATH);
+  });
+  it("should call seedHelpers.generateRandGenres() with the correct predefined array of genres", async () => {
     const GENRES = [
-      'fantasy',
-      'science',
-      'fiction',
-      'romance',
-      'mystery',
-      'thriller',
-      'historical',
-      'horror',
-      'non-fiction',
-    ]
+      "fantasy",
+      "science",
+      "fiction",
+      "romance",
+      "mystery",
+      "thriller",
+      "historical",
+      "horror",
+      "non-fiction",
+    ];
 
-    await seedHelpers.genObjForBookstoreClass()
+    await seedHelpers.genObjForBookstoreClass();
 
-    expect(generateRandGenresSpy).toBeCalledWith(GENRES)
-  })
-  it('should call seedHelpers.generateOpenDays()', async () => {
-    await seedHelpers.genObjForBookstoreClass()
+    expect(generateRandGenresSpy).toBeCalledWith(GENRES);
+  });
+  it("should call seedHelpers.generateOpenDays()", async () => {
+    await seedHelpers.genObjForBookstoreClass();
 
-    expect(generateOpenDaysSpy).toBeCalled()
-  })
-  it('should return an object which contains all the properties of a Bookstore model', async () => {
-    const res = await seedHelpers.genObjForBookstoreClass()
+    expect(generateOpenDaysSpy).toBeCalled();
+  });
+  it("should return an object which contains all the properties of a Bookstore model", async () => {
+    const res = await seedHelpers.genObjForBookstoreClass();
 
-    expect(res).toHaveProperty('name')
-    expect(res).toHaveProperty('address')
-    expect(res).toHaveProperty('description')
-    expect(res).toHaveProperty('genres')
-    expect(res).toHaveProperty('images')
-    expect(res).toHaveProperty('openDays')
-  })
-  it('should return an obj where description property is of a predetermined value', async () => {
+    expect(res).toHaveProperty("name");
+    expect(res).toHaveProperty("address");
+    expect(res).toHaveProperty("description");
+    expect(res).toHaveProperty("genres");
+    expect(res).toHaveProperty("images");
+    expect(res).toHaveProperty("openDays");
+  });
+  it("should return an obj where description property is of a predetermined value", async () => {
     const DESCRIPTION =
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus semper suscipit scelerisque. Etiam nec tortor id odio facilisis sodales id a justo. Proin porta, turpis eget sodales mattis, est mauris.'
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus semper suscipit scelerisque. Etiam nec tortor id odio facilisis sodales id a justo. Proin porta, turpis eget sodales mattis, est mauris.";
 
-    const res = await seedHelpers.genObjForBookstoreClass()
+    const res = await seedHelpers.genObjForBookstoreClass();
 
-    expect(res.description).toBe(DESCRIPTION)
-  })
-  it('should return an obj where images property is of a predetermined value', async () => {
-    const IMG_LINK = 'https://picsum.photos/800/600'
+    expect(res.description).toBe(DESCRIPTION);
+  });
+  it("should return an obj where images property is of a predetermined value", async () => {
+    const IMG_LINK = "https://picsum.photos/800/600";
 
-    const res = await seedHelpers.genObjForBookstoreClass()
+    const res = await seedHelpers.genObjForBookstoreClass();
 
-    expect(res.images).toBe(IMG_LINK)
-  })
+    expect(res.images).toBe(IMG_LINK);
+  });
   it("given seedHelpers methods' return values are mocked, it should return an object whose properties' values are predictable", async () => {
-    generateRandNameSpy.mockReturnValue('name')
-    generateRandAddressSpy.mockReturnValue('address')
-    generateRandGenresSpy.mockReturnValue(['fantasy', 'fiction'])
-    generateOpenDaysSpy.mockReturnValue(['Monday', 'Tuesday'])
+    generateRandNameSpy.mockReturnValue("name");
+    generateRandAddressSpy.mockReturnValue("address");
+    generateRandGenresSpy.mockReturnValue(["fantasy", "fiction"]);
+    generateOpenDaysSpy.mockReturnValue(["Monday", "Tuesday"]);
     const DESCRIPTION =
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus semper suscipit scelerisque. Etiam nec tortor id odio facilisis sodales id a justo. Proin porta, turpis eget sodales mattis, est mauris.'
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus semper suscipit scelerisque. Etiam nec tortor id odio facilisis sodales id a justo. Proin porta, turpis eget sodales mattis, est mauris.";
 
-    const IMG_LINK = 'https://picsum.photos/800/600'
+    const IMG_LINK = "https://picsum.photos/800/600";
 
-    const res = await seedHelpers.genObjForBookstoreClass()
+    const res = await seedHelpers.genObjForBookstoreClass();
 
     expect(res).toEqual({
-      name: 'name',
-      address: 'address',
-      genres: ['fantasy', 'fiction'],
-      openDays: ['Monday', 'Tuesday'],
+      name: "name",
+      address: "address",
+      genres: ["fantasy", "fiction"],
+      openDays: ["Monday", "Tuesday"],
       description: DESCRIPTION,
       images: IMG_LINK,
-    })
-  })
-})
+    });
+  });
+});
 
-describe('seedHelpers.genBookstoreDoc()', () => {
-  let genObjForBookstoreClassSpy
-  let modelsBookstoreSpy
+describe("seedHelpers.genBookstoreDoc()", () => {
+  let genObjForBookstoreClassSpy;
+  let modelsBookstoreSpy;
   let ModelClassMock = {
     create: vi.fn(),
-  }
+  };
   let connectionMock = {
     model: vi.fn(() => {
-      return ModelClassMock
+      return ModelClassMock;
     }),
-  }
+  };
 
   beforeEach(() => {
     genObjForBookstoreClassSpy = vi
-      .spyOn(seedHelpers, 'genObjForBookstoreClass')
-      .mockImplementation(vi.fn(() => {}))
-    modelsBookstoreSpy = vi.spyOn(models, 'Bookstore', 'get').mockReturnValue({
+      .spyOn(seedHelpers, "genObjForBookstoreClass")
+      .mockImplementation(vi.fn(() => {}));
+    modelsBookstoreSpy = vi.spyOn(models, "Bookstore", "get").mockReturnValue({
       getModelClass: vi.fn((connection) => {
-        return connection.model()
+        return connection.model();
       }),
-    })
-  })
+    });
+  });
 
   afterEach(() => {
-    vi.restoreAllMocks()
-  })
-  it('when you pass connection obj, it should call seedHelpers.genObjForBookstoreClass()', async () => {
-    await seedHelpers.genBookstoreDoc(connectionMock)
+    vi.restoreAllMocks();
+  });
+  it("when you pass connection obj, it should call seedHelpers.genObjForBookstoreClass()", async () => {
+    await seedHelpers.genBookstoreDoc(connectionMock);
 
-    expect(genObjForBookstoreClassSpy).toBeCalled()
-  })
+    expect(genObjForBookstoreClassSpy).toBeCalled();
+  });
 
-  it('when you pass connection obj, it should call models.Bookstore.getModelClass(connection)', async () => {
-    await seedHelpers.genBookstoreDoc(connectionMock)
+  it("when you pass connection obj, it should call models.Bookstore.getModelClass(connection)", async () => {
+    await seedHelpers.genBookstoreDoc(connectionMock);
 
-    expect(models.Bookstore.getModelClass).toBeCalledWith(connectionMock)
-  })
+    expect(models.Bookstore.getModelClass).toBeCalledWith(connectionMock);
+  });
 
-  it('given genObjForBookstoreClass returns a mocked obj, and models.Bookstore.getModelClass(connection) return a mocked ModelClass, it should call that mocked ModelClass create method with that mocked obj', async () => {
+  it("given genObjForBookstoreClass returns a mocked obj, and models.Bookstore.getModelClass(connection) return a mocked ModelClass, it should call that mocked ModelClass create method with that mocked obj", async () => {
     const objMock = {
-      testing: 'test',
-    }
-    genObjForBookstoreClassSpy.mockReturnValue(objMock)
+      testing: "test",
+    };
+    genObjForBookstoreClassSpy.mockReturnValue(objMock);
 
-    await seedHelpers.genBookstoreDoc(connectionMock)
+    await seedHelpers.genBookstoreDoc(connectionMock);
 
     expect(
-      models.Bookstore.getModelClass(connectionMock).create
-    ).toBeCalledWith(objMock)
-  })
+      models.Bookstore.getModelClass(connectionMock).create,
+    ).toBeCalledWith(objMock);
+  });
 
-  it('if you pass a non-obj, it should throw an error', async () => {
-    connectionMock = 'test'
+  it("if you pass a non-obj, it should throw an error", async () => {
+    connectionMock = "test";
 
     const fn = async () => {
-      await seedHelpers.genBookstoreDoc(connectionMock)
-    }
+      await seedHelpers.genBookstoreDoc(connectionMock);
+    };
 
     await expect(fn).rejects.toThrow(
-      'First parameter should be a connection obj'
-    )
-  })
-})
+      "First parameter should be a connection obj",
+    );
+  });
+});

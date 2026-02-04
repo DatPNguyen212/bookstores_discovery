@@ -1,5 +1,5 @@
-import Joi from 'joi'
-import customMsgs from './customMsgs.js'
+import Joi from "joi";
+import customMsgs from "./customMsgs.js";
 
 const bookstoreJoiSchema = Joi.object({
   bookstore: Joi.object({
@@ -9,19 +9,19 @@ const bookstoreJoiSchema = Joi.object({
     genres: Joi.array()
       .items(
         Joi.string()
-          .label('genre item')
+          .label("genre item")
           .valid(
-            'fantasy',
-            'science',
-            'fiction',
-            'romance',
-            'mystery',
-            'thriller',
-            'historical',
-            'horror',
-            'non-fiction'
+            "fantasy",
+            "science",
+            "fiction",
+            "romance",
+            "mystery",
+            "thriller",
+            "historical",
+            "horror",
+            "non-fiction",
           )
-          .messages(customMsgs)
+          .messages(customMsgs),
       )
       .min(1)
       .required()
@@ -30,22 +30,22 @@ const bookstoreJoiSchema = Joi.object({
     openDays: Joi.array()
       .items(
         Joi.string()
-          .label('day item')
+          .label("day item")
           .valid(
-            'Monday',
-            'Tuesday',
-            'Wednesday',
-            'Thursday',
-            'Friday',
-            'Saturday',
-            'Sunday'
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday",
           )
-          .messages(customMsgs)
+          .messages(customMsgs),
       )
       .min(1)
       .required()
       .messages(customMsgs),
   }),
-})
+});
 
-export default bookstoreJoiSchema
+export default bookstoreJoiSchema;

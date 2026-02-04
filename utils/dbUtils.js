@@ -1,4 +1,4 @@
-import objectUtils from './objectUtils.js'
+import objectUtils from "./objectUtils.js";
 
 const dbUtils = {
   // getModelClass(connection, modelName) {
@@ -22,23 +22,23 @@ const dbUtils = {
 
   async clearCollection(connection, models, modelName) {
     if (!objectUtils.isPlainObject(connection)) {
-      throw new TypeError('First parameter should be a connection obj')
+      throw new TypeError("First parameter should be a connection obj");
     }
 
     if (!objectUtils.isPlainObject(models)) {
-      throw new TypeError('Second parameter should be a models dependency obj')
+      throw new TypeError("Second parameter should be a models dependency obj");
     }
 
-    if (typeof modelName !== 'string') {
-      throw new TypeError('Third parameter should be a modelName string')
+    if (typeof modelName !== "string") {
+      throw new TypeError("Third parameter should be a modelName string");
     }
     // const ModelClass = this.getModelClass(connection, modelName)
     // await ModelClass.deleteMany({})
 
-    const ModelClass = connection.model(modelName, models[modelName].schema)
+    const ModelClass = connection.model(modelName, models[modelName].schema);
 
-    await ModelClass.deleteMany({})
+    await ModelClass.deleteMany({});
   },
-}
+};
 
-export default dbUtils
+export default dbUtils;

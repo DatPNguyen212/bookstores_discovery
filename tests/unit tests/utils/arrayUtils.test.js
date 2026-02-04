@@ -1,202 +1,202 @@
-import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
-import arrayUtils from '../../../utils/arrayUtils'
-import lodash from 'lodash'
-import { Window } from 'happy-dom'
-import FormInputExtracter from '../../../public/js/validation/FormInputExtracter.js'
-const window = new Window()
-const document = window.document
+import { vi, describe, it, expect, beforeEach, afterEach } from "vitest";
+import arrayUtils from "../../../utils/arrayUtils";
+import lodash from "lodash";
+import { Window } from "happy-dom";
+import FormInputExtracter from "../../../public/js/validation/FormInputExtracter.js";
+const window = new Window();
+const document = window.document;
 
-vi.stubGlobal('document', document)
+vi.stubGlobal("document", document);
 
-describe('arrayUtils.getRandItem()', () => {
-  let mathRandomSpy
-
-  beforeEach(() => {
-    mathRandomSpy = vi.spyOn(Math, 'random')
-  })
-
-  afterEach(() => {
-    vi.restoreAllMocks()
-  })
-
-  it('given Math.random() returns 0, when an array is passed to it, it should return 0 index item in the array', () => {
-    mathRandomSpy.mockImplementation(
-      vi.fn(() => {
-        return 0
-      })
-    )
-
-    const array = [1, 2, 3]
-
-    const res = arrayUtils.getRandItem(array)
-
-    expect(res).toBe(1)
-  })
-
-  it('given Math.random() returns 0.999, when an array is passed to it, it should return the last index item in the array', () => {
-    mathRandomSpy.mockImplementation(
-      vi.fn(() => {
-        return 0.999
-      })
-    )
-
-    const array = [1, 2, 3]
-
-    const res = arrayUtils.getRandItem(array)
-
-    expect(res).toBe(3)
-  })
-
-  it('given Math.random() returns 0.6, when a 3 items array is passed to it, it should return the 1st index item in the array', () => {
-    mathRandomSpy.mockImplementation(
-      vi.fn(() => {
-        return 0.6
-      })
-    )
-
-    const array = [1, 2, 3]
-
-    const res = arrayUtils.getRandItem(array)
-
-    expect(res).toBe(2)
-  })
-
-  it('should throw an error if first parameter is not array data type', () => {
-    const array = 3
-
-    const fn = () => {
-      arrayUtils.getRandItem(array)
-    }
-
-    expect(fn).toThrow('First parameter should be of array data type')
-  })
-})
-
-describe('arrayUtils.generateArray()', () => {
-  let mathRandomSpy
+describe("arrayUtils.getRandItem()", () => {
+  let mathRandomSpy;
 
   beforeEach(() => {
-    mathRandomSpy = vi.spyOn(Math, 'random')
-  })
+    mathRandomSpy = vi.spyOn(Math, "random");
+  });
 
   afterEach(() => {
-    vi.restoreAllMocks()
-  })
+    vi.restoreAllMocks();
+  });
 
-  it('when pass {numberItems: 3, enum: [1,2,3]}, it should return an array that contains 3 items', () => {
-    const option = { numberItems: 3, enum: [1, 2, 3] }
-
-    const res = arrayUtils.generateArray(option)
-
-    expect(res.length).toBe(3)
-  })
-  it('given Math.random() returns 0, when pass {numberItems: 3, enum: [1, 2, 3]}, it should return an array where each item can only be 1', () => {
+  it("given Math.random() returns 0, when an array is passed to it, it should return 0 index item in the array", () => {
     mathRandomSpy.mockImplementation(
       vi.fn(() => {
-        return 0
-      })
-    )
-    const option = { numberItems: 3, enum: [1, 2, 3] }
+        return 0;
+      }),
+    );
 
-    const res = arrayUtils.generateArray(option)
+    const array = [1, 2, 3];
 
-    for (let item of res) {
-      expect(item).toBe(1)
-    }
-  })
-  it('when pass {numberItems: 3, default: 3}, it should return an array where each item can only be 3', () => {
-    const option = { numberItems: 3, default: 3 }
+    const res = arrayUtils.getRandItem(array);
 
-    const res = arrayUtils.generateArray(option)
+    expect(res).toBe(1);
+  });
 
-    for (let item of res) {
-      expect(item).toBe(3)
-    }
-  })
+  it("given Math.random() returns 0.999, when an array is passed to it, it should return the last index item in the array", () => {
+    mathRandomSpy.mockImplementation(
+      vi.fn(() => {
+        return 0.999;
+      }),
+    );
 
-  it('when pass {numberItems: 3} with no default or enum, it should throw an error', () => {
-    const option = { numberItems: 3 }
+    const array = [1, 2, 3];
+
+    const res = arrayUtils.getRandItem(array);
+
+    expect(res).toBe(3);
+  });
+
+  it("given Math.random() returns 0.6, when a 3 items array is passed to it, it should return the 1st index item in the array", () => {
+    mathRandomSpy.mockImplementation(
+      vi.fn(() => {
+        return 0.6;
+      }),
+    );
+
+    const array = [1, 2, 3];
+
+    const res = arrayUtils.getRandItem(array);
+
+    expect(res).toBe(2);
+  });
+
+  it("should throw an error if first parameter is not array data type", () => {
+    const array = 3;
 
     const fn = () => {
-      arrayUtils.generateArray(option)
+      arrayUtils.getRandItem(array);
+    };
+
+    expect(fn).toThrow("First parameter should be of array data type");
+  });
+});
+
+describe("arrayUtils.generateArray()", () => {
+  let mathRandomSpy;
+
+  beforeEach(() => {
+    mathRandomSpy = vi.spyOn(Math, "random");
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("when pass {numberItems: 3, enum: [1,2,3]}, it should return an array that contains 3 items", () => {
+    const option = { numberItems: 3, enum: [1, 2, 3] };
+
+    const res = arrayUtils.generateArray(option);
+
+    expect(res.length).toBe(3);
+  });
+  it("given Math.random() returns 0, when pass {numberItems: 3, enum: [1, 2, 3]}, it should return an array where each item can only be 1", () => {
+    mathRandomSpy.mockImplementation(
+      vi.fn(() => {
+        return 0;
+      }),
+    );
+    const option = { numberItems: 3, enum: [1, 2, 3] };
+
+    const res = arrayUtils.generateArray(option);
+
+    for (let item of res) {
+      expect(item).toBe(1);
     }
+  });
+  it("when pass {numberItems: 3, default: 3}, it should return an array where each item can only be 3", () => {
+    const option = { numberItems: 3, default: 3 };
 
-    expect(fn).toThrow(
-      'First object parameter must have enum property OR default property'
-    )
-  })
+    const res = arrayUtils.generateArray(option);
 
-  it('when pass option object with numberItems, enum, default properties; it should throw an error', () => {
-    const option = { numberItems: 3, default: 3, enum: [1, 2, 3] }
+    for (let item of res) {
+      expect(item).toBe(3);
+    }
+  });
+
+  it("when pass {numberItems: 3} with no default or enum, it should throw an error", () => {
+    const option = { numberItems: 3 };
 
     const fn = () => {
-      arrayUtils.generateArray(option)
-    }
+      arrayUtils.generateArray(option);
+    };
 
     expect(fn).toThrow(
-      'First object parameter CANNOT have both default property and enum property'
-    )
-  })
+      "First object parameter must have enum property OR default property",
+    );
+  });
+
+  it("when pass option object with numberItems, enum, default properties; it should throw an error", () => {
+    const option = { numberItems: 3, default: 3, enum: [1, 2, 3] };
+
+    const fn = () => {
+      arrayUtils.generateArray(option);
+    };
+
+    expect(fn).toThrow(
+      "First object parameter CANNOT have both default property and enum property",
+    );
+  });
 
   it("when option object doesn't have numberItems property; it should throw an error", () => {
-    const option = { default: 3, enum: [1, 2, 3] }
+    const option = { default: 3, enum: [1, 2, 3] };
 
     const fn = () => {
-      arrayUtils.generateArray(option)
-    }
+      arrayUtils.generateArray(option);
+    };
 
-    expect(fn).toThrow('First object parameter MUST have numberItems property')
-  })
-  it('if enum is not array, it should throw an error', () => {
-    const option = { numberItems: 3, enum: 3 }
+    expect(fn).toThrow("First object parameter MUST have numberItems property");
+  });
+  it("if enum is not array, it should throw an error", () => {
+    const option = { numberItems: 3, enum: 3 };
 
     const fn = () => {
-      arrayUtils.generateArray(option)
-    }
+      arrayUtils.generateArray(option);
+    };
 
-    expect(fn).toThrow('enum property must be an array')
-  })
+    expect(fn).toThrow("enum property must be an array");
+  });
 
-  it('given Math.random() returns a predetermined value everytime it is called, when you pass {numberItems: 2, enum: [1,2], uniqueItems: true}, it should call arrayUtils.getRandItem() correct amount of times to get an array whose values are unique and are from enum array', () => {
-    mathRandomSpy.mockReturnValueOnce(0)
-    mathRandomSpy.mockReturnValueOnce(0.1)
-    mathRandomSpy.mockReturnValueOnce(0.99)
-    const getRandItemSpy = vi.spyOn(arrayUtils, 'getRandItem')
+  it("given Math.random() returns a predetermined value everytime it is called, when you pass {numberItems: 2, enum: [1,2], uniqueItems: true}, it should call arrayUtils.getRandItem() correct amount of times to get an array whose values are unique and are from enum array", () => {
+    mathRandomSpy.mockReturnValueOnce(0);
+    mathRandomSpy.mockReturnValueOnce(0.1);
+    mathRandomSpy.mockReturnValueOnce(0.99);
+    const getRandItemSpy = vi.spyOn(arrayUtils, "getRandItem");
 
     const option = {
       numberItems: 2,
       enum: [1, 2],
       uniqueItems: true,
-    }
+    };
 
-    const res = arrayUtils.generateArray(option)
+    const res = arrayUtils.generateArray(option);
 
-    expect(getRandItemSpy).toBeCalledTimes(3)
-    expect(res).toEqual([1, 2])
-  })
+    expect(getRandItemSpy).toBeCalledTimes(3);
+    expect(res).toEqual([1, 2]);
+  });
 
-  it('given option object arguemnt with numberItems, enum and uniqeItems true, when numberItems is larger than enum array length, it should throw an error', () => {
+  it("given option object arguemnt with numberItems, enum and uniqeItems true, when numberItems is larger than enum array length, it should throw an error", () => {
     const option = {
       numberItems: 4,
       enum: [1, 2],
       uniqueItems: true,
-    }
+    };
 
     const fn = () => {
-      arrayUtils.generateArray(option)
-    }
+      arrayUtils.generateArray(option);
+    };
 
     expect(fn).toThrow(
-      "numberItems should be smaller than or equal to enum array's length"
-    )
-  })
-})
+      "numberItems should be smaller than or equal to enum array's length",
+    );
+  });
+});
 
-describe('arrayUtils.areAllGroupInputs()', () => {
+describe("arrayUtils.areAllGroupInputs()", () => {
   beforeEach(() => {
-    document.body.innerHTML = ''
-  })
-  it('when you pass an array that contains atleast an input text, it should return false', () => {
+    document.body.innerHTML = "";
+  });
+  it("when you pass an array that contains atleast an input text, it should return false", () => {
     document.body.innerHTML = `<form action="">
   <fieldset>
     <legend>Genres</legend>
@@ -210,16 +210,16 @@ describe('arrayUtils.areAllGroupInputs()', () => {
     <input type = "text" name = "title" id = "title" >
     <label for = "title"></label>
   </fieldset>
-</form>`
-    const form = document.querySelector('form')
-    const formInputExtracter = new FormInputExtracter()
-    const inputs = formInputExtracter.getFormInputs(form).flat(1)
+</form>`;
+    const form = document.querySelector("form");
+    const formInputExtracter = new FormInputExtracter();
+    const inputs = formInputExtracter.getFormInputs(form).flat(1);
 
-    const result = arrayUtils.areAllGroupInputs(inputs)
+    const result = arrayUtils.areAllGroupInputs(inputs);
 
-    expect(result).toBe(false)
-  })
-  it('when you pass an array that only contains checkboxes and radios, it should return true', () => {
+    expect(result).toBe(false);
+  });
+  it("when you pass an array that only contains checkboxes and radios, it should return true", () => {
     document.body.innerHTML = `<form action="">
   <fieldset>
     <legend>Genres</legend>
@@ -233,17 +233,17 @@ describe('arrayUtils.areAllGroupInputs()', () => {
     <input type = "radio" name = "bookstore[test]">
     <input type = "radio" name = "bookstore[test]">
   </fieldset>
-</form>`
-    const form = document.querySelector('form')
-    const formInputExtracter = new FormInputExtracter()
-    const inputs = formInputExtracter.getFormInputs(form).flat(1)
+</form>`;
+    const form = document.querySelector("form");
+    const formInputExtracter = new FormInputExtracter();
+    const inputs = formInputExtracter.getFormInputs(form).flat(1);
 
-    const result = arrayUtils.areAllGroupInputs(inputs)
+    const result = arrayUtils.areAllGroupInputs(inputs);
 
-    expect(result).toBe(true)
-  })
+    expect(result).toBe(true);
+  });
 
-  it('when you pass an array of only checkboxes, it should return true', () => {
+  it("when you pass an array of only checkboxes, it should return true", () => {
     document.body.innerHTML = `<form action="">
   <fieldset>
     <legend>Genres</legend>
@@ -252,39 +252,39 @@ describe('arrayUtils.areAllGroupInputs()', () => {
     <input type="checkbox" value = "science" name = "bookstore[genres]" id = "science" checked>
     <label for="science">science</label>
   </fieldset>;
-</form>`
-    const form = document.querySelector('form')
-    const formInputExtracter = new FormInputExtracter()
-    const inputs = formInputExtracter.getFormInputs(form).flat(1)
+</form>`;
+    const form = document.querySelector("form");
+    const formInputExtracter = new FormInputExtracter();
+    const inputs = formInputExtracter.getFormInputs(form).flat(1);
 
-    const result = arrayUtils.areAllGroupInputs(inputs)
+    const result = arrayUtils.areAllGroupInputs(inputs);
 
-    expect(result).toBe(true)
-  })
+    expect(result).toBe(true);
+  });
 
-  it('when you pass an array of only radios, it should true', () => {
+  it("when you pass an array of only radios, it should true", () => {
     document.body.innerHTML = `<form action="">
   <fieldset>
    <legend>Test</legend>
    <input type = "radio" name = "test">
    <input type = "radio" name = "test">
   </fieldset>;
-</form>`
-    const form = document.querySelector('form')
-    const formInputExtracter = new FormInputExtracter()
-    const inputs = formInputExtracter.getFormInputs(form).flat(1)
+</form>`;
+    const form = document.querySelector("form");
+    const formInputExtracter = new FormInputExtracter();
+    const inputs = formInputExtracter.getFormInputs(form).flat(1);
 
-    const result = arrayUtils.areAllGroupInputs(inputs)
+    const result = arrayUtils.areAllGroupInputs(inputs);
 
-    expect(result).toBe(true)
-  })
-  it('when you pass a non array data type, it should throw an error', () => {
-    const inputs = 3
+    expect(result).toBe(true);
+  });
+  it("when you pass a non array data type, it should throw an error", () => {
+    const inputs = 3;
 
     const fn = () => {
-      arrayUtils.areAllGroupInputs(inputs)
-    }
+      arrayUtils.areAllGroupInputs(inputs);
+    };
 
-    expect(fn).toThrow('First parameter should be an array')
-  })
-})
+    expect(fn).toThrow("First parameter should be an array");
+  });
+});

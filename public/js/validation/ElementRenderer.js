@@ -1,74 +1,74 @@
-import ElementRendererBase from '../abstracts/validation/ElementRendererBase.js'
-import objectUtils from '../utils/objectUtils.js'
-import { IS_SCHEMA_ADAPTER_BASE_INSTANCE } from '../abstracts/validation/SchemaAdataperBase.js'
-import { IS_OBJ_ARG_VALIDATOR_BASE_INSTANCE } from '../abstracts/validation/ObjArgValidatorBase.js'
+import ElementRendererBase from "../abstracts/validation/ElementRendererBase.js";
+import objectUtils from "../utils/objectUtils.js";
+import { IS_SCHEMA_ADAPTER_BASE_INSTANCE } from "../abstracts/validation/SchemaAdataperBase.js";
+import { IS_OBJ_ARG_VALIDATOR_BASE_INSTANCE } from "../abstracts/validation/ObjArgValidatorBase.js";
 class ElementRenderer extends ElementRendererBase {
   constructor(objArgValidator) {
-    super()
+    super();
     if (!objArgValidator?.[IS_OBJ_ARG_VALIDATOR_BASE_INSTANCE]) {
       throw new TypeError(
-        'You need to pass instance of ObjArgValidatorBase to constructor'
-      )
+        "You need to pass instance of ObjArgValidatorBase to constructor",
+      );
     }
 
-    this.objArgValidator = objArgValidator
+    this.objArgValidator = objArgValidator;
   }
 
   createTextElement(text, options = {}) {
-    if (typeof text !== 'string') {
-      throw new TypeError('First parameter needs to be of string data type')
+    if (typeof text !== "string") {
+      throw new TypeError("First parameter needs to be of string data type");
     }
 
-    const { error } = this.objArgValidator.options.validate(options)
+    const { error } = this.objArgValidator.options.validate(options);
 
     if (error) {
-      throw error
+      throw error;
     }
 
     const defaultOptions = {
-      tagName: 'div',
-      class: '',
-      id: '',
+      tagName: "div",
+      class: "",
+      id: "",
       style: {
-        color: 'black',
-        fontSize: '16px',
+        color: "black",
+        fontSize: "16px",
       },
-    }
+    };
 
     const finalOptions = {
       ...defaultOptions,
       ...options,
-    }
+    };
 
     finalOptions.style = {
       ...defaultOptions.style,
       ...options.style,
+    };
+
+    const newElement = document.createElement(finalOptions.tagName);
+
+    newElement.innerText = text;
+
+    if (typeof finalOptions.class === "string") {
+      const classes = finalOptions.class.split(" ");
+      newElement.classList.add(...classes);
     }
 
-    const newElement = document.createElement(finalOptions.tagName)
-
-    newElement.innerText = text
-
-    if (typeof finalOptions.class === 'string') {
-      const classes = finalOptions.class.split(' ')
-      newElement.classList.add(...classes)
+    if (typeof finalOptions.id === "string") {
+      newElement.id = finalOptions.id;
     }
 
-    if (typeof finalOptions.id === 'string') {
-      newElement.id = finalOptions.id
-    }
-
-    const styleKeys = Object.keys(finalOptions.style)
+    const styleKeys = Object.keys(finalOptions.style);
 
     for (let styleKey of styleKeys) {
       if (newElement.style[styleKey] === undefined) {
-        throw new TypeError(`${styleKey} is not a valid style property`)
+        throw new TypeError(`${styleKey} is not a valid style property`);
       }
-      newElement.style[styleKey] = finalOptions.style[styleKey]
+      newElement.style[styleKey] = finalOptions.style[styleKey];
     }
 
-    return newElement
+    return newElement;
   }
 }
 
-export default ElementRenderer
+export default ElementRenderer;
