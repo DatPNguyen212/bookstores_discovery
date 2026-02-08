@@ -1,126 +1,126 @@
 // @vitest-environment happy-dom
-import { vi, describe, it, expect, beforeEach, afterEach } from "vitest";
-import FormErrorsRenderer from "../../../../../public/js/validation/FormErrorsRenderer.js";
-import { Window } from "happy-dom";
-import ElementRenderer from "../../../../../public/js/validation/ElementRenderer.js";
-import InputErrors from "../../../../../public/js/validation/InputErrors.js";
-import { IS_ERRORS_RENDERER_BASE_INSTANCE } from "../../../../../public/js/abstracts/validation/ErrorsRendererBase.js";
-import CreateTextOptsSchema from "../../../../../public/js/validation/CreateTextOptsSchema.js";
-import SchemaAdapterBase from "../../../../../public/js/abstracts/validation/SchemaAdataperBase.js";
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
+import FormErrorsRenderer from '../../../../../public/js/validation/FormErrorsRenderer.js'
+import { Window } from 'happy-dom'
+import ElementRenderer from '../../../../../public/js/validation/ElementRenderer.js'
+import InputErrors from '../../../../../public/js/validation/InputErrors.js'
+import { IS_ERRORS_RENDERER_BASE_INSTANCE } from '../../../../../public/js/abstracts/validation/ErrorsRendererBase.js'
+import CreateTextOptsSchema from '../../../../../public/js/validation/CreateTextOptsSchema.js'
+import SchemaAdapterBase from '../../../../../public/js/abstracts/validation/SchemaAdataperBase.js'
 import ObjArgValidatorBase, {
   IS_OBJ_ARG_VALIDATOR_BASE_INSTANCE,
-} from "../../../../../public/js/abstracts/validation/ObjArgValidatorBase.js";
-import e from "express";
-const window = new Window();
-const document = window.document;
+} from '../../../../../public/js/abstracts/validation/ObjArgValidatorBase.js'
+import e from 'express'
+const window = new Window()
+const document = window.document
 
-vi.stubGlobal("document", document);
+vi.stubGlobal('document', document)
 
-describe("FormErrorsRenderer", () => {
-  let formErrorsRenderer;
-  let elementRenderer;
+describe('FormErrorsRenderer', () => {
+  let formErrorsRenderer
+  let elementRenderer
   class ObjArgValidatorMock extends ObjArgValidatorBase {
     constructor() {
-      super();
+      super()
     }
   }
 
-  let resultMock;
-  let objArgValidatorMock;
+  let resultMock
+  let objArgValidatorMock
 
   beforeEach(() => {
-    document.body.innerHTML = "";
+    document.body.innerHTML = ''
 
-    objArgValidatorMock = new ObjArgValidatorMock();
+    objArgValidatorMock = new ObjArgValidatorMock()
 
     resultMock = {
       error: undefined,
-    };
+    }
     objArgValidatorMock.options = {
       validate: vi.fn(function () {
-        return resultMock;
+        return resultMock
       }),
-    };
+    }
 
-    elementRenderer = new ElementRenderer(objArgValidatorMock);
+    elementRenderer = new ElementRenderer(objArgValidatorMock)
 
     formErrorsRenderer = new FormErrorsRenderer(
       elementRenderer,
-      objArgValidatorMock,
-    );
-  });
+      objArgValidatorMock
+    )
+  })
 
   afterEach(() => {
-    vi.restoreAllMocks();
-  });
-  it("when you pass a non instance of ElementRendererBase, it should throw an error", () => {
-    const elementRenderer = 3;
+    vi.restoreAllMocks()
+  })
+  it('when you pass a non instance of ElementRendererBase, it should throw an error', () => {
+    const elementRenderer = 3
 
     const fn = () => {
-      new FormErrorsRenderer(elementRenderer);
-    };
+      new FormErrorsRenderer(elementRenderer)
+    }
 
     expect(fn).toThrow(
-      "You need to pass an isntance of ElementRendererBase to constructor",
-    );
-  });
+      'You need to pass an isntance of ElementRendererBase to constructor'
+    )
+  })
 
-  it("when you pass valid elementRenderer and objArgValidator to constructor, the instance should store those dependencies and have property that checks instance of ErrorsRendererBase", () => {
-    const result = new FormErrorsRenderer(elementRenderer, objArgValidatorMock);
+  it('when you pass valid elementRenderer and objArgValidator to constructor, the instance should store those dependencies and have property that checks instance of ErrorsRendererBase', () => {
+    const result = new FormErrorsRenderer(elementRenderer, objArgValidatorMock)
 
-    expect(result.elementRenderer).toEqual(elementRenderer);
-    expect(result.objArgValidator).toEqual(objArgValidatorMock);
-    expect(result[IS_ERRORS_RENDERER_BASE_INSTANCE]).toBe(true);
-  });
+    expect(result.elementRenderer).toEqual(elementRenderer)
+    expect(result.objArgValidator).toEqual(objArgValidatorMock)
+    expect(result[IS_ERRORS_RENDERER_BASE_INSTANCE]).toBe(true)
+  })
 
-  it("when you pass a non instance of ObjArgValidatorBase to 2nd param of constructor, it should throw an error", () => {
-    objArgValidatorMock = 3;
+  it('when you pass a non instance of ObjArgValidatorBase to 2nd param of constructor, it should throw an error', () => {
+    objArgValidatorMock = 3
 
     const fn = () => {
-      new FormErrorsRenderer(elementRenderer, objArgValidatorMock);
-    };
+      new FormErrorsRenderer(elementRenderer, objArgValidatorMock)
+    }
 
     expect(fn).toThrow(
-      "You need to pass instance of ObjArgValidatorBase to 2nd parameter",
-    );
-  });
+      'You need to pass instance of ObjArgValidatorBase to 2nd parameter'
+    )
+  })
 
-  describe("FormErrorsRenderer.render()", () => {
-    it("when you pass a number to 1st param, it should throw an error", () => {
-      const inputErrorsArray = 3;
+  describe('FormErrorsRenderer.render()', () => {
+    it('when you pass a number to 1st param, it should throw an error', () => {
+      const inputErrorsArray = 3
 
       const fn = () => {
-        formErrorsRenderer.render();
-      };
+        formErrorsRenderer.render()
+      }
 
-      expect(fn).toThrow("You need to pass an array of InputErrors instances");
-    });
+      expect(fn).toThrow('You need to pass an array of InputErrors instances')
+    })
 
-    it("when you pass an array where atleast 1 item is not InputErrors instance, it should throw an error", () => {
+    it('when you pass an array where atleast 1 item is not InputErrors instance, it should throw an error', () => {
       document.body.innerHTML = `
         <form>
           <input type = "text">
         </form>
-      `;
-      const input = document.querySelector("input");
-      const inputErrors = new InputErrors(input);
-      const inputErrorsArray = [1, inputErrors];
+      `
+      const input = document.querySelector('input')
+      const inputErrors = new InputErrors(input)
+      const inputErrorsArray = [1, inputErrors]
       const options = {
-        tagName: "DIV",
+        tagName: 'DIV',
         style: {
-          color: "black",
-          fontSize: "16px",
+          color: 'black',
+          fontSize: '16px',
         },
-      };
+      }
 
       const fn = () => {
-        formErrorsRenderer.render(inputErrorsArray, options);
-      };
+        formErrorsRenderer.render(inputErrorsArray, options)
+      }
 
-      expect(fn).toThrow("You need to pass an array of InputErrors instances");
-    });
+      expect(fn).toThrow('You need to pass an array of InputErrors instances')
+    })
 
-    it("given objArgValidator.options.validate() is mocked, when you pass inputErrorsArray and options, it should call objArgValidator.options.validate() with that options argument", () => {
+    it('given objArgValidator.options.validate() is mocked, when you pass inputErrorsArray and options, it should call objArgValidator.options.validate() with that options argument', () => {
       document.body.innerHTML = `
         <form>
           <fieldset>
@@ -131,45 +131,45 @@ describe("FormErrorsRenderer", () => {
             <input type = "text" name = "description" required>
           </fieldset>
         </form>
-      `;
+      `
 
-      const input1 = document.querySelector(`[name="title"]`);
-      const input2 = document.querySelector(`[name="description"]`);
+      const input1 = document.querySelector(`[name="title"]`)
+      const input2 = document.querySelector(`[name="description"]`)
 
-      const inputErrors1 = new InputErrors(input1);
-      inputErrors1.errors.push("test");
-      const inputErrors2 = new InputErrors(input2);
-      inputErrors2.errors.push("test");
+      const inputErrors1 = new InputErrors(input1)
+      inputErrors1.errors.push('test')
+      const inputErrors2 = new InputErrors(input2)
+      inputErrors2.errors.push('test')
 
-      const inputErrorsArray = [inputErrors1, inputErrors2];
+      const inputErrorsArray = [inputErrors1, inputErrors2]
 
       const options = {
-        tagName: "div",
-      };
+        tagName: 'div',
+      }
 
-      const result = formErrorsRenderer.render(inputErrorsArray, options);
+      const result = formErrorsRenderer.render(inputErrorsArray, options)
 
-      expect(objArgValidatorMock.options.validate).toBeCalledWith(options);
-    });
+      expect(objArgValidatorMock.options.validate).toBeCalledWith(options)
+    })
 
-    it("given objArgValidator.options.validate() is mocked to return an error, when you pass inputErrorsArray and options, it should throw that error", () => {
-      const errorMock = new Error("test");
+    it('given objArgValidator.options.validate() is mocked to return an error, when you pass inputErrorsArray and options, it should throw that error', () => {
+      const errorMock = new Error('test')
       resultMock = {
         error: errorMock,
-      };
+      }
 
-      const objArgValidator = new ObjArgValidatorMock();
+      const objArgValidator = new ObjArgValidatorMock()
 
       objArgValidator.options = {
         validate: vi.fn(() => {
-          return resultMock;
+          return resultMock
         }),
-      };
+      }
 
       const formErrorsRenderer = new FormErrorsRenderer(
         elementRenderer,
-        objArgValidator,
-      );
+        objArgValidator
+      )
 
       document.body.innerHTML = `
         <form>
@@ -181,28 +181,28 @@ describe("FormErrorsRenderer", () => {
             <input type = "text" name = "description" required>
           </fieldset>
         </form>
-      `;
+      `
 
-      const input1 = document.querySelector(`[name="title"]`);
-      const input2 = document.querySelector(`[name="description"]`);
+      const input1 = document.querySelector(`[name="title"]`)
+      const input2 = document.querySelector(`[name="description"]`)
 
-      const inputErrors1 = new InputErrors(input1);
-      inputErrors1.errors.push("test");
-      const inputErrors2 = new InputErrors(input2);
-      inputErrors2.errors.push("test");
+      const inputErrors1 = new InputErrors(input1)
+      inputErrors1.errors.push('test')
+      const inputErrors2 = new InputErrors(input2)
+      inputErrors2.errors.push('test')
 
-      const inputErrorsArray = [inputErrors1, inputErrors2];
+      const inputErrorsArray = [inputErrors1, inputErrors2]
 
       const options = {
-        tagName: "div",
-      };
+        tagName: 'div',
+      }
 
       const fn = () => {
-        formErrorsRenderer.render(inputErrorsArray, options);
-      };
+        formErrorsRenderer.render(inputErrorsArray, options)
+      }
 
-      expect(fn).toThrowError(errorMock);
-    });
+      expect(fn).toThrowError(errorMock)
+    })
 
     // it('when you pass a non plain obj to 2nd param, it should throw an error', () => {
     //   document.body.innerHTML = `
@@ -271,7 +271,7 @@ describe("FormErrorsRenderer", () => {
     //   )
     // })
 
-    it("given a form with 2 fieldsets with an input in each of them, when you create an inputErrorsArray from those inputs with errors and pass it to 1st param and you pass a plain options obj in 2nd param, the errors should be correctly rendered according to what you specified in options obj", () => {
+    it('given a form with 2 fieldsets with an input in each of them, when you create an inputErrorsArray from those inputs with errors and pass it to 1st param and you pass a plain options obj in 2nd param, the errors should be correctly rendered according to what you specified in options obj', () => {
       document.body.innerHTML = `
         <form>
           <fieldset id = "fieldset1">
@@ -282,62 +282,58 @@ describe("FormErrorsRenderer", () => {
             <input type = "checkbox" name = "genres" value = "fantasy" required>
           </fieldset>
         </form>
-      `;
+      `
 
-      const fieldset1 = document.querySelector("#fieldset1");
-      const fieldset2 = document.querySelector("#fieldset2");
+      const fieldset1 = document.querySelector('#fieldset1')
+      const fieldset2 = document.querySelector('#fieldset2')
 
-      const input1 = document.querySelector(`[name="title"]`);
-      const inputErrors1 = new InputErrors(input1);
-      const requiredError = "Field is required";
-      const maxLengthError = "Field exeeded maxLength";
-      inputErrors1.errors.push(requiredError, maxLengthError);
+      const input1 = document.querySelector(`[name="title"]`)
+      const inputErrors1 = new InputErrors(input1)
+      const requiredError = 'Field is required'
+      const maxLengthError = 'Field exeeded maxLength'
+      inputErrors1.errors.push(requiredError, maxLengthError)
 
-      const input2 = document.querySelector(`[value="fantasy"]`);
-      const inputErrors2 = new InputErrors(input2);
-      const groupRequiredError = "You must check atleast one item";
-      inputErrors2.errors.push(groupRequiredError);
+      const input2 = document.querySelector(`[value="fantasy"]`)
+      const inputErrors2 = new InputErrors(input2)
+      const groupRequiredError = 'You must check atleast one item'
+      inputErrors2.errors.push(groupRequiredError)
 
-      const inputErrorsArray = [inputErrors1, inputErrors2];
+      const inputErrorsArray = [inputErrors1, inputErrors2]
 
       const options = {
-        tagName: "section",
+        tagName: 'section',
         style: {
-          color: "purple",
-          fontSize: "18px",
+          color: 'purple',
+          fontSize: '18px',
         },
-      };
+      }
 
-      const result = formErrorsRenderer.render(inputErrorsArray, options);
+      const result = formErrorsRenderer.render(inputErrorsArray, options)
 
       expect(fieldset1.nextElementSibling.tagName).toBe(
-        options.tagName.toUpperCase(),
-      );
+        options.tagName.toUpperCase()
+      )
       expect(fieldset1.nextElementSibling.innerText).toBe(
-        inputErrors1.errors.join(""),
-      );
+        inputErrors1.errors.join('')
+      )
       expect(fieldset1.nextElementSibling.style.fontSize).toBe(
-        options.style.fontSize,
-      );
-      expect(fieldset1.nextElementSibling.style.color).toBe(
-        options.style.color,
-      );
+        options.style.fontSize
+      )
+      expect(fieldset1.nextElementSibling.style.color).toBe(options.style.color)
 
       expect(fieldset2.nextElementSibling.tagName).toBe(
-        options.tagName.toUpperCase(),
-      );
+        options.tagName.toUpperCase()
+      )
       expect(fieldset2.nextElementSibling.innerText).toBe(
-        inputErrors2.errors.join(""),
-      );
+        inputErrors2.errors.join('')
+      )
       expect(fieldset2.nextElementSibling.style.fontSize).toBe(
-        options.style.fontSize,
-      );
-      expect(fieldset2.nextElementSibling.style.color).toBe(
-        options.style.color,
-      );
-    });
+        options.style.fontSize
+      )
+      expect(fieldset2.nextElementSibling.style.color).toBe(options.style.color)
+    })
 
-    it("given a form with 2 fieldsets with an input and a DIV element for error msg in each of them, when you create an inputErrorsArray from those inputs with errors and pass it to 1st param and you pass a plain options obj that specify class name of error elements in 2nd param, ALL CURRENT error elements with that class name should be removed and NEW ERROR ELEMENTS should be correctly rendered according to what you specified in options obj", () => {
+    it('given a form with 2 fieldsets with an input and a DIV element for error msg in each of them, when you create an inputErrorsArray from those inputs with errors and pass it to 1st param and you pass a plain options obj that specify class name of error elements in 2nd param, ALL CURRENT error elements with that class name should be removed and NEW ERROR ELEMENTS should be correctly rendered according to what you specified in options obj', () => {
       document.body.innerHTML = `
         <form>
           <fieldset id = "fieldset1">
@@ -350,72 +346,131 @@ describe("FormErrorsRenderer", () => {
              <div class = "error" id = "error2">Test</div>
           </fieldset>
         </form>
-      `;
+      `
 
-      const fieldset1 = document.querySelector("#fieldset1");
-      const fieldset2 = document.querySelector("#fieldset2");
+      const fieldset1 = document.querySelector('#fieldset1')
+      const fieldset2 = document.querySelector('#fieldset2')
 
-      const input1 = document.querySelector(`[name="title"]`);
-      const inputErrors1 = new InputErrors(input1);
-      const requiredError = "Field is required";
-      const maxLengthError = "Field exeeded maxLength";
-      inputErrors1.errors.push(requiredError, maxLengthError);
+      const input1 = document.querySelector(`[name="title"]`)
+      const inputErrors1 = new InputErrors(input1)
+      const requiredError = 'Field is required'
+      const maxLengthError = 'Field exeeded maxLength'
+      inputErrors1.errors.push(requiredError, maxLengthError)
 
-      const input2 = document.querySelector(`[value="fantasy"]`);
-      const inputErrors2 = new InputErrors(input2);
-      const groupRequiredError = "You must check atleast one item";
-      inputErrors2.errors.push(groupRequiredError);
+      const input2 = document.querySelector(`[value="fantasy"]`)
+      const inputErrors2 = new InputErrors(input2)
+      const groupRequiredError = 'You must check atleast one item'
+      inputErrors2.errors.push(groupRequiredError)
 
-      const inputErrorsArray = [inputErrors1, inputErrors2];
+      const inputErrorsArray = [inputErrors1, inputErrors2]
 
       const options = {
-        tagName: "section",
-        class: "error",
+        tagName: 'section',
+        class: 'error',
         style: {
-          color: "purple",
-          fontSize: "18px",
+          color: 'purple',
+          fontSize: '18px',
         },
-      };
+      }
 
-      const result = formErrorsRenderer.render(inputErrorsArray, options);
+      const result = formErrorsRenderer.render(inputErrorsArray, options)
 
-      const oldErrorElement1 = document.getElementById("#error1");
-      const oldErrorElement2 = document.getElementById("#error2");
+      const oldErrorElement1 = document.getElementById('#error1')
+      const oldErrorElement2 = document.getElementById('#error2')
 
-      expect(oldErrorElement1).toBeNull();
-      expect(oldErrorElement2).toBeNull();
+      expect(oldErrorElement1).toBeNull()
+      expect(oldErrorElement2).toBeNull()
 
       expect(fieldset1.nextElementSibling.tagName).toBe(
-        options.tagName.toUpperCase(),
-      );
-      expect(fieldset1.nextElementSibling.classList.contains("error")).toBe(
-        true,
-      );
+        options.tagName.toUpperCase()
+      )
+      expect(fieldset1.nextElementSibling.classList.contains('error')).toBe(
+        true
+      )
       expect(fieldset1.nextElementSibling.innerText).toBe(
-        inputErrors1.errors.join(""),
-      );
+        inputErrors1.errors.join('')
+      )
       expect(fieldset1.nextElementSibling.style.fontSize).toBe(
-        options.style.fontSize,
-      );
-      expect(fieldset1.nextElementSibling.style.color).toBe(
-        options.style.color,
-      );
+        options.style.fontSize
+      )
+      expect(fieldset1.nextElementSibling.style.color).toBe(options.style.color)
 
       expect(fieldset2.nextElementSibling.tagName).toBe(
-        options.tagName.toUpperCase(),
-      );
-      expect(fieldset2.nextElementSibling.classList.contains("error")).toBe(
-        true,
-      );
+        options.tagName.toUpperCase()
+      )
+      expect(fieldset2.nextElementSibling.classList.contains('error')).toBe(
+        true
+      )
       expect(fieldset2.nextElementSibling.innerText).toBe(
-        inputErrors2.errors.join(""),
-      );
+        inputErrors2.errors.join('')
+      )
       expect(fieldset2.nextElementSibling.style.fontSize).toBe(
-        options.style.fontSize,
-      );
-      expect(fieldset2.nextElementSibling.style.color).toBe(
-        options.style.color,
-      );
-    });
-  });
-});
+        options.style.fontSize
+      )
+      expect(fieldset2.nextElementSibling.style.color).toBe(options.style.color)
+    })
+
+    it('given an inputRulesArray with 2 items, where one has no error msg and the other does, when you pass it to formErrorsRenderer.render(), it should render correct error msg and styling for the field with the error, while it DOES NOT render the other', () => {
+      // arrange
+      document.body.innerHTML = `<form>
+          <fieldset id = "fieldset1">
+            <input type = "text" required value = "test" id = "name" name = "name">
+          </fieldset>
+
+          <fieldset id = "fieldset2">
+            <input type = "text" required name = "description" id = "description">
+          </fieldset>
+        </form>`
+
+      const input1 = document.querySelector('#name')
+      const input2 = document.querySelector('#description')
+
+      console.log(input1.tagName)
+      console.log(input2.tagName)
+
+      const inputErrors1 = new InputErrors(input1)
+      const errorMsg1 = null
+      inputErrors1.errors.push(errorMsg1)
+
+      const inputErrors2 = new InputErrors(input2)
+      const errorMsg2 = 'required'
+      inputErrors2.errors.push(errorMsg2)
+
+      const inputErrorsArray = [inputErrors1, inputErrors2]
+
+      // act
+
+      const options = {
+        tagName: 'section',
+        class: 'error',
+        style: {
+          color: 'purple',
+          fontSize: '18px',
+        },
+      }
+
+      const result = formErrorsRenderer.render(inputErrorsArray, options)
+
+      // assert
+      const fieldset1 = document.querySelector('#fieldset1')
+
+      const fieldset2 = document.querySelector('#fieldset2')
+
+      expect(fieldset1.nextElementSibling.tagName).not.toBe(
+        options.tagName.toUpperCase()
+      )
+
+      expect(fieldset2.nextElementSibling.tagName).toBe(
+        options.tagName.toUpperCase()
+      )
+      expect(fieldset2.nextElementSibling.classList.contains('error')).toBe(
+        true
+      )
+      expect(fieldset2.nextElementSibling.style.color).toBe(options.style.color)
+      expect(fieldset2.nextElementSibling.style.fontSize).toBe(
+        options.style.fontSize
+      )
+      expect(fieldset2.nextElementSibling.innerText).toBe(errorMsg2)
+    })
+  })
+})
