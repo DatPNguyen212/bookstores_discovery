@@ -62,7 +62,7 @@ class FormErrorsRenderer extends ErrorsRendererBase {
     }
 
     for (let inputErrors of inputErrorsArray) {
-      if (!inputErrors.isEmpty()) {
+      if (!inputErrors.checkAllNull()) {
         const input = inputErrors.input
         const errors = inputErrors.errors
         const errorMsg = errors.join('')

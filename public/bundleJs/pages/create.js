@@ -15695,7 +15695,7 @@ class FormErrorsRenderer extends (0, _errorsRendererBaseJsDefault.default) {
         // }
         const oldErrorElements = Array.from(document.querySelectorAll(`.${options.class}`));
         for (let oldErrorElement of oldErrorElements)oldErrorElement.remove();
-        for (let inputErrors of inputErrorsArray){
+        for (let inputErrors of inputErrorsArray)if (!inputErrors.checkAllNull()) {
             const input = inputErrors.input;
             const errors = inputErrors.errors;
             const errorMsg = errors.join('');
