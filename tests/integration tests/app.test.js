@@ -601,7 +601,7 @@ describe('Integration tests for routes', () => {
         const route = '/bookstores'
 
         const response = await request(app).post(route).send(data)
-        const bookstoreRes = Bookstore.findOne(data.bookstore)
+        const bookstoreRes = await Bookstore.findOne(data.bookstore)
 
         expect(response.status).toBe(302)
         expect(response.headers.location).toBe(`/bookstores/${bookstoreRes.id}`)
