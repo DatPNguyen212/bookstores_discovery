@@ -596,7 +596,7 @@ describe('Integration tests for routes', () => {
         expect(response.status).toBe(400)
       })
 
-      it.only('when you send POST /bookstores with a valid mock bookstore, but req.body.bookstore.genres IS NOT an array but still a valid string for genre, it should redirect you to the created bookstore show page with correct response.status', async () => {
+      it('when you send POST /bookstores with a valid mock bookstore, but req.body.bookstore.genres IS NOT an array but still a valid string for genre, it should redirect you to the created bookstore show page with correct response.status', async () => {
         data.bookstore.genres = 'horror'
         const route = '/bookstores'
 
