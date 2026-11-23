@@ -608,7 +608,7 @@ describe('Integration tests for routes', () => {
       })
 
       it.only('when you send POST /bookstores with a valid mock bookstore, but req.body.bookstore.openDays is NOT an array but still a valid string for openDays, it should  redirect you to the created bookstore show page with correct response.status', async () => {
-        data.bookstore.genres = 'Monday'
+        data.bookstore.openDays = 'Monday'
         const route = '/bookstores'
 
         const response = await request(app).post(route).send(data)
