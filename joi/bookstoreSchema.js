@@ -43,24 +43,38 @@ const bookstoreJoiSchema = Joi.object({
         .messages(customMsgs)
     ),
     images: Joi.string().required().messages(customMsgs),
-    openDays: Joi.array()
-      .items(
-        Joi.string()
-          .label('day item')
-          .valid(
-            'Monday',
-            'Tuesday',
-            'Wednesday',
-            'Thursday',
-            'Friday',
-            'Saturday',
-            'Sunday'
-          )
-          .messages(customMsgs)
-      )
-      .min(1)
-      .required()
-      .messages(customMsgs),
+    openDays: Joi.alternatives().try(
+      Joi.array()
+        .items(
+          Joi.string()
+            .label('day item')
+            .valid(
+              'Monday',
+              'Tuesday',
+              'Wednesday',
+              'Thursday',
+              'Friday',
+              'Saturday',
+              'Sunday'
+            )
+            .messages(customMsgs)
+        )
+        .min(1)
+        .required()
+        .messages(customMsgs),
+      Joi.string()
+        .label('day item')
+        .valid(
+          'Monday',
+          'Tuesday',
+          'Wednesday',
+          'Thursday',
+          'Friday',
+          'Saturday',
+          'Sunday'
+        )
+        .messages(customMsgs)
+    ),
   }),
 })
 
