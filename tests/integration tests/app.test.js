@@ -606,6 +606,17 @@ describe('Integration tests for routes', () => {
         expect(response.status).toBe(302)
         expect(response.headers.location).toBe(`/bookstores/${bookstoreRes.id}`)
       })
+
+      it.only('when you send POST /bookstores with a valid mock bookstore, but req.body.bookstore.openDays is NOT an array but still a valid string for openDays, it should  redirect you to the created bookstore show page with correct response.status', async () => {
+        data.bookstore.genres = 'Monday'
+        const route = '/bookstores'
+
+        const response = await request(app).post(route).send(data)
+        const bookstoreRes = await Bookstore.findOne(data.bookstore)
+
+        expect(response.status).toBe(302)
+        expect(response.headers.location).toBe(`/bookstores/${bookstoreRes.id}`)
+      })
     })
   })
 })
