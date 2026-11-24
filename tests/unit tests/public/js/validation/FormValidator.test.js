@@ -396,7 +396,7 @@ describe('FormValidator', () => {
       expect(form.submit).toHaveBeenCalled()
     })
 
-    it('given schemaParser.parse, validationProcessor.validate, errorsRenderer.render and formSubmitChecker.checkCanSubmit are mocked AND formSubmitChecker.checkCanSubmit mocked return value is false, when you pass valid form, schema and options with no missing properties, it should NOT call the form element submit method', () => {
+    it('given schemaParser.parse, validationProcessor.validate, errorsRenderer.render and formSubmitChecker.checkCanSubmit are mocked AND formSubmitChecker.checkCanSubmit mocked return value is false, when you pass valid form, schema and options with no missing properties, it should log that it cannot submit and that something went wrong', () => {
       const options = {
         tagName: 'div',
         class: 'error',
@@ -406,11 +406,14 @@ describe('FormValidator', () => {
           fontSize: '16px',
         },
       }
+      vi.spyOn(console, 'log')
       formSubmitCheckerMock.checkCanSubmit.mockReturnValue(false)
 
       formValidator.validate(form, schema, options)
 
-      expect(form.submit).not.toHaveBeenCalled()
+      expect(console.log).toHaveBeenCalledWith(
+        expect.stringMatching(/(cannot submit)*(something went wrong)/gi)
+      )
     })
 
     describe('Tests to check if correct default values are applied to propeties of the obj parameter', () => {

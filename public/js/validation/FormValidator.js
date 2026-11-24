@@ -96,6 +96,8 @@ class FormValidator {
 
     if (this.formSubmitChecker.checkCanSubmit(inputErrorsArray) === true) {
       form.submit()
+    } else {
+      console.log('formValidator cannot submit because something went wrong')
     }
   }
 }
