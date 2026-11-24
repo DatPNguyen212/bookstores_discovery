@@ -51,15 +51,19 @@ const seedHelpers = {
 
     const city = vnDataSet[numberUtils.generateRandNum(0, vnDataSet.length - 1)]
     const cityName = city.name
+    console.log(`cityName: ${cityName}`)
 
     const districts = city.district
     const district = arrayUtils.getRandItem(districts)
     const districtName = district.name
+    console.log(`districtName: ${districtName}`)
 
     const streets = district.street
     const streetName = arrayUtils.getRandItem(streets)
+    console.log(`streetName: ${streetName}`)
 
     const homeNum = numberUtils.generateRandNum(0, 300).toString()
+    console.log(`homeNum: ${homeNum}`)
 
     const address = new Address({
       city: cityName,

@@ -1,28 +1,28 @@
 // Abstracts
-@use './abstracts/_variables.scss';
-@use './abstracts/_mixins.scss';
+@use "./abstracts/_variables.scss";
+@use "./abstracts/_mixins.scss";
 
 // Base
-@use './base/_reset.scss';
-@use './base/_typography.scss';
-@use './base/_base.scss';
+@use "./base/_reset.scss";
+@use "./base/_typography.scss";
+@use "./base/_base.scss";
 
 // Components
-@use './components/_nav.scss';
-@use './components/_button.scss';
-@use './components/_card-grid.scss';
-@use './components/_card.scss';
-@use './components/btn-flex';
-@use './components/_store-detail.scss';
-@use './components/_form-create.scss';
-@use './components/_error-card.scss';
+@use "./components/_nav.scss";
+@use "./components/_button.scss";
+@use "./components/_card-grid.scss";
+@use "./components/_card.scss";
+@use "./components/btn-flex";
+@use "./components/_store-detail.scss";
+@use "./components/_form-create.scss";
+@use "./components/_error-card.scss";
 
 // Layouts
-@use './layouts/_body.scss';
-@use './layouts/_footer.scss';
+@use "./layouts/_body.scss";
+@use "./layouts/_footer.scss";
 
 // Pages
-@use './pages/_create.scss';
-@use './pages/_error.scss';
+@use "./pages/_create.scss";
+@use "./pages/_error.scss";
 
 // Themes

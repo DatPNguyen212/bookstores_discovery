@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
 const bookstoreSchema = new mongoose.Schema({
   name: {
@@ -21,15 +21,15 @@ const bookstoreSchema = new mongoose.Schema({
       type: String,
       required: true,
       enum: [
-        'fantasy',
-        'science',
-        'fiction',
-        'romance',
-        'mystery',
-        'thriller',
-        'historical',
-        'horror',
-        'non-fiction',
+        "fantasy",
+        "science",
+        "fiction",
+        "romance",
+        "mystery",
+        "thriller",
+        "historical",
+        "horror",
+        "non-fiction",
       ],
     },
   ],
@@ -42,16 +42,16 @@ const bookstoreSchema = new mongoose.Schema({
       type: String,
       required: true,
       enum: [
-        'Monday',
-        'Tuesday',
-        'Wednesday',
-        'Thursday',
-        'Friday',
-        'Saturday',
-        'Sunday',
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
       ],
     },
   ],
-})
+});
 
-export default bookstoreSchema
+export default bookstoreSchema;

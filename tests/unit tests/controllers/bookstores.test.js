@@ -1,82 +1,82 @@
-import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
-import bookstoreCtrl from '../../../controllers/bookstores.js'
-import dbUtils from '../../../utils/dbUtils.js'
-import models from '../../../models/index.js'
-import mongoose from 'mongoose'
-import ExpressError from '../../../utils/ExpressError.js'
+import { vi, describe, it, expect, beforeEach, afterEach } from "vitest";
+import bookstoreCtrl from "../../../controllers/bookstores.js";
+import dbUtils from "../../../utils/dbUtils.js";
+import models from "../../../models/index.js";
+import mongoose from "mongoose";
+import ExpressError from "../../../utils/ExpressError.js";
 
-const ObjectId = mongoose.Types.ObjectId
+const ObjectId = mongoose.Types.ObjectId;
 
-describe('bookstoreCtrl', () => {
-  let findResult = [1, 2, 3]
+describe("bookstoreCtrl", () => {
+  let findResult = [1, 2, 3];
   let findByIdResult = {
-    name: 'bookstoreName',
-    address: '3, Ba Thang Hai Street, 3 District, Ho Chi Minh City',
-    description: 'test',
-    genres: ['fantasy', 'science'],
-    images: 'url',
-    openDays: ['Monday', 'Tuesday'],
-  }
+    name: "bookstoreName",
+    address: "3, Ba Thang Hai Street, 3 District, Ho Chi Minh City",
+    description: "test",
+    genres: ["fantasy", "science"],
+    images: "url",
+    openDays: ["Monday", "Tuesday"],
+  };
 
   let newBookstore = {
     _id: new ObjectId(),
-    name: 'bookstoreName',
-    address: '3, Ba Thang Hai Street, 3 District, Ho Chi Minh City',
-    description: 'test',
-    genres: ['fantasy', 'science'],
-    images: 'url',
-    openDays: ['Monday', 'Tuesday'],
-  }
+    name: "bookstoreName",
+    address: "3, Ba Thang Hai Street, 3 District, Ho Chi Minh City",
+    description: "test",
+    genres: ["fantasy", "science"],
+    images: "url",
+    openDays: ["Monday", "Tuesday"],
+  };
   let Bookstore = {
     find: vi.fn(async () => {
-      return findResult
+      return findResult;
     }),
     findById: vi.fn(async () => {
-      return findByIdResult
+      return findByIdResult;
     }),
     create: vi.fn(async () => {
-      return newBookstore
+      return newBookstore;
     }),
-  }
+  };
   let connection = {
     models: {
       Bookstore: Bookstore,
     },
     model: vi.fn((modelName, schema) => {
-      return Bookstore
+      return Bookstore;
     }),
-  }
+  };
   // let getModelClassSpy
 
   let req = {
     query: {
-      test: 'test',
+      test: "test",
     },
     params: {
       id: new ObjectId(),
     },
     body: {
       bookstore: {
-        name: 'bookstoreName',
-        address: '3, Ba Thang Hai Street, 3 District, Ho Chi Minh City',
-        description: 'test',
-        genres: ['fantasy', 'science'],
-        images: 'url',
-        openDays: ['Monday', 'Tuesday'],
+        name: "bookstoreName",
+        address: "3, Ba Thang Hai Street, 3 District, Ho Chi Minh City",
+        description: "test",
+        genres: ["fantasy", "science"],
+        images: "url",
+        openDays: ["Monday", "Tuesday"],
       },
     },
-  }
+  };
   let res = {
     render: vi.fn(() => {}),
     redirect: vi.fn(() => {}),
-  }
+  };
 
-  let next = vi.fn()
+  let next = vi.fn();
   beforeEach(() => {
     // getModelClassSpy = vi
     //   .spyOn(dbUtils, 'getModelClass')
     //   .mockReturnValue(Bookstore)
-  })
+  });
 
   afterEach(() => {
     connection = {
@@ -84,216 +84,216 @@ describe('bookstoreCtrl', () => {
         Bookstore: Bookstore,
       },
       model: vi.fn((modelName, schema) => {
-        return Bookstore
+        return Bookstore;
       }),
-    }
+    };
 
-    req.params.id = new ObjectId()
+    req.params.id = new ObjectId();
 
-    vi.restoreAllMocks()
-    vi.unstubAllGlobals()
-  })
+    vi.restoreAllMocks();
+    vi.unstubAllGlobals();
+  });
 
-  describe('bookstoreCtrl.renderIndexPage()', () => {
-    it('when you pass connection obj, it should return a function', () => {
-      const result = bookstoreCtrl.renderIndexPage(connection)
+  describe("bookstoreCtrl.renderIndexPage()", () => {
+    it("when you pass connection obj, it should return a function", () => {
+      const result = bookstoreCtrl.renderIndexPage(connection);
 
-      expect(result).toBeInstanceOf(Function)
-    })
-    it('should call connection.model(`Bookstore`, models.Bookstore.schema)', () => {
-      const result = bookstoreCtrl.renderIndexPage(connection)
+      expect(result).toBeInstanceOf(Function);
+    });
+    it("should call connection.model(`Bookstore`, models.Bookstore.schema)", () => {
+      const result = bookstoreCtrl.renderIndexPage(connection);
 
       expect(connection.model).toBeCalledWith(
-        'Bookstore',
-        models.Bookstore.schema
-      )
-    })
-    it('the return function should call Bookstore.find({})', () => {
-      const returnFn = bookstoreCtrl.renderIndexPage(connection)
+        "Bookstore",
+        models.Bookstore.schema,
+      );
+    });
+    it("the return function should call Bookstore.find({})", () => {
+      const returnFn = bookstoreCtrl.renderIndexPage(connection);
 
-      returnFn(req, res, next)
+      returnFn(req, res, next);
 
-      expect(Bookstore.find).toBeCalledWith({})
-    })
+      expect(Bookstore.find).toBeCalledWith({});
+    });
 
-    it('the return function should call res.render() with correct arguments', async () => {
-      const returnFn = bookstoreCtrl.renderIndexPage(connection)
+    it("the return function should call res.render() with correct arguments", async () => {
+      const returnFn = bookstoreCtrl.renderIndexPage(connection);
 
-      await returnFn(req, res, next)
+      await returnFn(req, res, next);
 
-      expect(res.render).toBeCalledWith('./bookstore/index.ejs', {
+      expect(res.render).toBeCalledWith("./bookstore/index.ejs", {
         bookstores: findResult,
-      })
-    })
+      });
+    });
 
-    it('if you pass a non plain obj, it should throw an error', () => {
-      connection = [1, 2, 3]
+    it("if you pass a non plain obj, it should throw an error", () => {
+      connection = [1, 2, 3];
       const fn = () => {
-        bookstoreCtrl.renderIndexPage(connection)
-      }
+        bookstoreCtrl.renderIndexPage(connection);
+      };
 
-      expect(fn).toThrow('First parameter should be a connection object')
-    })
+      expect(fn).toThrow("First parameter should be a connection object");
+    });
 
-    it('given Bookstore.find({}) throws an error, the return function should call next(error)', async () => {
-      const error = new ExpressError('error', 500)
+    it("given Bookstore.find({}) throws an error, the return function should call next(error)", async () => {
+      const error = new ExpressError("error", 500);
       Bookstore.find = vi.fn(async () => {
-        return Promise.reject(error)
-      })
+        return Promise.reject(error);
+      });
 
-      const resultFn = bookstoreCtrl.renderIndexPage(connection)
-      await resultFn(req, res, next)
+      const resultFn = bookstoreCtrl.renderIndexPage(connection);
+      await resultFn(req, res, next);
 
-      expect(next).toBeCalledWith(error)
-    })
-    it('given Bookstore.find({}) returns an empty array, the return function should call next() with correct error object', async () => {
+      expect(next).toBeCalledWith(error);
+    });
+    it("given Bookstore.find({}) returns an empty array, the return function should call next() with correct error object", async () => {
       Bookstore.find = vi.fn(() => {
-        return []
-      })
+        return [];
+      });
 
-      const resultFn = bookstoreCtrl.renderIndexPage(connection)
-      await resultFn(req, res, next)
+      const resultFn = bookstoreCtrl.renderIndexPage(connection);
+      await resultFn(req, res, next);
 
-      expect(next).toBeCalledWith(new ExpressError('No bookstores found', 404))
-    })
-  })
+      expect(next).toBeCalledWith(new ExpressError("No bookstores found", 404));
+    });
+  });
 
-  describe('bookstoreCtrl.renderCreatePage()', () => {
-    it('when you pass a connection obj, it should return a function', () => {
-      const res = bookstoreCtrl.renderCreatePage(connection)
+  describe("bookstoreCtrl.renderCreatePage()", () => {
+    it("when you pass a connection obj, it should return a function", () => {
+      const res = bookstoreCtrl.renderCreatePage(connection);
 
-      expect(res).toBeInstanceOf(Function)
-    })
+      expect(res).toBeInstanceOf(Function);
+    });
 
-    it('the return function should call res.render() with the correct arugments', async () => {
-      const returnFn = bookstoreCtrl.renderCreatePage(connection)
+    it("the return function should call res.render() with the correct arugments", async () => {
+      const returnFn = bookstoreCtrl.renderCreatePage(connection);
 
-      await returnFn(req, res, next)
+      await returnFn(req, res, next);
 
-      expect(res.render).toBeCalledWith('./bookstore/create.ejs')
-    })
+      expect(res.render).toBeCalledWith("./bookstore/create.ejs");
+    });
 
-    it('when you pass a non plain obj to it, it should throw an error', () => {
-      connection = [1, 2, 3]
+    it("when you pass a non plain obj to it, it should throw an error", () => {
+      connection = [1, 2, 3];
 
       const fn = () => {
-        bookstoreCtrl.renderCreatePage(connection)
-      }
+        bookstoreCtrl.renderCreatePage(connection);
+      };
 
-      expect(fn).toThrow('First parameter should be a connection object')
-    })
-  })
+      expect(fn).toThrow("First parameter should be a connection object");
+    });
+  });
 
-  describe('bookstoreCtrl.renderShowPage()', () => {
-    it('when you pass a connection obj, it should return a function', () => {
-      const result = bookstoreCtrl.renderShowPage(connection)
+  describe("bookstoreCtrl.renderShowPage()", () => {
+    it("when you pass a connection obj, it should return a function", () => {
+      const result = bookstoreCtrl.renderShowPage(connection);
 
-      expect(result).toBeInstanceOf(Function)
-    })
-    it('the return function should call res.render() with correct view file and findById result', async () => {
-      const renderShowPage = bookstoreCtrl.renderShowPage(connection)
+      expect(result).toBeInstanceOf(Function);
+    });
+    it("the return function should call res.render() with correct view file and findById result", async () => {
+      const renderShowPage = bookstoreCtrl.renderShowPage(connection);
 
-      await renderShowPage(req, res, next)
+      await renderShowPage(req, res, next);
 
-      expect(res.render).toBeCalledWith('./bookstore/show.ejs', {
+      expect(res.render).toBeCalledWith("./bookstore/show.ejs", {
         bookstore: findByIdResult,
-      })
-    })
+      });
+    });
 
-    it('if req.params.id is NOT valid ObjectId, the return function should call next() with correct ExpressError object instance', async () => {
-      req.params.id = 'invalidId'
-      const renderShowPage = bookstoreCtrl.renderShowPage(connection)
-      const expressError = new ExpressError('Invalid ID in URL', 404)
+    it("if req.params.id is NOT valid ObjectId, the return function should call next() with correct ExpressError object instance", async () => {
+      req.params.id = "invalidId";
+      const renderShowPage = bookstoreCtrl.renderShowPage(connection);
+      const expressError = new ExpressError("Invalid ID in URL", 404);
 
-      await renderShowPage(req, res, next)
+      await renderShowPage(req, res, next);
 
-      expect(next).toBeCalledWith(expressError)
-    })
-    it('if you pass a non object, it should throw an error', () => {
-      const connection = 3
+      expect(next).toBeCalledWith(expressError);
+    });
+    it("if you pass a non object, it should throw an error", () => {
+      const connection = 3;
 
       const fn = () => {
-        bookstoreCtrl.renderShowPage(connection)
-      }
+        bookstoreCtrl.renderShowPage(connection);
+      };
 
-      expect(fn).toThrow('First parameter should be a connection object')
-    })
-    it('given Bookstore.findById(id) throws an error, the return function should call next(error)', async () => {
-      const error = new ExpressError('test', 500)
+      expect(fn).toThrow("First parameter should be a connection object");
+    });
+    it("given Bookstore.findById(id) throws an error, the return function should call next(error)", async () => {
+      const error = new ExpressError("test", 500);
       Bookstore.findById = vi.fn(async () => {
-        return Promise.reject(error)
-      })
+        return Promise.reject(error);
+      });
 
-      const resultFn = bookstoreCtrl.renderShowPage(connection)
-      await resultFn(req, res, next)
+      const resultFn = bookstoreCtrl.renderShowPage(connection);
+      await resultFn(req, res, next);
 
-      expect(next).toBeCalledWith(error)
-    })
+      expect(next).toBeCalledWith(error);
+    });
 
-    it('given Bookstore.findById(id) does not find the document, the return function should call next() with correct error object', async () => {
-      const error = new ExpressError('Cannot find document with that ID', 404)
+    it("given Bookstore.findById(id) does not find the document, the return function should call next() with correct error object", async () => {
+      const error = new ExpressError("Cannot find document with that ID", 404);
       Bookstore.findById = vi.fn(async () => {
-        return null
-      })
+        return null;
+      });
 
-      const resultFn = bookstoreCtrl.renderShowPage(connection)
-      await resultFn(req, res, next)
+      const resultFn = bookstoreCtrl.renderShowPage(connection);
+      await resultFn(req, res, next);
 
-      expect(next).toBeCalledWith(error)
-    })
-  })
+      expect(next).toBeCalledWith(error);
+    });
+  });
 
-  describe('bookstoreCtrl.createBookstore()', () => {
-    it('when you pass a connection obj, should return a function', () => {
-      const result = bookstoreCtrl.createBookstore(connection)
+  describe("bookstoreCtrl.createBookstore()", () => {
+    it("when you pass a connection obj, should return a function", () => {
+      const result = bookstoreCtrl.createBookstore(connection);
 
-      expect(result).toBeInstanceOf(Function)
-    })
+      expect(result).toBeInstanceOf(Function);
+    });
 
-    it('should call connection.model(`Bookstore`, models.Bookstore.schema)', () => {
-      const result = bookstoreCtrl.createBookstore(connection)
+    it("should call connection.model(`Bookstore`, models.Bookstore.schema)", () => {
+      const result = bookstoreCtrl.createBookstore(connection);
 
       expect(connection.model).toBeCalledWith(
-        'Bookstore',
-        models.Bookstore.schema
-      )
-    })
-    it('the return function when called should call Bookstore.create(req.body.bookstore)', async () => {
-      const returnFn = bookstoreCtrl.createBookstore(connection)
+        "Bookstore",
+        models.Bookstore.schema,
+      );
+    });
+    it("the return function when called should call Bookstore.create(req.body.bookstore)", async () => {
+      const returnFn = bookstoreCtrl.createBookstore(connection);
 
-      await returnFn(req, res, next)
+      await returnFn(req, res, next);
 
-      expect(Bookstore.create).toBeCalled(req.body.bookstore)
-    })
+      expect(Bookstore.create).toBeCalled(req.body.bookstore);
+    });
 
-    it('the return function when called should call res.redirect(/bookstores/id) where id is the id of the newly created bookstore doc', async () => {
-      const returnFn = bookstoreCtrl.createBookstore(connection)
+    it("the return function when called should call res.redirect(/bookstores/id) where id is the id of the newly created bookstore doc", async () => {
+      const returnFn = bookstoreCtrl.createBookstore(connection);
 
-      await returnFn(req, res, next)
+      await returnFn(req, res, next);
 
-      expect(res.redirect).toBeCalledWith(`/bookstores/${newBookstore._id}`)
-    })
+      expect(res.redirect).toBeCalledWith(`/bookstores/${newBookstore._id}`);
+    });
 
-    it('if you pass a non plain obj, it should throw an error', () => {
-      const connection = 3
+    it("if you pass a non plain obj, it should throw an error", () => {
+      const connection = 3;
 
       const fn = () => {
-        bookstoreCtrl.createBookstore(connection)
-      }
+        bookstoreCtrl.createBookstore(connection);
+      };
 
-      expect(fn).toThrow('First parameter should be a connection object')
-    })
+      expect(fn).toThrow("First parameter should be a connection object");
+    });
 
-    it('given Bookstore.create() throws an error, the return function should call next(error)', async () => {
-      const error = new ExpressError('test', 500)
+    it("given Bookstore.create() throws an error, the return function should call next(error)", async () => {
+      const error = new ExpressError("test", 500);
       Bookstore.create = vi.fn(async () => {
-        return Promise.reject(error)
-      })
+        return Promise.reject(error);
+      });
 
-      const resultFn = bookstoreCtrl.createBookstore(connection)
-      await resultFn(req, res, next)
+      const resultFn = bookstoreCtrl.createBookstore(connection);
+      await resultFn(req, res, next);
 
-      expect(next).toBeCalledWith(error)
-    })
-  })
-})
+      expect(next).toBeCalledWith(error);
+    });
+  });
+});

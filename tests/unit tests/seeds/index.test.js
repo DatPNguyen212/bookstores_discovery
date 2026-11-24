@@ -6,156 +6,156 @@ import {
   beforeEach,
   afterEach,
   afterAll,
-} from 'vitest'
-import seedBookstore from '../../../seeds/index'
-import setupDB from '../../../config/setupDB'
-import seedHelpers from '../../../seeds/seedHelpers'
-import dbUtils from '../../../utils/dbUtils'
-import models from '../../../models/index.js'
+} from "vitest";
+import seedBookstore from "../../../seeds/index";
+import setupDB from "../../../config/setupDB";
+import seedHelpers from "../../../seeds/seedHelpers";
+import dbUtils from "../../../utils/dbUtils";
+import models from "../../../models/index.js";
 
-vi.mock('../../../config/setupDB.js', () => {
+vi.mock("../../../config/setupDB.js", () => {
   return {
     default: {
       connect: vi.fn(async (uri) => {}),
       close: vi.fn(async () => {}),
     },
-  }
-})
+  };
+});
 
-describe('seedBookstore()', () => {
-  let genObjForBookstoreClassSpy
-  let setupDBConnectSpy
-  let genBookstoreDocSpy
-  let clearCollectionSpy
+describe("seedBookstore()", () => {
+  let genObjForBookstoreClassSpy;
+  let setupDBConnectSpy;
+  let genBookstoreDocSpy;
+  let clearCollectionSpy;
   let connectionMock = {
     models: {
-      ModelClass: 'ModelName',
+      ModelClass: "ModelName",
     },
-  }
+  };
 
   beforeEach(() => {
     genObjForBookstoreClassSpy = vi
-      .spyOn(seedHelpers, 'genObjForBookstoreClass')
-      .mockImplementation(vi.fn(() => {}))
+      .spyOn(seedHelpers, "genObjForBookstoreClass")
+      .mockImplementation(vi.fn(() => {}));
 
-    setupDBConnectSpy = vi.spyOn(setupDB, 'connect').mockImplementation(
+    setupDBConnectSpy = vi.spyOn(setupDB, "connect").mockImplementation(
       vi.fn(() => {
-        return connectionMock
-      })
-    )
+        return connectionMock;
+      }),
+    );
 
     genBookstoreDocSpy = vi
-      .spyOn(seedHelpers, 'genBookstoreDoc')
-      .mockImplementation(vi.fn(() => {}))
+      .spyOn(seedHelpers, "genBookstoreDoc")
+      .mockImplementation(vi.fn(() => {}));
 
     clearCollectionSpy = vi
-      .spyOn(dbUtils, 'clearCollection')
-      .mockImplementation(vi.fn((connection, modelName) => {}))
-  })
+      .spyOn(dbUtils, "clearCollection")
+      .mockImplementation(vi.fn((connection, modelName) => {}));
+  });
 
   afterEach(() => {
-    vi.restoreAllMocks()
-  })
-  it('when you pass a positive number, it should call setupDB.connect() with local mongo service uri', async () => {
-    const localUri = 'mongodb://127.0.0.1:27017/bookstoreDiscovery'
-    const numberOfStores = 3
+    vi.restoreAllMocks();
+  });
+  it("when you pass a positive number, it should call setupDB.connect() with local mongo service uri", async () => {
+    const localUri = "mongodb://127.0.0.1:27017/bookstoreDiscovery";
+    const numberOfStores = 3;
 
-    await seedBookstore(numberOfStores)
+    await seedBookstore(numberOfStores);
 
-    expect(setupDBConnectSpy).toBeCalledWith(localUri)
-  })
+    expect(setupDBConnectSpy).toBeCalledWith(localUri);
+  });
 
-  it('given setupDB.connect() returns a promise of reject, it should throw an error', async () => {
-    setupDBConnectSpy.mockReturnValue(Promise.reject())
-    const numberOfStores = 3
-
-    const fn = async () => {
-      await seedBookstore(numberOfStores)
-    }
-
-    await expect(fn).rejects.toThrow('Failed to connect to database')
-  })
-
-  it('when you pass a string, it should throw an error', async () => {
-    const numberOfTimes = 'test'
+  it("given setupDB.connect() returns a promise of reject, it should throw an error", async () => {
+    setupDBConnectSpy.mockReturnValue(Promise.reject());
+    const numberOfStores = 3;
 
     const fn = async () => {
-      await seedBookstore(numberOfTimes)
-    }
+      await seedBookstore(numberOfStores);
+    };
+
+    await expect(fn).rejects.toThrow("Failed to connect to database");
+  });
+
+  it("when you pass a string, it should throw an error", async () => {
+    const numberOfTimes = "test";
+
+    const fn = async () => {
+      await seedBookstore(numberOfTimes);
+    };
 
     await expect(fn).rejects.toThrow(
-      'First parameter should be a positive number that is not zero'
-    )
-  })
+      "First parameter should be a positive number that is not zero",
+    );
+  });
 
-  it('when you pass a negative number it should throw an error', async () => {
-    const numberOfStores = -3
+  it("when you pass a negative number it should throw an error", async () => {
+    const numberOfStores = -3;
 
     const fn = async () => {
-      await seedBookstore(numberOfStores)
-    }
+      await seedBookstore(numberOfStores);
+    };
 
     await expect(fn).rejects.toThrow(
-      'First parameter should be a positive number that is not zero'
-    )
-  })
+      "First parameter should be a positive number that is not zero",
+    );
+  });
 
-  it('when you pass a positive number, it should call dbUtils.clearCollection(connection, models, `Bookstore`)', async () => {
-    const numberOfStores = 3
+  it("when you pass a positive number, it should call dbUtils.clearCollection(connection, models, `Bookstore`)", async () => {
+    const numberOfStores = 3;
 
-    await seedBookstore(numberOfStores)
+    await seedBookstore(numberOfStores);
 
     expect(clearCollectionSpy).toBeCalledWith(
       connectionMock,
       models,
-      'Bookstore'
-    )
-  })
+      "Bookstore",
+    );
+  });
 
-  it('when you pass a positive number, it should call seedHelpers.genBookstoreDoc() with connection obj returned by setupDB.connect(uri) that same amount of number of times', async () => {
-    const numberOfStores = 3
+  it("when you pass a positive number, it should call seedHelpers.genBookstoreDoc() with connection obj returned by setupDB.connect(uri) that same amount of number of times", async () => {
+    const numberOfStores = 3;
 
-    await seedBookstore(numberOfStores)
+    await seedBookstore(numberOfStores);
 
-    expect(genBookstoreDocSpy).toBeCalledWith(connectionMock)
-    expect(genBookstoreDocSpy).toBeCalledTimes(numberOfStores)
-  })
+    expect(genBookstoreDocSpy).toBeCalledWith(connectionMock);
+    expect(genBookstoreDocSpy).toBeCalledTimes(numberOfStores);
+  });
 
-  it('should call setupDB.close() with connection obj returned by setupDB.connect()', async () => {
-    const numberOfStores = 3
+  it("should call setupDB.close() with connection obj returned by setupDB.connect()", async () => {
+    const numberOfStores = 3;
 
-    await seedBookstore(numberOfStores)
+    await seedBookstore(numberOfStores);
 
-    expect(setupDB.close).toBeCalledWith(connectionMock)
-  })
-  it('given seedHelpers.genBookstoreDoc() returns a promise reject, it should call setupDB.close()', async () => {
+    expect(setupDB.close).toBeCalledWith(connectionMock);
+  });
+  it("given seedHelpers.genBookstoreDoc() returns a promise reject, it should call setupDB.close()", async () => {
     genBookstoreDocSpy.mockImplementation(
       vi.fn(() => {
-        return Promise.reject()
-      })
-    )
-    const numberOfStores = 3
+        return Promise.reject();
+      }),
+    );
+    const numberOfStores = 3;
     try {
-      await seedBookstore(numberOfStores)
+      await seedBookstore(numberOfStores);
     } catch (error) {}
 
-    expect(setupDB.close).toBeCalled()
-  })
+    expect(setupDB.close).toBeCalled();
+  });
 
-  it('given seedHelpers.genBookstoreDoc() returns a promise reject, it should trow an error', async () => {
+  it("given seedHelpers.genBookstoreDoc() returns a promise reject, it should trow an error", async () => {
     genBookstoreDocSpy.mockImplementation(
       vi.fn(() => {
-        return Promise.reject('error')
-      })
-    )
-    const numberOfStores = 3
+        return Promise.reject("error");
+      }),
+    );
+    const numberOfStores = 3;
 
     const fn = async () => {
-      await seedBookstore(numberOfStores)
-    }
+      await seedBookstore(numberOfStores);
+    };
 
     await expect(fn).rejects.toThrow(
-      "There's an error generating bookstore document and saving it to the database server"
-    )
-  })
-})
+      "There's an error generating bookstore document and saving it to the database server",
+    );
+  });
+});

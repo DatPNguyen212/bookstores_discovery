@@ -1,9 +1,9 @@
-import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
-import mongoose, { model } from 'mongoose'
-import dbUtils from '../../../utils/dbUtils.js'
-import models from '../../../models/index.js'
+import { vi, describe, it, expect, beforeEach, afterEach } from "vitest";
+import mongoose, { model } from "mongoose";
+import dbUtils from "../../../utils/dbUtils.js";
+import models from "../../../models/index.js";
 
-vi.mock('mongoose', () => {
+vi.mock("mongoose", () => {
   return {
     default: {
       connection: {
@@ -16,8 +16,8 @@ vi.mock('mongoose', () => {
       model: vi.fn(),
       Schema: vi.fn(),
     },
-  }
-})
+  };
+});
 
 // describe('dbUtils.getModelClass()', () => {
 //   let connectionMock = {
@@ -68,12 +68,12 @@ vi.mock('mongoose', () => {
 //   })
 // })
 
-describe('dbUtils.clearCollection()', () => {
-  let connectionMock
+describe("dbUtils.clearCollection()", () => {
+  let connectionMock;
   let ModelClassMock = {
     deleteMany: vi.fn(async () => {}),
-  }
-  let modelsGetModelClassSpy
+  };
+  let modelsGetModelClassSpy;
 
   beforeEach(() => {
     connectionMock = {
@@ -83,64 +83,64 @@ describe('dbUtils.clearCollection()', () => {
         },
       },
       model: vi.fn((modelName, schema) => {
-        return ModelClassMock
+        return ModelClassMock;
       }),
-    }
+    };
 
     modelsGetModelClassSpy = vi
-      .spyOn(models, 'Bookstore', 'get')
+      .spyOn(models, "Bookstore", "get")
       .mockReturnValue({
         getModelClass: vi.fn(() => {
-          return ModelClassMock
+          return ModelClassMock;
         }),
-      })
-  })
+      });
+  });
 
   afterEach(() => {
-    vi.restoreAllMocks()
-  })
+    vi.restoreAllMocks();
+  });
 
-  it('when you pass connection obj, models dependency, and modelName  it should call ModelClassMock.deleteMany()', async () => {
-    const modelName = 'Bookstore'
+  it("when you pass connection obj, models dependency, and modelName  it should call ModelClassMock.deleteMany()", async () => {
+    const modelName = "Bookstore";
 
-    await dbUtils.clearCollection(connectionMock, models, modelName)
+    await dbUtils.clearCollection(connectionMock, models, modelName);
 
-    expect(modelsGetModelClassSpy).toBeCalled()
-  })
-  it('when you pass a non-plain obj in 1st param, it should throw an error', async () => {
-    connectionMock = 3
-    const modelName = 'Bookstore'
-
-    const fn = async () => {
-      await dbUtils.clearCollection(connectionMock, models, modelName)
-    }
-
-    await expect(fn).rejects.toThrow(
-      'First parameter should be a connection obj'
-    )
-  })
-  it('when you pass a non-plain obj in 2nd param, it should throw an error', async () => {
-    const modelName = 'Bookstore'
-    const modelsMock = 3
+    expect(modelsGetModelClassSpy).toBeCalled();
+  });
+  it("when you pass a non-plain obj in 1st param, it should throw an error", async () => {
+    connectionMock = 3;
+    const modelName = "Bookstore";
 
     const fn = async () => {
-      await dbUtils.clearCollection(connectionMock, modelsMock, modelName)
-    }
+      await dbUtils.clearCollection(connectionMock, models, modelName);
+    };
 
     await expect(fn).rejects.toThrow(
-      'Second parameter should be a models dependency obj'
-    )
-  })
-
-  it('when you pass a non-string argument in 3rd param, it should throw an error', async () => {
-    const modelName = 3
+      "First parameter should be a connection obj",
+    );
+  });
+  it("when you pass a non-plain obj in 2nd param, it should throw an error", async () => {
+    const modelName = "Bookstore";
+    const modelsMock = 3;
 
     const fn = async () => {
-      await dbUtils.clearCollection(connectionMock, models, modelName)
-    }
+      await dbUtils.clearCollection(connectionMock, modelsMock, modelName);
+    };
 
     await expect(fn).rejects.toThrow(
-      'Third parameter should be a modelName string'
-    )
-  })
-})
+      "Second parameter should be a models dependency obj",
+    );
+  });
+
+  it("when you pass a non-string argument in 3rd param, it should throw an error", async () => {
+    const modelName = 3;
+
+    const fn = async () => {
+      await dbUtils.clearCollection(connectionMock, models, modelName);
+    };
+
+    await expect(fn).rejects.toThrow(
+      "Third parameter should be a modelName string",
+    );
+  });
+});

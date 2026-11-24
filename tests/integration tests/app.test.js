@@ -301,7 +301,7 @@ describe('Integration tests for routes', () => {
 
       expect(bookstoreRes).not.toBe(null)
     }, 5000)
-    it('when you send POST /bookstores with mocked bookstore data, it should redirect you to the show page of the created bookstore', async () => {
+    it('when you send POST /bookstores with valid mocked bookstore data, it should redirect you to the show page of the created bookstore with correct response.status', async () => {
       const data = {
         bookstore: {
           name: 'bookstoreName',
@@ -594,6 +594,28 @@ describe('Integration tests for routes', () => {
         expect(response.text).toContain(400)
         expect(response.text).toContain('can only have one of these values')
         expect(response.status).toBe(400)
+      })
+
+      it('when you send POST /bookstores with a valid mock bookstore, but req.body.bookstore.genres IS NOT an array but still a valid string for genre, it should redirect you to the created bookstore show page with correct response.status', async () => {
+        data.bookstore.genres = 'horror'
+        const route = '/bookstores'
+
+        const response = await request(app).post(route).send(data)
+        const bookstoreRes = await Bookstore.findOne(data.bookstore)
+
+        expect(response.status).toBe(302)
+        expect(response.headers.location).toBe(`/bookstores/${bookstoreRes.id}`)
+      })
+
+      it('when you send POST /bookstores with a valid mock bookstore, but req.body.bookstore.openDays is NOT an array but still a valid string for openDays, it should  redirect you to the created bookstore show page with correct response.status', async () => {
+        data.bookstore.openDays = 'Monday'
+        const route = '/bookstores'
+
+        const response = await request(app).post(route).send(data)
+        const bookstoreRes = await Bookstore.findOne(data.bookstore)
+
+        expect(response.status).toBe(302)
+        expect(response.headers.location).toBe(`/bookstores/${bookstoreRes.id}`)
       })
     })
   })
