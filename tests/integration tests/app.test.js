@@ -350,7 +350,7 @@ describe('Integration tests for routes', () => {
     })
 
     describe('GET /users/login', () => {
-      it('it should render login page correctly', () => {
+      it('it should render login page correctly with correct elements and response.status', () => {
         const route = '/users/login'
 
         const response = request(app).get(route)
@@ -366,6 +366,7 @@ describe('Integration tests for routes', () => {
           $('form').find('input#password[name="user[password]"]').length
         ).toBe(1)
         expect($('form').find('button[type="submit"]').length).toBe(1)
+        expect(response.status).toBe(200)
       })
     })
 
