@@ -365,7 +365,7 @@ describe('Integration tests for routes', () => {
         expect(
           $('form').find('input#password[name="user[password]"]').length
         ).toBe(1)
-        expect($('form').find('button[type="submit"]'))
+        expect($('form').find('button[type="submit"]').length).toBe(1)
       })
     })
 
