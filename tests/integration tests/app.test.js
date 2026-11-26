@@ -349,6 +349,26 @@ describe('Integration tests for routes', () => {
       expect(response.status).toBe(500)
     })
 
+    describe('GET /users/login', () => {
+      it('it should render login page correctly', () => {
+        const route = '/users/login'
+
+        const response = request(app).get(route)
+
+        const $ = cheerio.load(response.text)
+        expect(
+          $('form[action="/login"][method="POST"][novalidate]').length
+        ).toBe(1)
+        expect(
+          $('form').find('input#username[name="user[username]"]').length
+        ).toBe(1)
+        expect(
+          $('form').find('input#password[name="user[password]"]').length
+        ).toBe(1)
+        expect($('form').find('button[type="submit"]'))
+      })
+    })
+
     describe('Joi validation tests', () => {
       let data
       const sliceOfJoiLabelIndex = 11
