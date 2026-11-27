@@ -617,6 +617,32 @@ describe('Integration tests for routes', () => {
         expect(response.status).toBe(400)
       })
 
+      it('when you send POST /bookstores with req.body.bookstore.openDays has an empty array, response.text should contain correct error msg and status; response.status should be correct', async () => {
+        data.bookstore.openDays = []
+        const route = '/bookstores'
+
+        const response = await request(app).post(route).send(data)
+
+        expect(response.text).toContain(400)
+        expect(response.text).toContain(
+          customMsgs['array.min'].slice(sliceOfJoiLabelIndex)
+        )
+        expect(response.status).toBe(400)
+      })
+
+      it('when you send POST /bookstores with req.body.bookstore.openDays is NOT an array NOR is it a valid openDays string, response.text should contain correct error and msg; response.status should be correct', async () => {
+        data.bookstore.openDays = 3
+        const route = '/bookstores'
+
+        const response = await request(app).post(route).send(data)
+
+        expect(response.text).toContain(400)
+        expect(response.text).toContain(
+          customMsgs['alternatives.types'].slice(sliceOfJoiLabelIndex)
+        )
+        expect(response.status).toBe(400)
+      })
+
       it('when you send POST /bookstores with a valid mock bookstore, but req.body.bookstore.genres IS NOT an array but still a valid string for genre, it should redirect you to the created bookstore show page with correct response.status', async () => {
         data.bookstore.genres = 'horror'
         const route = '/bookstores'
