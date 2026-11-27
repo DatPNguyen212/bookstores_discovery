@@ -504,7 +504,7 @@ describe('Integration tests for routes', () => {
         expect(response.status).toBe(400)
       })
 
-      it('when you send POST /bookstores with req.body.bookstore.genres is NOT an array, response.text should contain correct error msg and status; response.status should be correct', async () => {
+      it('when you send POST /bookstores with req.body.bookstore.genres is NOT an array NOR valid genre string, response.text should contain correct error msg and status; response.status should be correct', async () => {
         data.bookstore.genres = 3
         const route = '/bookstores'
 
@@ -512,7 +512,7 @@ describe('Integration tests for routes', () => {
 
         expect(response.text).toContain(400)
         expect(response.text).toContain(
-          customMsgs['array.base'].slice(sliceOfJoiLabelIndex)
+          customMsgs['alternatives.types'].slice(sliceOfJoiLabelIndex)
         )
         expect(response.status).toBe(400)
       })
