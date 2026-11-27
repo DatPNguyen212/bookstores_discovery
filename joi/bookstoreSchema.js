@@ -41,8 +41,10 @@ const bookstoreJoiSchema = Joi.object({
             'horror',
             'non-fiction'
           )
+          .required()
           .messages(customMsgs)
       )
+      .required()
       .messages(customMsgs),
     images: Joi.string().required().messages(customMsgs),
     openDays: Joi.alternatives().try(
