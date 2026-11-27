@@ -6,42 +6,44 @@ const bookstoreJoiSchema = Joi.object({
     name: Joi.string().required().max(100).messages(customMsgs),
     address: Joi.string().max(255).required().messages(customMsgs),
     description: Joi.string().max(500).required().messages(customMsgs),
-    genres: Joi.alternatives().try(
-      Joi.array()
-        .items(
-          Joi.string()
-            .label('genre item')
-            .valid(
-              'fantasy',
-              'science',
-              'fiction',
-              'romance',
-              'mystery',
-              'thriller',
-              'historical',
-              'horror',
-              'non-fiction'
-            )
-            .messages(customMsgs)
-        )
-        .min(1)
-        .required()
-        .messages(customMsgs),
-      Joi.string()
-        .label('genre item')
-        .valid(
-          'fantasy',
-          'science',
-          'fiction',
-          'romance',
-          'mystery',
-          'thriller',
-          'historical',
-          'horror',
-          'non-fiction'
-        )
-        .messages(customMsgs)
-    ),
+    genres: Joi.alternatives()
+      .try(
+        Joi.array()
+          .items(
+            Joi.string()
+              .label('genre item')
+              .valid(
+                'fantasy',
+                'science',
+                'fiction',
+                'romance',
+                'mystery',
+                'thriller',
+                'historical',
+                'horror',
+                'non-fiction'
+              )
+              .messages(customMsgs)
+          )
+          .min(1)
+          .required()
+          .messages(customMsgs),
+        Joi.string()
+          .label('genre item')
+          .valid(
+            'fantasy',
+            'science',
+            'fiction',
+            'romance',
+            'mystery',
+            'thriller',
+            'historical',
+            'horror',
+            'non-fiction'
+          )
+          .messages(customMsgs)
+      )
+      .messages(customMsgs),
     images: Joi.string().required().messages(customMsgs),
     openDays: Joi.alternatives().try(
       Joi.array()
